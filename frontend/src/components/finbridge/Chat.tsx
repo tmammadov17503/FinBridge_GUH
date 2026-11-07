@@ -51,12 +51,14 @@ export function Chat({
   userId,
   seed,
   onForecast,
+  onAgentReply,
   customFinance,
 }: {
   userId: string;
   seed?: ChatSeed | null;
-  /** Receives each answer's forecast, and null when the conversation is cleared. */
   onForecast?: (forecast: BalanceForecast | null) => void;
+  /** Called after every agent reply — used by the demo sequence to fire the next question. */
+  onAgentReply?: () => void;
   customFinance?: CustomFinance | null;
 }) {
   const [input, setInput] = useState("");
@@ -83,11 +85,13 @@ export function Chat({
     },
   });
 
+  const onAgentReplyRef = useRef(onAgentReply);
+  onAgentReplyRef.current = onAgentReply;
+
   const handleAgentMessage = useCallback(
     (message: TranscriptMessage, channel: Channel) => {
       if (message.forecast) onForecast?.(message.forecast);
-      // Speak when the toggle is on, and always speak the answer to a spoken question —
-      // someone who just talked to the page is not watching it.
+      onAgentReplyRef.current?.();
       if (!speakRepliesRef.current && channel !== "voice") return;
       void speech.speak({
         text: message.text,

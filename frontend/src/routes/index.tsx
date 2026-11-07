@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { topics, type TopicId } from "@/data/topics";
 import { HeaderCards } from "@/components/finbridge/HeaderCards";
@@ -32,13 +32,43 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+/** Per-persona demo walkthrough: first question fires on click, followups queue up. */
+const DEMO_SCRIPTS: Record<string, { first: string; followups: string[] }> = {
+  "demo-amira": {
+    first: "Will I run short before my next payday?",
+    followups: [
+      "What support could I apply for right now?",
+      "What would happen if I lost two of my shifts this month?",
+      "Thank you so much — I had no idea I could access some of these!",
+    ],
+  },
+  "demo-josh": {
+    first: "Will I run out of money before my next student loan arrives?",
+    followups: [
+      "Are there any hardship funds I could apply for as a student?",
+      "How much can I safely spend each day until my loan comes in?",
+      "This is brilliant, thanks — I didn't realise my uni had these funds!",
+    ],
+  },
+  "demo-priya": {
+    first: "How much can I safely spend each day until I'm paid?",
+    followups: [
+      "Am I building up a good enough savings buffer?",
+      "What would an unexpected £400 bill do to my finances this month?",
+      "Really clear breakdown, thank you — that gives me real peace of mind!",
+    ],
+  },
+};
+
 function Index() {
   const [active, setActive] = useState<TopicId | null>(null);
   const [userId, setUserId] = useState<DemoUserId>("demo-amira");
   const [customFinance, setCustomFinance] = useState<CustomFinance | null>(null);
-  /** A question handed to the chat from a topic box; the nonce lets the same one re-fire. */
   const [seed, setSeed] = useState<ChatSeed | null>(null);
   const [forecast, setForecast] = useState<BalanceForecast | null>(null);
+
+  /** Stable ref so the agent-reply callback always sees the latest queue without re-creating. */
+  const demoQueueRef = useRef<string[]>([]);
 
   const topic = topics.find((t) => t.id === active) ?? null;
 
@@ -46,11 +76,53 @@ function Index() {
     setSeed((current) => ({ text, nonce: (current?.nonce ?? 0) + 1 }));
   }
 
-  function startDemo() {
-    setUserId("demo-amira");
-    setCustomFinance(null);
+  /** Called by Chat after each agent reply — fires the next demo question after a short pause. */
+  function handleAgentReply() {
+    const queue = demoQueueRef.current;
+    if (queue.length === 0) return;
+    const [next, ...rest] = queue;
+    demoQueueRef.current = rest;
+    setTimeout(() => {
+      setSeed({ text: next!, nonce: Date.now() });
+    }, 1200);
+  }
+
+  function handlePersonaChange(next: DemoUserId) {
+    setUserId(next);
     setForecast(null);
-    setSeed({ text: "Will I run short before my next payday?", nonce: Date.now() });
+    if (next !== "demo-me") setCustomFinance(null);
+
+    const script = DEMO_SCRIPTS[next];
+    if (script) {
+      demoQueueRef.current = script.followups;
+      setSeed({ text: script.first, nonce: Date.now() });
+    } else {
+      demoQueueRef.current = [];
+      setSeed(null);
+    }
+  }
+
+  /** When the user submits their own numbers, format them into a natural message and fire it. */
+  function handleCustomProfile(profile: CustomFinance) {
+    setCustomFinance(profile);
+    demoQueueRef.current = [];
+
+    const dateStr = new Date(profile.nextIncomeDate).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+    });
+    const msg =
+      `Hi! Here's my current situation: I have £${profile.balance} in my account right now. ` +
+      `My next income of £${profile.nextIncomeAmount} arrives on ${dateStr}. ` +
+      `I pay about £${profile.monthlyBills} a month in rent and bills, and spend roughly ` +
+      `£${profile.weeklySpend} a week on food and daily essentials. ` +
+      `Will I run short before my next income arrives?`;
+
+    setSeed({ text: msg, nonce: Date.now() });
+  }
+
+  function startDemo() {
+    handlePersonaChange("demo-amira");
   }
 
   return (
@@ -61,28 +133,18 @@ function Index() {
           <Sidebar active={active} onSelect={setActive} />
           <PersonaPicker
             value={userId}
-            onChange={(next) => {
-              setUserId(next);
-              setForecast(null);
-              if (next !== "demo-me") setCustomFinance(null);
-              // Auto-start a relevant question for each demo persona
-              const autoQuestions: Record<string, string> = {
-                "demo-amira": "Will I run short before my next payday?",
-                "demo-josh": "Will I run out of money before my next student loan arrives?",
-                "demo-priya": "How much can I safely spend each day until I'm paid?",
-              };
-              const q = autoQuestions[next];
-              setSeed(q ? { text: q, nonce: Date.now() } : null);
-            }}
-            onCustomProfile={setCustomFinance}
+            onChange={handlePersonaChange}
+            onCustomProfile={handleCustomProfile}
           />
         </div>
         <main className="flex max-w-[660px] min-w-0 flex-col gap-12">
-          {/* Demo launcher — one click kicks off a live Amira walkthrough */}
+          {/* Demo launcher */}
           <div className="flex items-center gap-4 rounded-md border border-primary/30 bg-primary/5 px-4 py-3">
             <div className="flex-1">
               <p className="text-sm font-medium">See it in action</p>
-              <p className="text-xs text-muted-foreground">Watch FinBridge run a live payday forecast for Amira.</p>
+              <p className="text-xs text-muted-foreground">
+                Watch FinBridge run a live walkthrough for Amira.
+              </p>
             </div>
             <button
               type="button"
@@ -94,13 +156,12 @@ function Index() {
           </div>
           <HeaderCards forecast={forecast} />
           <TopicPanel topic={topic} onAsk={ask} />
-          {/* Remounting on persona change starts a fresh session, so one profile's
-              conversation never carries into another's numbers. */}
           <Chat
             key={userId}
             userId={userId}
             seed={seed}
             onForecast={setForecast}
+            onAgentReply={handleAgentReply}
             customFinance={customFinance}
           />
         </main>
