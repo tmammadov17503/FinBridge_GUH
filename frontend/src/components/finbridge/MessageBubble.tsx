@@ -3,16 +3,53 @@ import type { TranscriptMessage } from "@/lib/finbridge/types";
 import { BalanceChart } from "./BalanceChart";
 import { SourceCards } from "./SourceCards";
 
-/** Agent replies arrive as plain prose with blank-line paragraphs; keep those breaks. */
+/** Render inline **bold** markers. */
+function InlineBold({ text }: { text: string }) {
+  const segments = text.split("**");
+  return (
+    <>
+      {segments.map((seg, i) =>
+        i % 2 === 1 ? <strong key={i}>{seg}</strong> : seg,
+      )}
+    </>
+  );
+}
+
+/** Render one paragraph — either a bullet list or plain prose. */
+function Block({ text }: { text: string }) {
+  const lines = text.split("\n").filter((l) => l.trim().length > 0);
+  const isList = lines.every((l) => /^([•\-\*]|\d+\.)\s/.test(l.trim()));
+  if (isList) {
+    return (
+      <ul className="ml-4 flex list-none flex-col gap-1">
+        {lines.map((l, i) => (
+          <li key={i} className="flex gap-2">
+            <span aria-hidden className="shrink-0">
+              {/^\d+\./.test(l.trim()) ? l.trim().match(/^(\d+\.)/)?.[1] : "•"}
+            </span>
+            <span>
+              <InlineBold text={l.trim().replace(/^([•\-\*]|\d+\.)\s/, "")} />
+            </span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  return (
+    <p className="whitespace-pre-wrap">
+      <InlineBold text={text} />
+    </p>
+  );
+}
+
+/** Split on blank lines then render each block. */
 function Paragraphs({ text }: { text: string }) {
-  const parts = text.split(/\n{2,}/).filter((part) => part.trim().length > 0);
-  if (parts.length <= 1) return <p className="whitespace-pre-wrap">{text}</p>;
+  const blocks = text.split(/\n{2,}/).filter((b) => b.trim().length > 0);
+  if (blocks.length <= 1) return <Block text={text} />;
   return (
     <div className="flex flex-col gap-2">
-      {parts.map((part, index) => (
-        <p key={index} className="whitespace-pre-wrap">
-          {part}
-        </p>
+      {blocks.map((block, i) => (
+        <Block key={i} text={block} />
       ))}
     </div>
   );

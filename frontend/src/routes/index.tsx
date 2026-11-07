@@ -132,8 +132,11 @@ function Index() {
     setSeed((current) => ({ text, nonce: (current?.nonce ?? 0) + 1 }));
   }
 
-  /** Called by Chat after each agent reply — fires the next demo question after a short pause. */
+  /** Called by Chat after each agent reply — fires the next demo question after a short pause.
+   *  Also clears the custom finance payload after the first "Me" reply so follow-up questions
+   *  go to Claude as plain chat rather than re-triggering the full finance analysis. */
   function handleAgentReply() {
+    if (customFinance) setCustomFinance(null);
     const queue = demoQueueRef.current;
     if (queue.length === 0) return;
     const [next, ...rest] = queue;
