@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "checkedAt": "2026-11-07",
+  "resources": [
+    {
+      "id": "manchester-unexpected-needs",
+      "title": "Unexpected Financial Needs Fund",
+      "provider": "University of Manchester",
+      "url": "https://www.studentsupport.manchester.ac.uk/finances/funding-opportunities/all/living-cost-support-fund/",
+      "summary": "The university describes a year-round, non-repayable fund for students facing unexpected financial hardship. The page links to the application information.",
+      "actionLabel": "Check the fund and how to apply",
+      "university": "university of manchester",
+      "tags": ["hardship", "shortfall", "rent", "food", "bills", "unexpected", "fund"],
+      "caution": "Eligibility and any award are assessed by the university; this link is not an approval."
+    },
+    {
+      "id": "manchester-estranged",
+      "title": "Support for estranged students",
+      "provider": "University of Manchester",
+      "url": "https://www.studentsupport.manchester.ac.uk/tailored-support/estrangedstudents/",
+      "summary": "The university explains its dedicated support for students without family support, including named contacts, financial support routes, and help with applications.",
+      "actionLabel": "Explore dedicated student support",
+      "university": "university of manchester",
+      "requiresNoFamilySupport": true,
+      "tags": ["estranged", "family", "support", "student", "bursary", "hardship"],
+      "caution": "Eligibility depends on the university's criteria and individual circumstances; do not assume that having no family support alone qualifies someone."
+    },
+    {
+      "id": "manchester-su-advice",
+      "title": "Students' Union Advice Service",
+      "provider": "University of Manchester Students' Union",
+      "url": "https://manchesterstudentsunion.com/advice",
+      "summary": "The Students' Union offers free, confidential and impartial advice on finances, housing, and student life, with a contact form for enquiries.",
+      "actionLabel": "Contact the Advice Service",
+      "university": "university of manchester",
+      "tags": ["advice", "rent", "housing", "debt", "hardship", "student"],
+      "caution": "Eligibility and available support depend on the service's current rules; check directly with the Advice Service."
+    },
+    {
+      "id": "natwest-money-worries",
+      "title": "Help with money worries",
+      "provider": "NatWest",
+      "url": "https://www.natwest.com/life-moments/Struggling-financially.html",
+      "summary": "NatWest explains options for customers worried about payments or accounts, including contacting the bank early and finding independent debt advice.",
+      "actionLabel": "See NatWest support options",
+      "tags": ["bank", "payment", "debt", "overdraft", "shortfall", "hardship"],
+      "caution": "Eligibility and bank support options depend on the customer's situation; this prototype is not a NatWest service."
+    },
+    {
+      "id": "moneyhelper-student-budget",
+      "title": "Budgeting for college or university",
+      "provider": "MoneyHelper",
+      "url": "https://www.moneyhelper.org.uk/en/family-and-care/student-and-graduate-money/budgeting-for-college-or-university",
+      "summary": "MoneyHelper gives student budgeting guidance and suggests speaking with a university or college money adviser about financial help.",
+      "actionLabel": "Read student budgeting guidance",
+      "tags": ["budget", "student", "loan", "income", "spending", "advice"],
+      "caution": "Eligibility for financial help depends on the relevant provider; this guide gives general information."
+    }
+  ]
+}
