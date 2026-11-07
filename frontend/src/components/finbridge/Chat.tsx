@@ -41,10 +41,13 @@ const SUGGESTIONS = [
 /**
  * A question handed in from the topic panel. The `nonce` is what makes it re-fire, so asking
  * the same question twice works without smuggling a marker into the message text.
+ * When `cannedReply` is set the message is added locally — no API call — so demo finales
+ * don't trigger another forecast from n8n.
  */
 export interface ChatSeed {
   text: string;
   nonce: number;
+  cannedReply?: string;
 }
 
 export function Chat({
@@ -156,8 +159,13 @@ export function Chat({
   useEffect(() => {
     if (!seed || seed.nonce === lastSeedNonceRef.current) return;
     lastSeedNonceRef.current = seed.nonce;
-    void sendMessage(seed.text, { channel: "web" });
-  }, [seed, sendMessage]);
+    if (seed.cannedReply) {
+      chat.addLocal(seed.text, seed.cannedReply);
+      onAgentReplyRef.current?.();
+    } else {
+      void sendMessage(seed.text, { channel: "web" });
+    }
+  }, [seed, sendMessage, chat]);
 
   const onlyGreeting = chat.messages.length === 1;
 
