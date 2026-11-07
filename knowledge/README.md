@@ -1,5 +1,7 @@
 # FinBridge support knowledge
 
+This folder contains two separate knowledge collections. `sources.json` is the five-record catalogue used by the **currently published** n8n demo workflow. [`lifeline/`](lifeline/) contains the three broader LIFELINE datasets contributed by the team: events, finding-money support options, and community indicators. Their schemas and verification status differ. The live workflow does **not** yet retrieve from LIFELINE; see its [agent README](lifeline/README_LIFELINE_KNOWLEDGE_BASE.md) before designing that integration.
+
 This is a small, curated retrieval layer for the hackathon demo. It is **not** a live benefits database and does not decide eligibility. The five records in `sources.json` were checked against their providers' pages on 7 November 2026. Their summaries are paraphrases, not copied page text.
 
 ## Source coverage

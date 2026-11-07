@@ -1,108 +1,33 @@
 # FinBridge
 
-**A financial safety net for people whose income does not arrive on the same day every month.**
+FinBridge is a hackathon prototype for helping students understand cash shortfalls and find relevant support. The current implementation has a website skeleton, a published n8n demo workflow, and two separate knowledge collections. It is **not** a bank, benefits checker, eligibility decision maker, or regulated financial adviser.
 
-Zero-hours workers, agency staff and students on termly loans are asked to budget with tools built for
-a fixed monthly salary. FinBridge answers the two questions those tools cannot: *am I going to run short
-before my next payday*, and *what can I actually do about it today*.
+## What works now
 
-Built at Great Uni Hack, Manchester.
-
-## How it works
-
-```
-Website chat widget ─┐                         ┌─> get_financial_forecast ──> deterministic forecast engine
-ElevenLabs voice ────┼─> POST /finbridge/chat ─┤        (pure JS maths, no model involved)
-(server tool)        ┘   [Claude agent+memory] └─> search_knowledge_base ───> curated support catalogue
-```
-
-Three parts:
-
-1. **A forecast engine.** Given a user and a horizon, it computes current balance, monthly income,
-   outgoings and surplus, buffer days, safe-to-spend-per-day until the next income, and spend by
-   category. It then runs four scenarios — `base`, `income_dip`, `unexpected_cost` and `perfect_storm` —
-   each returning a weekly balance curve, the first overdraft day and the lowest balance, alongside
-   risk flags, nudges and the assumptions it used.
-2. **A curated support catalogue.** Real, hand-checked support providers with their own URLs, filtered
-   and ranked against the user's situation. See [knowledge/](knowledge/).
-3. **Two front doors.** A website chat widget and an ElevenLabs voice agent, both calling a single n8n
-   webhook that runs a Claude agent with conversation memory and the two tools above.
-
-## The design rule
-
-**The model explains. It never calculates, decides or invents.**
-
-Money advice is a bad place for a confident guess, and the people this is built for can least afford one.
-So every consequential step is taken out of the model's hands:
-
-- **The LLM never does the arithmetic.** The finance engine computes every number; the agent puts those
-  numbers into plain English and states the assumptions behind them.
-- **The LLM never picks a link.** Retrieval returns entries from the trusted catalogue. Any `sourceIds`
-  the model returns that are not in the retrieved set are rejected, and the UI builds its source cards
-  from the catalogue rather than from model text.
-- **Sensitive status is never inferred.** Support for estranged students is only surfaced when the person
-  has explicitly confirmed it via a `noFamilySupport` flag. Saying the words in chat is not consent, and
-  there is a test asserting exactly that.
-- **No eligibility claims.** Every catalogue record carries a caution that the provider decides, and a
-  test asserts none can be returned without one.
-- **User text is data, never instructions.** Questions are length-bounded and tokenised for tag matching
-  only; an attempt to talk the retriever into promising a grant changes nothing about what it returns.
-- **Drafts are for the user to send.** Any message FinBridge drafts is editable and is never sent on
-  someone's behalf.
-
-The result is financial triage you can audit end to end: deterministic maths, human-verified referrals,
-and a language model confined to the narration layer.
-
-## Repository layout
-
-| Path | What it is |
+| Part | Current state |
 | --- | --- |
-| [knowledge/](knowledge/) | The support catalogue, its retrieval logic, and tests. See its [README](knowledge/README.md) for the n8n handoff. |
-| [knowledge/sources.json](knowledge/sources.json) | Curated providers with real URLs, tags, eligibility gates and cautions. |
-| [knowledge/retrieve.mjs](knowledge/retrieve.mjs) | Reference retrieval implementation, locally testable. |
-| [knowledge/n8n-retrieve.js](knowledge/n8n-retrieve.js) | Paste-ready n8n Code node version of the same logic. |
-| [knowledge/retrieve.test.mjs](knowledge/retrieve.test.mjs) | Tests covering ranking, eligibility gating and injection resistance. |
-| [n8n-agent-architecture.md](n8n-agent-architecture.md) | The agent layer: workflow setup, the full API contract, and the ElevenLabs voice route. |
+| [`frontend/`](frontend/) | Lovable-built responsive UI skeleton with navigation and placeholder chat. No live API integration yet. |
+| [`n8n/`](n8n/) | Source-controlled snapshot of the published **FinBridge Demo** workflow: graph JSON, four Code node files, tests, and import notes. |
+| [`knowledge/sources.json`](knowledge/sources.json) | Five curated student and money-support links used by the live workflow. |
+| [`knowledge/lifeline/`](knowledge/lifeline/) | Team-contributed LIFELINE event, support-option, and community datasets. These are not yet connected to the live workflow. |
 
-## Running the tests
+The live `POST /webhook/finbridge/chat` workflow accepts caller-supplied GBP finance data, validates dates and amounts, computes the forecast in pence, selects up to three links from the pinned catalogue, and uses Anthropic only to choose a draft focus. Explanation and draft copy are assembled from deterministic templates. Invalid input returns HTTP 400; catalogue or Anthropic errors return the forecast with explicit fallback statuses. The exact payload and response are in the [knowledge contract](knowledge/README.md).
 
-No dependencies, no install step. From the repository root:
+The workflow export omits credentials and is inactive on import. The live workflow is [FinBridge Demo](https://tagihan.app.n8n.cloud/workflow/GAoLt3qT4DfDC1f2). Its public webhook is for **synthetic demo inputs only** until a protected website server route and rate limiting are added. The workflow is configured not to save execution payloads.
 
-```bash
-node --test knowledge/retrieve.test.mjs
+## Local checks
+
+```powershell
+node --test knowledge/retrieve.test.mjs n8n/workflow.test.mjs
 ```
 
-## API contract
+The repository also contains a [proposed broader agent architecture](n8n-agent-architecture.md). That document describes future chat memory, separate forecast and knowledge-ingest workflows, voice, and vector retrieval; those are **not** implemented in the live workflow.
 
-Full detail in [n8n-agent-architecture.md](n8n-agent-architecture.md). In short:
+## Next steps
 
-- **`POST /webhook/finbridge/chat`** — `{ message, userId, sessionId?, channel? }` → `{ reply, sessionId, userId }`.
-  Set `channel: "voice"` for short, spoken-style answers.
-- **`POST /webhook/finbridge/forecast`** — `{ userId, horizonDays? }` → the full forecast object. No LLM
-  involved, so the dashboard can call this directly to drive charts.
-- **`POST /webhook/finbridge/kb/ingest`** — `{ title, text, source? }` → adds a document to the retrieval store.
+1. Connect the [`frontend/`](frontend/) chat and forecast UI to the documented API through a server-side route. Add inbound protection and rate limiting before accepting personal finance data. Follow [`frontend/AGENTS.md`](frontend/AGENTS.md) and Lovable's project boundaries when editing the UI.
+2. Decide how the three LIFELINE datasets should be retrieved. Keep events, support options, and aggregate community indicators distinct; validate provenance, geography, time, and eligibility before showing them. The current five-link catalogue stays separate until that design is tested.
+3. Add realistic finance input and scenario editing to the website. The live workflow calculates only from the transactions supplied in each request; it has no bank connection or stored customer profile.
+4. If needed, implement the proposed voice route, conversational memory, and broader agent workflows in separate reviewed iterations. The current webhook does not provide those contracts.
 
-Demo personas: `demo-amira` (zero-hours single parent, medium risk), `demo-josh` (student on a termly
-loan), `demo-priya` (stable salary saver, low risk).
-
-## Status
-
-This is a hackathon prototype under active development. Landed and tested: the support catalogue and its
-retrieval layer, and the forecast endpoint end to end. Work in progress:
-
-- The n8n workflow JSON, prompts and knowledge-base seeding described in the architecture doc are not yet
-  in this repository.
-- Two retrieval paths exist — an in-memory vector store and the fetch-and-score Code node — and have not
-  yet been reconciled into one.
-- User data is generated demo personas. Swapping in a mock bank, Open Banking API or user-uploaded CSV
-  means replacing one node with the same output shape.
-- The in-memory vector store is wiped on n8n restart; a hosted store is the fix for persistence.
-- Webhooks are currently open (`allowedOrigins: *`, no auth). Header auth and origin restriction are
-  required before any public demo.
-
-## Disclaimer
-
-FinBridge is a prototype. It is not a bank, a benefits checker or a regulated financial adviser, it does
-not decide anyone's eligibility for anything, and it is not affiliated with any provider listed in its
-catalogue. Eligibility and awards are decided by the providers themselves. The catalogue holds general UK
-guidance written for a hackathon; it should be reviewed before being presented to anyone as advice.
+No model-generated grant, eligibility promise, or source link should be presented as fact. Provider rules and awards are decided by providers; source records must be rechecked before high-stakes use.

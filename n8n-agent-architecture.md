@@ -1,4 +1,6 @@
-# FinBridge – n8n agent layer
+# FinBridge – proposed n8n agent layer
+
+> **Design proposal, not the current implementation.** The three workflows, memory, vector store, voice route, demo personas, and `/forecast` and `/kb/ingest` endpoints below are not present in the published FinBridge Demo workflow or this repository. The actual ten-node workflow, its export, and its tested contract are documented in [`n8n/README.md`](n8n/README.md) and [`knowledge/README.md`](knowledge/README.md). Do not send this proposal's `{ message, userId }` payload to the live `/finbridge/chat` webhook.
 
 Three importable workflows (in `workflows/`) that back the website chatbot and the ElevenLabs voice assistant.
 

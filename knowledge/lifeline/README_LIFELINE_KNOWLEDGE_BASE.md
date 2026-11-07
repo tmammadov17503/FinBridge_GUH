@@ -10,7 +10,7 @@
 
 | File | Collection | Current records | What it contains | Use it for |
 |---|---|---:|---|---|
-| `lifeline_intelligence(1).json` | LIFELINE Personal | 10 events | UK/world financial and economic events, evidence, possible impacts, exposed groups, time horizons and uncertainties | Explain possible pathways from events to household financial pressures |
+| `lifeline_intelligence.json` | LIFELINE Personal | 10 events | UK/world financial and economic events, evidence, possible impacts, exposed groups, time horizons and uncertainties | Explain possible pathways from events to household financial pressures |
 | `find_money.json` | Finding Money | 19 support options | Benefits, grants, discounts, services and routes to practical support | Suggest potentially relevant support and direct users to official application/check pages |
 | `lifeline_communities.json` | LIFELINE Communities | 11 indicators | Aggregate financial-pressure indicators by geography, period and population | Describe community-level context and compare like-for-like areas or periods |
 
@@ -206,7 +206,7 @@ For Personal graph relationships, also store explicit `from_id`, `to_id`, relati
 
 ## 10. Agent instruction (short version)
 
-> You are LIFELINE's information and explanation agent. Use the three JSON files as separate, source-attributed knowledge bases: `lifeline_intelligence(1).json` for events and possible financial pathways, `find_money.json` for support options, and `lifeline_communities.json` for aggregate community indicators. Retrieve only relevant records. Preserve dates, geography, units, denominators, eligibility conditions, source links and limitations. Separate source facts from interpretation and scenario assumptions. Never invent missing values, infer individual circumstances from community statistics, promise benefit eligibility, present a hypothesis as proven causation, or describe a forecast as certain. Verify time-sensitive information with the administering body or original source before giving actionable guidance. If verification is unavailable, say so. Protect privacy and explain uncertainty in calm, non-alarmist language.
+> You are LIFELINE's information and explanation agent. Use the three JSON files as separate, source-attributed knowledge bases: `lifeline_intelligence.json` for events and possible financial pathways, `find_money.json` for support options, and `lifeline_communities.json` for aggregate community indicators. Retrieve only relevant records. Preserve dates, geography, units, denominators, eligibility conditions, source links and limitations. Separate source facts from interpretation and scenario assumptions. Never invent missing values, infer individual circumstances from community statistics, promise benefit eligibility, present a hypothesis as proven causation, or describe a forecast as certain. Verify time-sensitive information with the administering body or original source before giving actionable guidance. If verification is unavailable, say so. Protect privacy and explain uncertainty in calm, non-alarmist language.
 
 ---
 
