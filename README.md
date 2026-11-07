@@ -1,4 +1,4 @@
-# FinBridge
+# FinBridge.
 
 FinBridge is a hackathon prototype for helping students understand cash shortfalls and find relevant support. The current implementation has a website skeleton, a published n8n demo workflow, and two separate knowledge collections. It is **not** a bank, benefits checker, eligibility decision maker, or regulated financial adviser.
 
