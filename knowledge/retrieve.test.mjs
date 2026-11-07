@@ -42,6 +42,7 @@ test('university-specific support is not shown to another university', () => {
   });
   assert.ok(results.every((result) => !result.id.startsWith('manchester-')));
   assert.ok(results.length > 0);
+  assert.ok(results.some((result) => result.id === 'student-minds-budget'));
 });
 
 test('retrieval is bounded and never treats question text as instructions', () => {

@@ -32,7 +32,7 @@ export function retrieveSupport(resources, context = {}, limit = 3) {
         + (risk && resource.tags.includes('hardship') ? 4 : 0)
         + (risk && resource.tags.includes('shortfall') ? 2 : 0)
         + (lacksFamilySupport && resource.id === 'manchester-estranged' ? 7 : 0)
-        + (resource.id === 'moneyhelper-student-budget' ? 1 : 0);
+        + (resource.id === 'student-minds-budget' ? 1 : 0);
       return { resource, score };
     })
     .sort((a, b) => b.score - a.score || a.resource.id.localeCompare(b.resource.id))

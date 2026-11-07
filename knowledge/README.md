@@ -10,7 +10,7 @@ This is a small, curated retrieval layer for the hackathon demo. It is **not** a
 | Manchester estranged student support | The student explicitly confirms they lack family support or are estranged. Do not infer eligibility from that statement. |
 | Manchester Students' Union Advice Service | A Manchester student needs human advice on money, rent, debt, or housing. |
 | NatWest help with money worries | A customer is concerned about bank payments, an overdraft, or broader money worries. |
-| MoneyHelper student budgeting | A student needs general budgeting guidance, including irregular income. |
+| Student Minds student budgeting | A student needs general guidance on loan payments, wages, and essential costs. |
 
 Manchester-only records are excluded unless the request explicitly says `"university": "University of Manchester"` or `"Manchester"`. The dedicated estranged-student record requires `"noFamilySupport": true`; do not guess this sensitive status from chat text. Other university users receive only broadly applicable records. The retrieval code returns at most three entries; every entry includes its real provider URL and a caution about eligibility.
 

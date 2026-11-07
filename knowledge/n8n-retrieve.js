@@ -27,7 +27,7 @@ const supportSources = resources
       + (shortfall && source.tags.includes('hardship') ? 4 : 0)
       + (shortfall && source.tags.includes('shortfall') ? 2 : 0)
       + (noFamilySupport && source.id === 'manchester-estranged' ? 7 : 0)
-      + (source.id === 'moneyhelper-student-budget' ? 1 : 0),
+      + (source.id === 'student-minds-budget' ? 1 : 0),
   }))
   .sort((a, b) => b.score - a.score || a.source.id.localeCompare(b.source.id))
   .slice(0, 3)

@@ -47,11 +47,11 @@
       "caution": "Eligibility and bank support options depend on the customer's situation; this prototype is not a NatWest service."
     },
     {
-      "id": "moneyhelper-student-budget",
-      "title": "Budgeting for college or university",
-      "provider": "MoneyHelper",
-      "url": "https://www.moneyhelper.org.uk/en/family-and-care/student-and-graduate-money/budgeting-for-college-or-university",
-      "summary": "MoneyHelper gives student budgeting guidance and suggests speaking with a university or college money adviser about financial help.",
+      "id": "student-minds-budget",
+      "title": "How to make a student budget",
+      "provider": "Student Minds",
+      "url": "https://www.studentminds.org.uk/advice-and-info/how-to-make-a-student-budget/",
+      "summary": "Student Minds explains how to plan for student loan payments, wages and essential costs, and suggests contacting university support when essential costs exceed income.",
       "actionLabel": "Read student budgeting guidance",
       "tags": ["budget", "student", "loan", "income", "spending", "advice"],
       "caution": "Eligibility for financial help depends on the relevant provider; this guide gives general information."
