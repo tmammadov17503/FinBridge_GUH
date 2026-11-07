@@ -64,8 +64,15 @@ function Index() {
             onChange={(next) => {
               setUserId(next);
               setForecast(null);
-              setSeed(null);
               if (next !== "demo-me") setCustomFinance(null);
+              // Auto-start a relevant question for each demo persona
+              const autoQuestions: Record<string, string> = {
+                "demo-amira": "Will I run short before my next payday?",
+                "demo-josh": "Will I run out of money before my next student loan arrives?",
+                "demo-priya": "How much can I safely spend each day until I'm paid?",
+              };
+              const q = autoQuestions[next];
+              setSeed(q ? { text: q, nonce: Date.now() } : null);
             }}
             onCustomProfile={setCustomFinance}
           />
