@@ -30,33 +30,6 @@ function run(file, input, nodes = {}, env = {}) {
   return structuredClone(result[0].json);
 }
 
-// ── Shared-secret auth ────────────────────────────────────────────────────────
-
-test('missing key is rejected when secret is configured in env', () => {
-  const result = run('./validate-finance.js',
-    { body: fixture, headers: {} },
-    {},
-    { FINBRIDGE_WEBHOOK_SECRET: 'test-secret' });
-  assert.equal(result.valid, false);
-  assert.equal(result.error.code, 'UNAUTHORIZED');
-});
-
-test('correct key is accepted when secret is configured', () => {
-  const result = run('./validate-finance.js',
-    { body: fixture, headers: { 'x-finbridge-key': 'test-secret' } },
-    {},
-    { FINBRIDGE_WEBHOOK_SECRET: 'test-secret' });
-  assert.equal(result.valid, true);
-});
-
-test('no env secret means open access (dev default)', () => {
-  const result = run('./validate-finance.js',
-    { body: fixture, headers: {} },
-    {},
-    {});
-  assert.equal(result.valid, true);
-});
-
 // ── Validation ────────────────────────────────────────────────────────────────
 
 test('valid finance input is normalized without fictional data', () => {

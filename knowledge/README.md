@@ -20,7 +20,12 @@ Manchester-only records are excluded unless the request explicitly says `"univer
 
 ### Authentication
 
-Send `X-FinBridge-Key: <secret>` with every request. Set `FINBRIDGE_WEBHOOK_SECRET` in both n8n's environment variables and Lovable Secrets. Requests without the correct key return HTTP 400 with `error.code = "UNAUTHORIZED"`. If the env variable is not set in n8n the check is skipped (safe for local dev and workflow import).
+Send `X-FinBridge-Key: <secret>` with every request. Configure this in two places:
+
+1. **n8n Webhook node** — open the node, set Authentication to **Header Auth**, create a credential with Name `X-FinBridge-Key` and your chosen secret value. n8n rejects requests without it before the Code node runs. No enterprise plan required.
+2. **Lovable Secrets** — add `FINBRIDGE_WEBHOOK_SECRET = <same secret>`. The server function reads it and sends the header on every request.
+
+Requests with a missing or wrong key are rejected by n8n with a 401 before reaching the workflow.
 
 ### Request
 

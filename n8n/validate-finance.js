@@ -1,11 +1,6 @@
 // n8n Code node: validate and normalize one webhook request before any external call.
-// Shared-secret check: set FINBRIDGE_WEBHOOK_SECRET in n8n's environment variables.
-// If the variable is not configured the check is skipped (safe for local dev/import).
-const _reqHeaders = $input.first().json.headers || {};
-const _expectedKey = $env.FINBRIDGE_WEBHOOK_SECRET;
-if (_expectedKey && (_reqHeaders['x-finbridge-key'] || _reqHeaders['X-FinBridge-Key']) !== _expectedKey) {
-  return [{ json: { valid: false, error: { code: 'UNAUTHORIZED', message: 'Invalid or missing API key.' } } }];
-}
+// Authentication is handled by the Webhook node's built-in Header Auth (X-FinBridge-Key).
+// Set that credential in the Webhook node — no enterprise plan required.
 const body = $input.first().json.body;
 const fail = (message) => [{ json: { valid: false, error: { code: 'INVALID_INPUT', message } } }];
 const object = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
