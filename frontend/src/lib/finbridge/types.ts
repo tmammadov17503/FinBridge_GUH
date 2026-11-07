@@ -26,9 +26,24 @@ export const DEMO_USERS = [
     blurb: "Salaried, building savings",
     risk: "low",
   },
+  {
+    id: "demo-me",
+    name: "Me",
+    blurb: "My own numbers",
+    risk: "unknown",
+  },
 ] as const;
 
 export type DemoUserId = (typeof DEMO_USERS)[number]["id"];
+
+/** Finance data entered by the user in "My numbers" mode. */
+export interface CustomFinance {
+  balance: number;
+  nextIncomeDate: string;
+  nextIncomeAmount: number;
+  monthlyBills: number;
+  weeklySpend: number;
+}
 
 /** Which front door a message came through. Drives answer length in the n8n prompt. */
 export type Channel = "web" | "voice";

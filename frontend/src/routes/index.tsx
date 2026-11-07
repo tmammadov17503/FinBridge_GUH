@@ -8,7 +8,7 @@ import { TopicPanel } from "@/components/finbridge/TopicPanel";
 import { Chat, type ChatSeed } from "@/components/finbridge/Chat";
 import { PersonaPicker } from "@/components/finbridge/PersonaPicker";
 import { NavBar } from "@/components/NavBar";
-import type { BalanceForecast, DemoUserId } from "@/lib/finbridge/types";
+import type { BalanceForecast, CustomFinance, DemoUserId } from "@/lib/finbridge/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,6 +35,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [active, setActive] = useState<TopicId | null>(null);
   const [userId, setUserId] = useState<DemoUserId>("demo-amira");
+  const [customFinance, setCustomFinance] = useState<CustomFinance | null>(null);
   /** A question handed to the chat from a topic box; the nonce lets the same one re-fire. */
   const [seed, setSeed] = useState<ChatSeed | null>(null);
   const [forecast, setForecast] = useState<BalanceForecast | null>(null);
@@ -43,6 +44,13 @@ function Index() {
 
   function ask(text: string) {
     setSeed((current) => ({ text, nonce: (current?.nonce ?? 0) + 1 }));
+  }
+
+  function startDemo() {
+    setUserId("demo-amira");
+    setCustomFinance(null);
+    setForecast(null);
+    setSeed({ text: "Will I run short before my next payday?", nonce: Date.now() });
   }
 
   return (
@@ -56,12 +64,27 @@ function Index() {
             onChange={(next) => {
               setUserId(next);
               setForecast(null);
-              // The chat remounts for the new profile, so a kept seed would be asked again.
               setSeed(null);
+              if (next !== "demo-me") setCustomFinance(null);
             }}
+            onCustomProfile={setCustomFinance}
           />
         </div>
         <main className="flex max-w-[660px] min-w-0 flex-col gap-12">
+          {/* Demo launcher — one click kicks off a live Amira walkthrough */}
+          <div className="flex items-center gap-4 rounded-md border border-primary/30 bg-primary/5 px-4 py-3">
+            <div className="flex-1">
+              <p className="text-sm font-medium">See it in action</p>
+              <p className="text-xs text-muted-foreground">Watch FinBridge run a live payday forecast for Amira.</p>
+            </div>
+            <button
+              type="button"
+              onClick={startDemo}
+              className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
+            >
+              ▶ Start demo
+            </button>
+          </div>
           <HeaderCards forecast={forecast} />
           <TopicPanel topic={topic} onAsk={ask} />
           {/* Remounting on persona change starts a fresh session, so one profile's
@@ -71,6 +94,7 @@ function Index() {
             userId={userId}
             seed={seed}
             onForecast={setForecast}
+            customFinance={customFinance}
           />
         </main>
       </div>

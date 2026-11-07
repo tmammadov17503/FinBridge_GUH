@@ -80,6 +80,15 @@ export const ChatBody = z.object({
     .regex(/^[a-zA-Z0-9_-]+$/)
     .optional(),
   channel: z.enum(["web", "voice"]).optional(),
+  customFinance: z
+    .object({
+      balance: z.number(),
+      nextIncomeDate: z.string(),
+      nextIncomeAmount: z.number(),
+      monthlyBills: z.number(),
+      weeklySpend: z.number(),
+    })
+    .optional(),
 });
 
 export type ChatBodyInput = z.infer<typeof ChatBody>;

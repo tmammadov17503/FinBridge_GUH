@@ -1,4 +1,4 @@
-export type TopicId = "career" | "hardship" | "money";
+export type TopicId = "career" | "hardship";
 
 /**
  * Each box is a one-tap question. The label is what the user reads; the prompt is what gets
@@ -66,30 +66,6 @@ export const topics: Topic[] = [
         label: "Worst case",
         prompt:
           "What's the worst case if my hours drop and I get an unexpected cost at once?",
-      },
-    ],
-  },
-  {
-    id: "money",
-    title: "Money you have access to",
-    description: "Find benefits, grants and help you might be able to get.",
-    boxes: [
-      {
-        label: "Support I could get",
-        prompt: "What support might I be able to apply for in my situation?",
-      },
-      {
-        label: "Hardship funds",
-        prompt: "Are there hardship funds or grants I could look into?",
-      },
-      {
-        label: "Help with bills",
-        prompt: "Could I get help with my bills or a discount on them?",
-      },
-      {
-        label: "Talking to my bank",
-        prompt:
-          "How should I talk to my bank if I think a payment will bounce?",
       },
     ],
   },

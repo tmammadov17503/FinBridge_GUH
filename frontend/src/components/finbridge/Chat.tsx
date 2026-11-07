@@ -14,6 +14,7 @@ import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import type {
   BalanceForecast,
   Channel,
+  CustomFinance,
   TranscriptMessage,
   VoiceKey,
 } from "@/lib/finbridge/types";
@@ -50,11 +51,13 @@ export function Chat({
   userId,
   seed,
   onForecast,
+  customFinance,
 }: {
   userId: string;
   seed?: ChatSeed | null;
   /** Receives each answer's forecast, and null when the conversation is cleared. */
   onForecast?: (forecast: BalanceForecast | null) => void;
+  customFinance?: CustomFinance | null;
 }) {
   const [input, setInput] = useState("");
   const [speakReplies, setSpeakReplies] = useState(false);
@@ -95,7 +98,7 @@ export function Chat({
     [speech, onForecast],
   );
 
-  const chat = useFinBridgeChat({ userId, onAgentMessage: handleAgentMessage });
+  const chat = useFinBridgeChat({ userId, customFinance, onAgentMessage: handleAgentMessage });
   const { send: sendMessage } = chat;
 
   /** Transcribe the clip, then send it down the ordinary chat path. */

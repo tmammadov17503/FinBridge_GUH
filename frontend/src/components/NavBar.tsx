@@ -3,7 +3,7 @@ import { ThemeToggle } from "@/components/finbridge/ThemeToggle";
 
 const NAV_LINKS = [
   { to: "/" as const, label: "Chat" },
-  { to: "/lifeline" as const, label: "LIFELINE" },
+  { to: "/lifeline" as const, label: "LifeLine" },
   { to: "/money" as const, label: "Money Where It Is" },
   { to: "/communities" as const, label: "Communities" },
 ] as const;

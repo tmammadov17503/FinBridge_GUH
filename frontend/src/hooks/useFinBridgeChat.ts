@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import type {
   Channel,
   ChatResponse,
+  CustomFinance,
   TranscriptMessage,
 } from "@/lib/finbridge/types";
 
@@ -32,11 +33,12 @@ function newId(prefix: string): string {
 
 interface Options {
   userId: string;
+  customFinance?: CustomFinance | null;
   /** Called with each new agent message, so the caller can decide whether to speak it. */
   onAgentMessage?: (message: TranscriptMessage, channel: Channel) => void;
 }
 
-export function useFinBridgeChat({ userId, onAgentMessage }: Options) {
+export function useFinBridgeChat({ userId, customFinance, onAgentMessage }: Options) {
   const [messages, setMessages] = useState<TranscriptMessage[]>([GREETING]);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -89,6 +91,7 @@ export function useFinBridgeChat({ userId, onAgentMessage }: Options) {
             userId,
             sessionId: sessionIdRef.current,
             channel,
+            ...(customFinance ? { customFinance } : {}),
           }),
         });
 
@@ -148,7 +151,7 @@ export function useFinBridgeChat({ userId, onAgentMessage }: Options) {
         setPending(false);
       }
     },
-    [userId],
+    [userId, customFinance],
   );
 
   return {

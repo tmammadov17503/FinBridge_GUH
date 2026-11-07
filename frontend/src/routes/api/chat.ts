@@ -6,16 +6,15 @@ import {
   n8nUrl,
 } from "@/lib/finbridge/server-config";
 import { ChatBody, toChatResponse } from "@/lib/finbridge/normalize";
+import type { CustomFinance } from "@/lib/finbridge/types";
 
 /**
  * Browser -> n8n chat proxy.
  *
- * It exists so the n8n URL and any webhook secret stay on the server, and so the browser
- * talks to one stable shape no matter how the workflow's response is nested.
- *
- * The n8n FinBridge workflow expects a finance payload (question + synthetic finance data),
- * not a plain chat message. We build a synthetic payload here from the user's question.
- * All figures are illustrative; no personal data is sent.
+ * Keeps the n8n URL and webhook secret server-side. Builds a finance payload
+ * appropriate for each demo persona so Amira, Josh, and Priya get meaningfully
+ * different forecasts. When the user selects "Me" and fills in their own numbers,
+ * those values drive the payload instead.
  */
 
 function pad(n: number): string {
@@ -30,31 +29,159 @@ function addDays(d: Date, n: number): Date {
   return r;
 }
 
-/** Builds the synthetic finance payload the n8n workflow expects. */
-function buildFinancePayload(question: string) {
+type FinanceBlock = {
+  startDate: string;
+  openingBalance: number;
+  nextMaintenanceLoanDate: string;
+  transactions: { date: string; amount: number; label: string }[];
+  weeklyEssentials: { firstDate: string; amount: number };
+};
+
+type ScenarioBBlock = {
+  transactions: { date: string; amount: number; label: string }[];
+  weeklyEssentials: { firstDate: string; amount: number };
+} | null;
+
+function personaFinance(
+  userId: string,
+  today: Date,
+): { finance: FinanceBlock; scenarioB: ScenarioBBlock; university: string } {
+  switch (userId) {
+    case "demo-amira":
+      return {
+        university: "Manchester Metropolitan University",
+        finance: {
+          startDate: isoDate(today),
+          openingBalance: 180,
+          nextMaintenanceLoanDate: isoDate(addDays(today, 60)),
+          transactions: [
+            { date: isoDate(addDays(today, 7)), amount: -120, label: "Childcare" },
+            { date: isoDate(addDays(today, 14)), amount: 480, label: "Wages" },
+            { date: isoDate(addDays(today, 25)), amount: -650, label: "Rent" },
+          ],
+          weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 35 },
+        },
+        scenarioB: {
+          transactions: [
+            { date: isoDate(addDays(today, 7)), amount: -120, label: "Childcare" },
+            { date: isoDate(addDays(today, 14)), amount: 200, label: "Wages (fewer shifts)" },
+            { date: isoDate(addDays(today, 25)), amount: -650, label: "Rent" },
+          ],
+          weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 35 },
+        },
+      };
+
+    case "demo-josh":
+      return {
+        university: "University of Manchester",
+        finance: {
+          startDate: isoDate(today),
+          openingBalance: 350,
+          nextMaintenanceLoanDate: isoDate(addDays(today, 45)),
+          transactions: [
+            { date: isoDate(addDays(today, 20)), amount: -480, label: "Rent" },
+          ],
+          weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 25 },
+        },
+        scenarioB: {
+          transactions: [
+            { date: isoDate(addDays(today, 10)), amount: -150, label: "Laptop repair" },
+            { date: isoDate(addDays(today, 20)), amount: -480, label: "Rent" },
+          ],
+          weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 25 },
+        },
+      };
+
+    case "demo-priya":
+      return {
+        university: "University of Leeds",
+        finance: {
+          startDate: isoDate(today),
+          openingBalance: 1200,
+          nextMaintenanceLoanDate: isoDate(addDays(today, 90)),
+          transactions: [
+            { date: isoDate(addDays(today, 25)), amount: -850, label: "Rent" },
+            { date: isoDate(addDays(today, 28)), amount: 1800, label: "Salary" },
+          ],
+          weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 50 },
+        },
+        scenarioB: {
+          transactions: [
+            { date: isoDate(addDays(today, 25)), amount: -850, label: "Rent" },
+            { date: isoDate(addDays(today, 28)), amount: 1200, label: "Salary (unpaid leave)" },
+          ],
+          weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 50 },
+        },
+      };
+
+    default:
+      // Fallback generic profile
+      return {
+        university: "University of Manchester",
+        finance: {
+          startDate: isoDate(today),
+          openingBalance: 200,
+          nextMaintenanceLoanDate: isoDate(addDays(today, 30)),
+          transactions: [
+            { date: isoDate(addDays(today, 7)), amount: 100, label: "Wages" },
+            { date: isoDate(addDays(today, 20)), amount: -300, label: "Rent" },
+          ],
+          weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 20 },
+        },
+        scenarioB: {
+          transactions: [
+            { date: isoDate(addDays(today, 7)), amount: 50, label: "Wages (reduced)" },
+            { date: isoDate(addDays(today, 20)), amount: -300, label: "Rent" },
+          ],
+          weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 20 },
+        },
+      };
+  }
+}
+
+function buildFinancePayload(
+  question: string,
+  userId: string,
+  customFinance?: CustomFinance,
+) {
   const today = new Date();
-  const loanDate = addDays(today, 30);
+
+  if (customFinance) {
+    return {
+      question,
+      university: "Your university",
+      noFamilySupport: false,
+      finance: {
+        startDate: isoDate(today),
+        openingBalance: customFinance.balance,
+        nextMaintenanceLoanDate: isoDate(addDays(today, 90)),
+        transactions: [
+          {
+            date: customFinance.nextIncomeDate,
+            amount: customFinance.nextIncomeAmount,
+            label: "Income",
+          },
+          {
+            date: isoDate(addDays(today, 25)),
+            amount: -customFinance.monthlyBills,
+            label: "Bills & rent",
+          },
+        ],
+        weeklyEssentials: {
+          firstDate: isoDate(addDays(today, 2)),
+          amount: customFinance.weeklySpend,
+        },
+      },
+    };
+  }
+
+  const { finance, scenarioB, university } = personaFinance(userId, today);
   return {
     question,
-    university: "University of Manchester",
+    university,
     noFamilySupport: false,
-    finance: {
-      startDate: isoDate(today),
-      openingBalance: 200,
-      nextMaintenanceLoanDate: isoDate(loanDate),
-      transactions: [
-        { date: isoDate(addDays(today, 7)), amount: 100, label: "Wages" },
-        { date: isoDate(addDays(today, 20)), amount: -300, label: "Rent" },
-      ],
-      weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 20 },
-    },
-    scenarioB: {
-      transactions: [
-        { date: isoDate(addDays(today, 7)), amount: 50, label: "Wages (reduced)" },
-        { date: isoDate(addDays(today, 20)), amount: -300, label: "Rent" },
-      ],
-      weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 20 },
-    },
+    finance,
+    ...(scenarioB ? { scenarioB } : {}),
   };
 }
 
@@ -108,13 +235,14 @@ export const Route = createFileRoute("/api/chat")({
           upstream = await fetch(url, {
             method: "POST",
             headers,
-            body: JSON.stringify(buildFinancePayload(body.message)),
+            body: JSON.stringify(
+              buildFinancePayload(body.message, body.userId, body.customFinance),
+            ),
             signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
           });
         } catch (error) {
           const timedOut =
             error instanceof Error && error.name === "TimeoutError";
-          // Log the detail server-side; never return the upstream URL to the browser.
           console.error("[finbridge] chat webhook unreachable", error);
           return bad(
             504,
