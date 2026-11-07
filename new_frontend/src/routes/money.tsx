@@ -51,10 +51,10 @@ const options: SupportOption[] = (moneyRaw as { support_options: SupportOption[]
 // ── Category config ───────────────────────────────────────────────────────────
 
 const CATEGORIES: { key: string; label: string; Icon: typeof Banknote; color: string }[] = [
-  { key: "Low household income",         label: "Low income",    Icon: Banknote,     color: "text-green-600  bg-green-50  dark:text-green-300  dark:bg-green-900/20" },
+  { key: "Low household income",         label: "Low income",    Icon: Banknote,     color: "text-green-700  bg-green-50  dark:text-green-300  dark:bg-green-900/20" },
   { key: "Benefit entitlement",          label: "Benefits",      Icon: Calculator,   color: "text-blue-600   bg-blue-50   dark:text-blue-300   dark:bg-blue-900/20" },
-  { key: "Energy and utility costs",     label: "Energy",        Icon: Zap,          color: "text-amber-600  bg-amber-50  dark:text-amber-300  dark:bg-amber-900/20" },
-  { key: "Children and education",       label: "Children",      Icon: Baby,         color: "text-pink-600   bg-pink-50   dark:text-pink-300   dark:bg-pink-900/20" },
+  { key: "Energy and utility costs",     label: "Energy",        Icon: Zap,          color: "text-amber-700  bg-amber-50  dark:text-amber-300  dark:bg-amber-900/20" },
+  { key: "Children and education",       label: "Children",      Icon: Baby,         color: "text-pink-700   bg-pink-50   dark:text-pink-300   dark:bg-pink-900/20" },
   { key: "Disability and health-related costs", label: "Disability", Icon: Heart,    color: "text-purple-600 bg-purple-50 dark:text-purple-300 dark:bg-purple-900/20" },
   { key: "Council Tax",                  label: "Council Tax",   Icon: Home,         color: "text-indigo-600 bg-indigo-50 dark:text-indigo-300 dark:bg-indigo-900/20" },
   { key: "Financial hardship",           label: "Hardship",      Icon: AlertCircle,  color: "text-lifeline   bg-lifeline/10" },
@@ -75,7 +75,7 @@ function SupportCard({
 }) {
   const cfg = categoryConfig(option.support_category);
   return (
-    <article className="rounded-md border border-border bg-card p-4 flex flex-col gap-3">
+    <article className="fb-card p-4 flex flex-col gap-3">
       <div>
         <div className="flex items-center gap-2 mb-2">
           <span className={cn("inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium", cfg.color)}>
@@ -115,7 +115,7 @@ function SupportCard({
             href={option.application_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+            className="flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:brightness-90 transition-[filter]"
           >
             Apply <ExternalLink className="h-3 w-3" />
           </a>
@@ -138,7 +138,7 @@ function SchemeDetail({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40" onClick={onClose}>
       <div
-        className="relative w-full max-w-lg rounded-md border border-border bg-card p-6 max-h-[85vh] overflow-y-auto"
+        className="relative w-full max-w-lg fb-dialog p-6 max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -177,7 +177,7 @@ function SchemeDetail({
               <ul className="space-y-1">
                 {option.eligibility_criteria.map((c, i) => (
                   <li key={i} className="flex gap-2 text-muted-foreground text-xs">
-                    <span className="shrink-0 text-primary mt-0.5">▸</span>
+                    <span className="shrink-0 text-link mt-0.5">▸</span>
                     {c}
                   </li>
                 ))}
@@ -244,7 +244,7 @@ function SchemeDetail({
             </span>
             {option.source_url && (
               <a href={option.source_url} target="_blank" rel="noopener noreferrer"
-                className="text-xs font-medium text-primary hover:underline underline-offset-2">
+                className="text-xs font-medium text-link hover:underline underline-offset-2">
                 Source ↗
               </a>
             )}
@@ -262,7 +262,7 @@ function SchemeDetail({
             href={option.application_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-5 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
+            className="mt-5 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:brightness-90 transition-[filter]"
           >
             Go to application <ExternalLink className="h-4 w-4" />
           </a>
@@ -306,7 +306,7 @@ function MoneyPage() {
       <div className="">
         <div className="mx-auto max-w-[1000px] px-5 md:px-8 py-10">
           <p className="text-xs font-semibold uppercase tracking-wider text-lifeline mb-2">Money Where It Is</p>
-          <h1 className="font-serif text-3xl text-heading mb-3">
+          <h1 className="text-3xl text-heading mb-3">
             There may be more support available than you think.
           </h1>
           <p className="text-muted-foreground mb-6 max-w-xl">
@@ -356,7 +356,7 @@ function MoneyPage() {
                 >
                   <cat.Icon className="h-5 w-5" aria-hidden />
                   <span>{cat.label}</span>
-                  <span className={cn("text-[10px]", isActive ? "text-primary-foreground/70" : "text-muted-foreground")}>
+                  <span className={cn("text-[10px]", isActive ? "text-primary-foreground" : "text-muted-foreground")}>
                     {count}
                   </span>
                 </button>
@@ -376,7 +376,7 @@ function MoneyPage() {
               <button
                 type="button"
                 onClick={() => { setActiveCategory(null); setQuery(""); }}
-                className="text-xs text-primary hover:underline underline-offset-2"
+                className="text-xs text-link hover:underline underline-offset-2"
               >
                 Clear filters
               </button>
@@ -384,7 +384,7 @@ function MoneyPage() {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="rounded-md border border-border bg-card p-10 text-center">
+            <div className="fb-card p-10 text-center">
               <Search className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
               <p className="font-semibold">No schemes matched your search</p>
               <p className="text-sm text-muted-foreground mt-1">Try different words or browse by category.</p>

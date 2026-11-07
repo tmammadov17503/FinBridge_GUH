@@ -26,7 +26,7 @@ export function SourceCards({
               href={source.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary underline underline-offset-2 hover:no-underline"
+              className="text-link underline underline-offset-2 hover:no-underline"
             >
               {source.title}
               <span className="sr-only"> (opens in a new tab)</span>

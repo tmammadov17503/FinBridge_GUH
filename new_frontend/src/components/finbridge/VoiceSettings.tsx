@@ -26,7 +26,7 @@ function Toggle({
       className={cn(
         "min-h-9 rounded-md border px-2.5 text-sm",
         on
-          ? "border-primary text-foreground"
+          ? "border-link text-foreground"
           : "border-border text-muted-foreground hover:text-foreground",
       )}
     >

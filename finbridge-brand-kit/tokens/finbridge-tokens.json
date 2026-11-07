@@ -1,0 +1,52 @@
+{
+  "brand": "finbridge.",
+  "wordmark": {
+    "text": "finbridge.",
+    "font": "Plus Jakarta Sans",
+    "weight": 800,
+    "letterSpacing": "-0.045em",
+    "case": "lowercase (always)",
+    "ligatures": "off",
+    "period": "same colour as the word, tucked in by -0.03em"
+  },
+  "colours": {
+    "black":           {"hex": "#04030A", "role": "Deepest background"},
+    "midnight":        {"hex": "#090821", "role": "Main background"},
+    "deep-violet":     {"hex": "#130C33", "role": "Raised surfaces, dark ink on light backgrounds"},
+    "violet":          {"hex": "#7C3AED", "role": "Primary brand colour, glows"},
+    "electric-violet": {"hex": "#8B5CF6", "role": "Accents, lines, highlights"},
+    "blue":            {"hex": "#3D5AFE", "role": "Secondary brand colour"},
+    "soft-blue":       {"hex": "#5B7CFF", "role": "Gradient end, secondary accents"},
+    "lavender":        {"hex": "#C4B5FD", "role": "Highlights, rim light, borders"},
+    "bright-lavender": {"hex": "#E6DDFF", "role": "Luminous highlights, body text on dark"},
+    "off-white":       {"hex": "#F6F3FF", "role": "Headlines and wordmark on dark"},
+    "muted":           {"hex": "#A9A3D1", "role": "Secondary text"}
+  },
+  "gradients": {
+    "accent-text":  "linear-gradient(100deg, #E6DDFF 0%, #C4B5FD 30%, #8B5CF6 65%, #5B7CFF 100%)",
+    "icon-tile":    "linear-gradient(135deg, #8B5CF6, #3D5AFE)",
+    "background":   "radial-gradient(ellipse 70% 60% at 30% 25%, rgba(124,58,237,0.25), transparent 70%), radial-gradient(ellipse 60% 55% at 78% 70%, rgba(61,90,254,0.15), transparent 70%), #090821",
+    "end-card":     "radial-gradient(ellipse 55% 45% at 50% 46%, rgba(167,139,250,0.42) 0%, rgba(91,60,200,0.25) 40%, transparent 75%), radial-gradient(ellipse 100% 100% at 50% 50%, #170E40 0%, #07051A 100%)"
+  },
+  "typography": {
+    "family": "Plus Jakarta Sans",
+    "weights": {"regular": 400, "medium": 500, "semibold": 600, "bold": 700, "extrabold": 800},
+    "scale_px_at_1080p": {"wordmark": 210, "hero": 74, "headline": 64, "subhead": 50, "card-title": 31, "body": 27, "label": 18},
+    "headline-letterSpacing": "-0.02em",
+    "label-letterSpacing": "0.05em–0.12em, uppercase"
+  },
+  "surfaces": {
+    "card-background": "linear-gradient(160deg, rgba(40,30,96,0.55) 0%, rgba(14,10,40,0.72) 100%)",
+    "card-border": "1.5px solid rgba(196,181,253,0.22)",
+    "card-radius": "22–28px",
+    "card-shadow": "0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(230,221,255,0.12)",
+    "pill-radius": "999px",
+    "glow": "0 0 30px rgba(139,92,246,0.25)"
+  },
+  "motion": {
+    "ease-out": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "ease-in-out": "cubic-bezier(0.65, 0, 0.35, 1)",
+    "text-reveal": "word by word, 4–5 frames apart; rise 0.45em, blur 12px → 0 over ~0.9s",
+    "crossfade": "0.6s with slight scale 1.025 → 1 and blur 6px → 0"
+  }
+}

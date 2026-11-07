@@ -26,13 +26,13 @@ export function HeaderCards({
   return (
     <section
       aria-label="Your summary"
-      className="grid grid-cols-1 gap-6 border-b border-border pb-6 sm:grid-cols-3"
+      className="grid grid-cols-1 gap-4 sm:grid-cols-3"
     >
       {headerCards.map((card) => {
         const live = card.title === "Coming up" ? summary : null;
         return (
-          <div key={card.title}>
-            <h2 className="font-sans text-sm font-semibold">{card.title}</h2>
+          <div key={card.title} className="fb-card p-4">
+            <h2 className="fb-label text-link">{card.title}</h2>
             <p
               className={
                 live

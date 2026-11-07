@@ -28,7 +28,7 @@ export function Sidebar({ active, onSelect }: Props) {
             className={cn(
               "min-h-11 border-b-2 py-2 text-left leading-snug md:border-b-0 md:border-l-2 md:pl-3",
               on
-                ? "border-primary text-foreground"
+                ? "border-link text-foreground"
                 : "border-transparent text-muted-foreground hover:text-foreground",
             )}
           >

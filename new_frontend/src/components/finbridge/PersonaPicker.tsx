@@ -32,7 +32,7 @@ export function PersonaPicker({
               className={cn(
                 "min-h-11 border-b-2 py-1.5 text-left leading-snug md:border-b-0 md:border-l-2 md:pl-3",
                 active
-                  ? "border-primary text-foreground"
+                  ? "border-link text-foreground"
                   : "border-transparent text-muted-foreground hover:text-foreground",
               )}
             >

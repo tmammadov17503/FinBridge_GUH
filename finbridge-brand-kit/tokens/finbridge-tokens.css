@@ -1,0 +1,45 @@
+/* finbridge. design tokens */
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 400; src: url("../fonts/web/plus-jakarta-sans-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 500; src: url("../fonts/web/plus-jakarta-sans-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 600; src: url("../fonts/web/plus-jakarta-sans-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 700; src: url("../fonts/web/plus-jakarta-sans-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-weight: 800; src: url("../fonts/web/plus-jakarta-sans-latin-800-normal.woff2") format("woff2"); }
+
+:root {
+  --fb-black: #04030A;
+  --fb-midnight: #090821;
+  --fb-deep-violet: #130C33;
+  --fb-violet: #7C3AED;
+  --fb-electric-violet: #8B5CF6;
+  --fb-blue: #3D5AFE;
+  --fb-soft-blue: #5B7CFF;
+  --fb-lavender: #C4B5FD;
+  --fb-bright-lavender: #E6DDFF;
+  --fb-off-white: #F6F3FF;
+  --fb-muted: #A9A3D1;
+
+  --fb-gradient-accent: linear-gradient(100deg, #E6DDFF 0%, #C4B5FD 30%, #8B5CF6 65%, #5B7CFF 100%);
+  --fb-gradient-icon: linear-gradient(135deg, #8B5CF6, #3D5AFE);
+
+  --fb-font: "Plus Jakarta Sans", system-ui, sans-serif;
+  --fb-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --fb-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --fb-card-bg: linear-gradient(160deg, rgba(40,30,96,0.55) 0%, rgba(14,10,40,0.72) 100%);
+  --fb-card-border: 1.5px solid rgba(196,181,253,0.22);
+  --fb-radius: 24px;
+}
+
+.fb-wordmark {
+  font-family: var(--fb-font);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  font-variant-ligatures: none;
+  color: var(--fb-off-white);
+}
+.fb-accent-text {
+  background-image: var(--fb-gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

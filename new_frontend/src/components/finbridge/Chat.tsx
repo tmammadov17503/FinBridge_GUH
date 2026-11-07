@@ -264,7 +264,7 @@ export function Chat({
               type="button"
               onClick={() => askSuggestion(question)}
               disabled={busy}
-              className="min-h-9 text-left text-primary underline underline-offset-2 hover:no-underline disabled:opacity-50"
+              className="min-h-9 text-left text-link underline underline-offset-2 hover:no-underline disabled:opacity-50"
             >
               {question}
             </button>
@@ -322,7 +322,7 @@ export function Chat({
           type="submit"
           disabled={busy || input.trim().length === 0}
           aria-label="Send your question"
-          className="min-h-11 shrink-0 rounded-md bg-primary px-5 text-primary-foreground hover:bg-primary/85 disabled:opacity-50"
+          className="min-h-11 shrink-0 rounded-md bg-primary px-5 text-primary-foreground shadow-(--fb-glow) hover:brightness-90 disabled:opacity-50 disabled:shadow-none"
         >
           Send
         </button>

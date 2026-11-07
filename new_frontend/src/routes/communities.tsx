@@ -58,15 +58,15 @@ const indicators: Indicator[] = (commRaw as { indicators: Indicator[] }).indicat
 // ── Pressure categories config ────────────────────────────────────────────────
 
 const PRESSURE_CATS: { key: string; label: string; color: string }[] = [
-  { key: "housing_and_rental_pressure",        label: "Housing & rent",   color: "#7c3aed" },
-  { key: "energy_and_heating_costs",           label: "Energy & heating", color: "#d97706" },
-  { key: "employment_and_income_instability",  label: "Employment",       color: "#0891b2" },
-  { key: "childcare_and_family_costs",         label: "Childcare",        color: "#db2777" },
-  { key: "local_financial_hardship",           label: "Hardship",         color: "#dc2626" },
+  { key: "housing_and_rental_pressure",        label: "Housing & rent",   color: "var(--cat-housing)" },
+  { key: "energy_and_heating_costs",           label: "Energy & heating", color: "var(--cat-energy)" },
+  { key: "employment_and_income_instability",  label: "Employment",       color: "var(--cat-employment)" },
+  { key: "childcare_and_family_costs",         label: "Childcare",        color: "var(--cat-childcare)" },
+  { key: "local_financial_hardship",           label: "Hardship",         color: "var(--cat-hardship)" },
 ];
 
 function catConfig(key: string) {
-  return PRESSURE_CATS.find((c) => c.key === key) ?? { key, label: key, color: "#6b7280" };
+  return PRESSURE_CATS.find((c) => c.key === key) ?? { key, label: key, color: "var(--muted-foreground)" };
 }
 
 // ── Trend badge ───────────────────────────────────────────────────────────────
@@ -83,7 +83,7 @@ function TrendBadge({ trend }: { trend: string | null }) {
     </span>
   );
   if (decreasing) return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400">
+    <span className="inline-flex items-center gap-1 text-xs font-medium text-green-700 dark:text-green-400">
       <TrendingDown className="h-3 w-3" />
       {trend}
     </span>
@@ -106,12 +106,12 @@ function IndicatorCard({ indicator, onDetail }: { indicator: Indicator; onDetail
     : null;
 
   return (
-    <article className="rounded-md border border-border bg-card p-4 flex flex-col gap-3">
+    <article className="fb-card p-4 flex flex-col gap-3">
       <div>
         <div className="flex items-center gap-2 mb-2">
           <span
             className="inline-block rounded-md px-2 py-0.5 text-xs font-medium"
-            style={{ background: cfg.color + "20", color: cfg.color }}
+            style={{ background: `color-mix(in oklab, ${cfg.color} 13%, transparent)`, color: cfg.color }}
           >
             {cfg.label}
           </span>
@@ -131,7 +131,7 @@ function IndicatorCard({ indicator, onDetail }: { indicator: Indicator; onDetail
             <span className="text-sm font-normal text-muted-foreground ml-1">{indicator.unit.replace("GBP per month", "/mo").replace("GBP", "").trim()}</span>
           </p>
           {pctChange && (
-            <p className={cn("text-xs font-medium", Number(pctChange) > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400")}>
+            <p className={cn("text-xs font-medium", Number(pctChange) > 0 ? "text-red-600 dark:text-red-400" : "text-green-700 dark:text-green-400")}>
               {Number(pctChange) > 0 ? "▲" : "▼"} {Math.abs(Number(pctChange))}% vs {indicator.comparison_period}
             </p>
           )}
@@ -147,7 +147,7 @@ function IndicatorCard({ indicator, onDetail }: { indicator: Indicator; onDetail
       <button
         type="button"
         onClick={() => onDetail(indicator)}
-        className="mt-auto text-left text-xs font-medium text-primary hover:underline underline-offset-2"
+        className="mt-auto text-left text-xs font-medium text-link hover:underline underline-offset-2"
       >
         View indicator detail →
       </button>
@@ -162,7 +162,7 @@ function IndicatorDetail({ indicator, onClose }: { indicator: Indicator; onClose
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40" onClick={onClose}>
       <div
-        className="relative w-full max-w-lg rounded-md border border-border bg-card p-6 max-h-[85vh] overflow-y-auto"
+        className="relative w-full max-w-lg fb-dialog p-6 max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button type="button" onClick={onClose} className="absolute right-4 top-4 rounded-md p-1 hover:bg-accent" aria-label="Close">
@@ -170,7 +170,7 @@ function IndicatorDetail({ indicator, onClose }: { indicator: Indicator; onClose
         </button>
 
         <span className="inline-block rounded-md px-2 py-0.5 text-xs font-medium mb-3"
-          style={{ background: cfg.color + "20", color: cfg.color }}>
+          style={{ background: `color-mix(in oklab, ${cfg.color} 13%, transparent)`, color: cfg.color }}>
           {cfg.label}
         </span>
         <h2 className="text-lg mb-1">{indicator.indicator_name}</h2>
@@ -242,7 +242,7 @@ function IndicatorDetail({ indicator, onClose }: { indicator: Indicator; onClose
         <div className="flex items-center justify-between pt-2 border-t border-border">
           <span className="text-xs text-muted-foreground">Source: {indicator.source_name}</span>
           <a href={indicator.source_url} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline underline-offset-2">
+            className="inline-flex items-center gap-1 text-xs font-medium text-link hover:underline underline-offset-2">
             Source <ExternalLink className="h-3 w-3" />
           </a>
         </div>
@@ -266,26 +266,28 @@ function IndicatorsChart({ data }: { data: Indicator[] }) {
   }));
 
   return (
-    <div className="rounded-md border border-border bg-card p-5">
+    <div className="fb-card p-5">
       <h2 className=" mb-4">Indicator values by area</h2>
       <ResponsiveContainer width="100%" height={260}>
         <BarChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 60 }}>
           <XAxis
             dataKey="name"
-            tick={{ fontSize: 10 }}
+            tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
             angle={-40}
             textAnchor="end"
             interval={0}
           />
-          <YAxis tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
           <Tooltip
             formatter={(value: number, _name: unknown, props: { payload?: { full?: string; unit?: string } }) => [
               `${value.toLocaleString()} ${props.payload?.unit ?? ""}`,
               props.payload?.full ?? "",
             ]}
-            contentStyle={{ fontSize: 11, borderRadius: 8 }}
+            cursor={{ fill: "var(--accent)" }}
+            contentStyle={{ fontSize: 11, borderRadius: 8, background: "var(--popover)", borderColor: "var(--border)", color: "var(--popover-foreground)" }}
+            itemStyle={{ color: "var(--popover-foreground)" }}
           />
-          <ReferenceLine y={0} stroke="#e5e7eb" />
+          <ReferenceLine y={0} stroke="var(--border)" />
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
             {chartData.map((entry, index) => (
               <Cell key={index} fill={catConfig(entry.category).color} fillOpacity={0.8} />
@@ -328,7 +330,7 @@ function CommunitiesPage() {
       <div className="">
         <div className="mx-auto max-w-[1000px] px-5 md:px-8 py-10">
           <p className="text-xs font-semibold uppercase tracking-wider text-lifeline mb-2">LIFELINE Communities</p>
-          <h1 className="font-serif text-3xl text-heading mb-3">
+          <h1 className="text-3xl text-heading mb-3">
             Where financial pressure is emerging across communities
           </h1>
           <p className="text-muted-foreground max-w-2xl">
@@ -345,7 +347,7 @@ function CommunitiesPage() {
             {national.map((ind) => {
               const cfg = catConfig(ind.pressure_category);
               return (
-                <div key={ind.indicator_id} className="rounded-md border border-border bg-card p-4">
+                <div key={ind.indicator_id} className="fb-card p-4">
                   <span className="text-xs font-medium" style={{ color: cfg.color }}>{cfg.label}</span>
                   <p className="text-xl font-bold mt-1 tabular-nums">
                     {ind.unit.includes("GBP") ? "£" : ""}{ind.value.toLocaleString()}
@@ -410,7 +412,7 @@ function CommunitiesPage() {
         <div>
           <p className="text-sm text-muted-foreground mb-3">{filtered.length} indicator{filtered.length !== 1 ? "s" : ""}</p>
           {filtered.length === 0 ? (
-            <div className="rounded-md border border-border bg-card p-10 text-center">
+            <div className="fb-card p-10 text-center">
               <p className="font-semibold">No indicators match the selected filters</p>
             </div>
           ) : (

@@ -42,7 +42,8 @@ export function TopicPanel({
       ) : (
         <>
           <h1 className="text-3xl text-balance md:text-4xl">
-            Money help, in plain English.
+            Money help, in{" "}
+            <span className="fb-accent-text">plain English.</span>
           </h1>
           <p className="mt-3 text-lg text-muted-foreground">
             Ask below by typing or by voice, or choose a topic.

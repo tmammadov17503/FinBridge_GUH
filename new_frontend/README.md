@@ -78,6 +78,12 @@ The rules in the [root README](../README.md) hold here too, and the UI enforces 
 Tests: `npm test`. The forecast endpoint (`/webhook/finbridge/forecast`) is not wired up yet —
 the header cards and the dashboard charts it would drive are still placeholders.
 
+## Brand
+
+The live look comes from the finbridge. brand kit in [`finbridge-brand-kit/`](../finbridge-brand-kit/): palette, Plus Jakarta Sans and wordmark. Its tokens are in `src/styles.css`, and the fonts and logos used here are copied to `public/fonts` and `public/brand`. Dark is the default theme. The NatWest-style palette and Georgia headings in the original build brief below are superseded.
+
+## Original build brief
+
 DESIGN
 
 - Match NatWest's brand feel: confident purple on clean white and soft lavender. Use these tokens:

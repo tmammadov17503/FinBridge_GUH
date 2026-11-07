@@ -77,7 +77,7 @@ function statusBadge(status: string) {
   const map: Record<string, { label: string; className: string; Icon: typeof CheckCircle2 }> = {
     confirmed:        { label: "Confirmed",        className: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",   Icon: CheckCircle2 },
     implemented:      { label: "Implemented",      className: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",    Icon: CheckCircle2 },
-    announced:        { label: "Announced",        className: "bg-primary/10 text-primary",                                           Icon: Info },
+    announced:        { label: "Announced",        className: "bg-primary/10 text-link",                                           Icon: Info },
     forecast:         { label: "Forecast",         className: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300", Icon: TrendingUp },
     "emerging signal":{ label: "Emerging signal",  className: "bg-lifeline/10 text-lifeline",                                         Icon: AlertTriangle },
   };
@@ -115,7 +115,7 @@ function IntelligenceCard({ event }: { event: Event }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <article className="rounded-md border border-border bg-card overflow-hidden">
+    <article className="fb-card overflow-hidden">
       <button
         type="button"
         className="w-full px-5 py-4 text-left"
@@ -206,7 +206,7 @@ function IntelligenceCard({ event }: { event: Event }) {
             <span className="text-xs text-muted-foreground">Source: {event.source_name} · Published {event.published_at}</span>
             {event.source_url && (
               <a href={event.source_url} target="_blank" rel="noopener noreferrer"
-                className="text-xs font-medium text-primary underline-offset-2 hover:underline">
+                className="text-xs font-medium text-link underline-offset-2 hover:underline">
                 Source ↗
               </a>
             )}
@@ -301,7 +301,7 @@ function ConsequenceGraph({
   const dim = (id: string) => isHighlighted && !highlighted.has(id);
 
   return (
-    <div className="rounded-md border border-border bg-card overflow-hidden">
+    <div className="fb-card overflow-hidden">
       {/* Controls */}
       <div className="flex items-center justify-between border-b border-border px-4 py-2">
         <div className="flex items-center gap-2">
@@ -379,7 +379,7 @@ function ConsequenceGraph({
                   cx={pos.x} cy={pos.y} r={EVT_R}
                   className="fill-primary transition-all"
                   opacity={dimNode ? 0.15 : 1}
-                  stroke={isSelected ? "white" : "transparent"}
+                  stroke={isSelected ? "var(--foreground)" : "transparent"}
                   strokeWidth={2}
                 />
                 <text
@@ -407,7 +407,7 @@ function ConsequenceGraph({
                   cx={pos.x} cy={pos.y} r={VAR_R}
                   className="fill-lifeline transition-all"
                   opacity={dimNode ? 0.15 : 1}
-                  stroke={isSelected ? "white" : "transparent"}
+                  stroke={isSelected ? "var(--foreground)" : "transparent"}
                   strokeWidth={2}
                 />
                 <text
@@ -437,7 +437,7 @@ function ConsequenceGraph({
               <div className="space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className={cn("inline-block rounded-md px-2 py-0.5 text-xs font-medium mb-1", isEvent ? "bg-primary/10 text-primary" : "bg-lifeline/10 text-lifeline")}>
+                    <span className={cn("inline-block rounded-md px-2 py-0.5 text-xs font-medium mb-1", isEvent ? "bg-primary/10 text-link" : "bg-lifeline/10 text-lifeline")}>
                       {isEvent ? "World event" : "Economic variable"}
                     </span>
                     <h4 className=" text-sm">{node.label}</h4>
@@ -529,7 +529,7 @@ function ImpactExplorer() {
     <div className="space-y-6">
       <ConsequenceGraph highlighted={graphHighlight} onSelectNode={() => {}} />
 
-      <div className="rounded-md border border-border bg-card p-5">
+      <div className="fb-card p-5">
         <h3 className=" mb-1">Select events to explore connected pathways</h3>
         <p className="text-xs text-muted-foreground mb-4">
           Events selected below are highlighted in the graph above. Pathways show candidate analytical connections, not proven causal relationships.
@@ -596,7 +596,7 @@ const PREPARE_STEPS = [
 
 function PrepareSection() {
   return (
-    <div className="rounded-md border border-border bg-card p-5">
+    <div className="fb-card p-5">
       <h3 className=" mb-1">Prepare for the future</h3>
       <p className="text-xs text-muted-foreground mb-4">
         These are general questions and steps drawn from the analysed events. They are possibilities to explore, not financial advice. Eligibility and outcomes depend on individual circumstances.
@@ -638,7 +638,7 @@ function LifelinePage() {
       <div className="">
         <div className="mx-auto max-w-[1000px] px-5 md:px-8 py-10">
           <p className="text-xs font-semibold uppercase tracking-wider text-lifeline mb-2">LIFELINE</p>
-          <h1 className="font-serif text-3xl text-heading mb-3">
+          <h1 className="text-3xl text-heading mb-3">
             Predict the world. Understand the impact. Prepare for the future.
           </h1>
           <p className="text-muted-foreground max-w-2xl">
