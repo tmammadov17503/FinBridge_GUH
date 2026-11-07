@@ -1,0 +1,474 @@
+{
+  "schema_version": "1.0",
+  "description": "Curated candidate relationships. Analytical hypotheses are explicitly labelled and should not be treated as proven causal effects.",
+  "edges": [
+    {
+      "id": "R001",
+      "from": "E005",
+      "to": "V001",
+      "relationship": "may increase pressure on",
+      "pathway": "Global diesel supply → diesel/gasoil prices",
+      "evidence_status": "source_supported",
+      "confidence": "medium",
+      "time_lag": "immediate to medium term",
+      "supporting_event_ids": [
+        "E005"
+      ],
+      "assumptions": [
+        "Global supply tightness persists and is transmitted into relevant market prices."
+      ],
+      "caveats": [
+        "IEA global market assessment; not a direct forecast of UK pump prices."
+      ]
+    },
+    {
+      "id": "R002",
+      "from": "V001",
+      "to": "V002",
+      "relationship": "may increase",
+      "pathway": "Diesel prices → road freight/logistics costs",
+      "evidence_status": "analytical_hypothesis",
+      "confidence": "medium",
+      "time_lag": "weeks to months",
+      "supporting_event_ids": [
+        "E005"
+      ],
+      "assumptions": [
+        "Road transport businesses use diesel and pass some additional fuel costs into operating costs."
+      ],
+      "caveats": [
+        "The size of the effect depends on fuel contracts, hedging, margins and efficiency."
+      ]
+    },
+    {
+      "id": "R003",
+      "from": "V002",
+      "to": "V017",
+      "relationship": "may contribute to",
+      "pathway": "Logistics costs → some consumer prices",
+      "evidence_status": "analytical_hypothesis",
+      "confidence": "low",
+      "time_lag": "weeks to months",
+      "supporting_event_ids": [
+        "E005"
+      ],
+      "assumptions": [
+        "Some businesses pass a portion of increased transport costs to customers."
+      ],
+      "caveats": [
+        "Not all businesses pass costs on; other cost and demand factors matter."
+      ]
+    },
+    {
+      "id": "R004",
+      "from": "V001",
+      "to": "V003",
+      "relationship": "may increase",
+      "pathway": "Diesel prices → household transport costs",
+      "evidence_status": "analytical_hypothesis",
+      "confidence": "medium",
+      "time_lag": "immediate",
+      "supporting_event_ids": [
+        "E005"
+      ],
+      "assumptions": [
+        "Household owns or uses a diesel vehicle or is otherwise exposed to fuel-related travel costs."
+      ],
+      "caveats": [
+        "The record concerns global diesel markets, not an individual household's pump price."
+      ]
+    },
+    {
+      "id": "R005",
+      "from": "E004",
+      "to": "V004",
+      "relationship": "sets regulated default-tariff price limits for",
+      "pathway": "Ofgem cap → retail energy rates",
+      "evidence_status": [
+        "Household is on a tariff covered by the cap."
+      ],
+      "confidence": "high",
+      "time_lag": "effective during stated cap period",
+      "supporting_event_ids": [
+        "E004"
+      ],
+      "assumptions": [
+        "The cap limits unit rates and standing charges; it is not a fixed annual bill."
+      ],
+      "caveats": []
+    },
+    {
+      "id": "R006",
+      "from": "V004",
+      "to": "V005",
+      "relationship": "determines part of",
+      "pathway": "Retail energy rates → household energy expenditure",
+      "evidence_status": "analytical_hypothesis",
+      "confidence": "high",
+      "time_lag": "immediate to billing period",
+      "supporting_event_ids": [
+        "E004"
+      ],
+      "assumptions": [
+        "Consumption, region, payment method and tariff are considered."
+      ],
+      "caveats": [
+        "Actual bills vary with consumption and tariff."
+      ]
+    },
+    {
+      "id": "R007",
+      "from": "E003",
+      "to": "V006",
+      "relationship": "measures",
+      "pathway": "ONS CPI release → consumer price inflation",
+      "evidence_status": [
+        "The ONS release is interpreted using its stated CPI definition."
+      ],
+      "confidence": "high",
+      "time_lag": "observed reference period",
+      "supporting_event_ids": [
+        "E003"
+      ],
+      "assumptions": [
+        "An aggregate CPI rate is not an individual household inflation rate."
+      ],
+      "caveats": []
+    },
+    {
+      "id": "R008",
+      "from": "E007",
+      "to": "V007",
+      "relationship": "provides group-level evidence about",
+      "pathway": "Household Cost Indices → purchasing power pressure",
+      "evidence_status": "source_supported_with_interpretation",
+      "confidence": "medium",
+      "time_lag": "observed reference period",
+      "supporting_event_ids": [
+        "E007"
+      ],
+      "assumptions": [
+        "Household group expenditure patterns are relevant to the comparison."
+      ],
+      "caveats": [
+        "Group averages are not individual household budgets; HCI is not a personal forecast."
+      ]
+    },
+    {
+      "id": "R009",
+      "from": "V006",
+      "to": "V007",
+      "relationship": "can erode when income growth lags",
+      "pathway": "Inflation → real purchasing power",
+      "evidence_status": "general_economic_relationship",
+      "confidence": "high",
+      "time_lag": "ongoing",
+      "supporting_event_ids": [
+        "E003",
+        "E007"
+      ],
+      "assumptions": [
+        "Nominal household income or benefits do not rise as quickly as relevant prices."
+      ],
+      "caveats": [
+        "The impact varies with household-specific spending and income changes."
+      ]
+    },
+    {
+      "id": "R010",
+      "from": "E002",
+      "to": "V008",
+      "relationship": "sets",
+      "pathway": "MPC decision → Bank Rate",
+      "evidence_status": [],
+      "confidence": "high",
+      "time_lag": "effective immediately in policy markets",
+      "supporting_event_ids": [
+        "E002"
+      ],
+      "assumptions": [
+        "The policy rate does not translate one-for-one into every borrowing rate."
+      ],
+      "caveats": []
+    },
+    {
+      "id": "R011",
+      "from": "V008",
+      "to": "V009",
+      "relationship": "can increase",
+      "pathway": "Bank Rate → mortgage and credit payments",
+      "evidence_status": "general_economic_relationship",
+      "confidence": "medium",
+      "time_lag": "weeks to months",
+      "supporting_event_ids": [
+        "E002",
+        "E009"
+      ],
+      "assumptions": [
+        "A household has variable-rate borrowing or refinances at a higher rate."
+      ],
+      "caveats": [
+        "Fixed-rate borrowers are affected mainly at product renewal; lender pricing differs."
+      ]
+    },
+    {
+      "id": "R012",
+      "from": "E009",
+      "to": "V008",
+      "relationship": "provides a forecast for",
+      "pathway": "OBR outlook → expected interest-rate path",
+      "evidence_status": [
+        "The OBR's conditioning assumptions are interpreted as forecast context."
+      ],
+      "confidence": "medium",
+      "time_lag": "medium to long term",
+      "supporting_event_ids": [
+        "E009"
+      ],
+      "assumptions": [
+        "This is not a Bank of England commitment or a guaranteed future rate."
+      ],
+      "caveats": []
+    },
+    {
+      "id": "R013",
+      "from": "E008",
+      "to": "V010",
+      "relationship": "measures recent movement in",
+      "pathway": "ONS rents release → private rents",
+      "evidence_status": [],
+      "confidence": "high",
+      "time_lag": "observed reference period",
+      "supporting_event_ids": [
+        "E008"
+      ],
+      "assumptions": [
+        "Latest estimates may be provisional and subject to revision."
+      ],
+      "caveats": []
+    },
+    {
+      "id": "R014",
+      "from": "V010",
+      "to": "V012",
+      "relationship": "can reduce",
+      "pathway": "Higher rent → household disposable income after housing costs",
+      "evidence_status": "general_economic_relationship",
+      "confidence": "medium",
+      "time_lag": "at rent review or tenancy change",
+      "supporting_event_ids": [
+        "E008",
+        "E007"
+      ],
+      "assumptions": [
+        "Rent increases apply to the household and income does not rise enough to offset them."
+      ],
+      "caveats": [
+        "Actual exposure depends on tenancy, rent review timing, income and housing support."
+      ]
+    },
+    {
+      "id": "R015",
+      "from": "V010",
+      "to": "V011",
+      "relationship": "can constrain",
+      "pathway": "Rent burden → ability to save for a deposit",
+      "evidence_status": "analytical_hypothesis",
+      "confidence": "medium",
+      "time_lag": "months to years",
+      "supporting_event_ids": [
+        "E008"
+      ],
+      "assumptions": [
+        "A prospective buyer rents and has limited surplus income."
+      ],
+      "caveats": [
+        "Not all renters are prospective buyers; savings behaviour and income vary."
+      ]
+    },
+    {
+      "id": "R016",
+      "from": "E001",
+      "to": "V015",
+      "relationship": "announces",
+      "pathway": "Budget measures → government support",
+      "evidence_status": [],
+      "confidence": "high",
+      "time_lag": "from dates specified in the announcement",
+      "supporting_event_ids": [
+        "E001"
+      ],
+      "assumptions": [
+        "Eligibility, commencement and implementation conditions must be checked."
+      ],
+      "caveats": []
+    },
+    {
+      "id": "R017",
+      "from": "V015",
+      "to": "V012",
+      "relationship": "may support",
+      "pathway": "Eligible transfers/relief → disposable income",
+      "evidence_status": "analytical_hypothesis",
+      "confidence": "medium",
+      "time_lag": "when support is received or bills reduce",
+      "supporting_event_ids": [
+        "E001"
+      ],
+      "assumptions": [
+        "Household meets eligibility criteria and the measure is implemented."
+      ],
+      "caveats": [
+        "Support is targeted; devolved arrangements and take-up may differ."
+      ]
+    },
+    {
+      "id": "R018",
+      "from": "E001",
+      "to": "V004",
+      "relationship": "may reduce tax component of",
+      "pathway": "VAT relief → domestic electricity costs",
+      "evidence_status": [
+        "The announced VAT measure takes effect as described."
+      ],
+      "confidence": "medium",
+      "time_lag": "during announced measure period",
+      "supporting_event_ids": [
+        "E001"
+      ],
+      "assumptions": [
+        "Retail bill effect depends on supplier billing and consumption."
+      ],
+      "caveats": []
+    },
+    {
+      "id": "R019",
+      "from": "E001",
+      "to": "V003",
+      "relationship": "may moderate",
+      "pathway": "Fuel-duty freeze/extension → motoring fuel costs",
+      "evidence_status": [
+        "The duty measure is implemented and passed through."
+      ],
+      "confidence": "medium",
+      "time_lag": "during announced measure period",
+      "supporting_event_ids": [
+        "E001"
+      ],
+      "assumptions": [
+        "Does not offset changes in wholesale fuel prices, margins or exchange rates."
+      ],
+      "caveats": []
+    },
+    {
+      "id": "R020",
+      "from": "E006",
+      "to": "V013",
+      "relationship": "provides indicators for",
+      "pathway": "ONS labour-market release → employment/labour demand",
+      "evidence_status": [],
+      "confidence": "high",
+      "time_lag": "observed reference period",
+      "supporting_event_ids": [
+        "E006"
+      ],
+      "assumptions": [
+        "Vacancy and payroll data do not establish the cause of changes."
+      ],
+      "caveats": []
+    },
+    {
+      "id": "R021",
+      "from": "V013",
+      "to": "V012",
+      "relationship": "can affect",
+      "pathway": "Employment/income → household disposable income",
+      "evidence_status": "general_economic_relationship",
+      "confidence": "medium",
+      "time_lag": "weeks to months",
+      "supporting_event_ids": [
+        "E006"
+      ],
+      "assumptions": [
+        "Employment or hours change for a household member."
+      ],
+      "caveats": [
+        "Household income also depends on pay, benefits, savings and other earners."
+      ]
+    },
+    {
+      "id": "R022",
+      "from": "E010",
+      "to": "V014",
+      "relationship": "discusses possible effects on",
+      "pathway": "AI adoption → productivity and task change",
+      "evidence_status": "forecast",
+      "confidence": "low",
+      "time_lag": "medium term",
+      "supporting_event_ids": [
+        "E010"
+      ],
+      "assumptions": [
+        "AI adoption occurs at the scale and pace assumed in the cited outlook."
+      ],
+      "caveats": [
+        "The source does not quantify occupation-level job losses or gains."
+      ]
+    },
+    {
+      "id": "R023",
+      "from": "V014",
+      "to": "V013",
+      "relationship": "could change",
+      "pathway": "AI-driven task change → labour demand",
+      "evidence_status": "analytical_hypothesis",
+      "confidence": "low",
+      "time_lag": "medium to long term",
+      "supporting_event_ids": [
+        "E010"
+      ],
+      "assumptions": [
+        "Firms change staffing, task allocation, hiring or training in response to AI."
+      ],
+      "caveats": [
+        "Direction and distribution of employment effects are uncertain; productivity gains may also create work."
+      ]
+    },
+    {
+      "id": "R024",
+      "from": "E009",
+      "to": "V016",
+      "relationship": "forecasts scenario sensitivity in",
+      "pathway": "Energy shock → government borrowing/public finances",
+      "evidence_status": "source_supported",
+      "confidence": "medium",
+      "time_lag": "2027-28 scenario horizon",
+      "supporting_event_ids": [
+        "E009"
+      ],
+      "assumptions": [],
+      "caveats": [
+        "OBR scenario estimate is not a certain borrowing outcome."
+      ]
+    },
+    {
+      "id": "R025",
+      "from": "V016",
+      "to": "V015",
+      "relationship": "can constrain choices about",
+      "pathway": "Fiscal headroom → future public support",
+      "evidence_status": "analytical_hypothesis",
+      "confidence": "low",
+      "time_lag": "medium to long term",
+      "supporting_event_ids": [
+        "E009"
+      ],
+      "assumptions": [
+        "Government chooses to respond to fiscal constraints through spending or tax decisions."
+      ],
+      "caveats": [
+        "This is a policy channel, not a deterministic consequence."
+      ]
+    }
+  ]
+}
