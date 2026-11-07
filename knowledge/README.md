@@ -18,6 +18,12 @@ Manchester-only records are excluded unless the request explicitly says `"univer
 
 ## Webhook contract
 
+### Authentication
+
+Send `X-FinBridge-Key: <secret>` with every request. Set `FINBRIDGE_WEBHOOK_SECRET` in both n8n's environment variables and Lovable Secrets. Requests without the correct key return HTTP 400 with `error.code = "UNAUTHORIZED"`. If the env variable is not set in n8n the check is skipped (safe for local dev and workflow import).
+
+### Request
+
 `POST /webhook/finbridge/chat` accepts one JSON object. All figures are supplied by the caller; there is no demo student or hidden estimate. Income is a positive transaction amount and spending is negative. The question selects a draft focus and relevant support sources, but never changes the numbers.
 
 ```json
@@ -34,15 +40,59 @@ Manchester-only records are excluded unless the request explicitly says `"univer
       { "date": "2026-12-01", "amount": -300, "label": "Rent" }
     ],
     "weeklyEssentials": { "firstDate": "2026-11-09", "amount": 20 }
+  },
+  "scenarioB": {
+    "transactions": [
+      { "date": "2026-11-14", "amount": 50, "label": "Wages (reduced)" },
+      { "date": "2026-12-01", "amount": -300, "label": "Rent" }
+    ],
+    "weeklyEssentials": { "firstDate": "2026-11-09", "amount": 20 }
   }
 }
 ```
 
-The request requires real ISO dates, GBP amounts with at most two decimals, a loan date within 366 days, at most 100 transactions, and a weekly essentials amount. `question` is optional (up to 500 characters), `university` is optional (up to 100), and `noFamilySupport` must be an explicit boolean. Invalid requests return HTTP 400 with `error.code = "INVALID_INPUT"`. Transactions on or after the loan date are rejected; supply reduced wages as transaction amounts to test a lost-shifts scenario.
+`question` is optional (up to 500 characters), `university` is optional (up to 100), `noFamilySupport` must be an explicit boolean. `scenarioB` is optional — when provided, it runs a parallel forecast using the same `startDate`, `openingBalance`, and `nextMaintenanceLoanDate` as the base but with its own `transactions` and `weeklyEssentials`. Use it to show a "lost shifts" comparison chart. The request requires real ISO dates, GBP amounts with at most two decimals, a loan date within 366 days, and at most 100 transactions per scenario. Invalid requests return HTTP 400 with `error.code = "INVALID_INPUT"`. Transactions on or after the loan date are rejected.
 
-The successful response contains `forecast`, `explanation`, `draft`, `supportSources`, `supportStatus`, `draftStatus`, and `catalogueCheckedAt`. Forecast arithmetic uses pence. Explanation, draft text, and URLs are built by deterministic code. Anthropic can only select the `rent`, `budget`, or `general` draft focus. If catalogue retrieval fails, the response has `supportStatus: "unavailable"` and no sources. If Anthropic fails or returns another value, `draftStatus: "fallback"` and a general draft are returned. Neither failure drops the forecast.
+### Response
 
-The deployed Code node sources and credential-free workflow export are in [`n8n/`](../n8n/). The catalogue URL is pinned to repository commit `35698fd54ebba2e1c6052c0e579c0ac8614aa5b1` so approved links cannot change with the main branch. The workflow disables saved execution data for financial payloads. The public webhook still needs inbound authentication and rate limiting before it should receive personal financial records.
+```json
+{
+  "forecast": {
+    "currency": "GBP",
+    "scenario": "provided_transactions",
+    "startDate": "2026-11-07",
+    "openingBalance": 200,
+    "nextMaintenanceLoanDate": "2026-12-05",
+    "lowestBalance": -80,
+    "lowestBalanceDate": "2026-12-01",
+    "firstShortfallDate": "2026-12-01",
+    "firstShortfallAmount": -80,
+    "hasShortfall": true,
+    "balanceBeforeNextLoan": -80,
+    "dailySeries": [
+      { "date": "2026-11-07", "balance": 200 },
+      { "date": "2026-11-08", "balance": 200 }
+    ],
+    "timeline": [
+      { "date": "2026-11-09", "label": "Weekly essentials", "amount": -20, "balance": 180 }
+    ],
+    "scenarios": {
+      "base":    { "lowestBalance": -80,  "firstShortfallDate": "2026-12-01", "firstShortfallAmount": -80,  "hasShortfall": true, "balanceBeforeNextLoan": -80,  "dailySeries": [] },
+      "changed": { "lowestBalance": -130, "firstShortfallDate": "2026-11-28", "firstShortfallAmount": -50, "hasShortfall": true, "balanceBeforeNextLoan": -130, "dailySeries": [] }
+    }
+  },
+  "explanation": "Your projected lowest balance is -£80.00 on 2026-12-01. Your first projected shortfall is on 2026-12-01 (-£80.00). ...",
+  "draft": "Hello, I would like to discuss my financial situation...",
+  "supportSources": [{ "id": "...", "title": "...", "provider": "...", "url": "https://...", "summary": "...", "actionLabel": "...", "caution": "..." }],
+  "supportStatus": "ok",
+  "draftStatus": "model",
+  "catalogueCheckedAt": "2026-11-07"
+}
+```
+
+`dailySeries` has one entry per calendar day from `startDate` to the day before `nextMaintenanceLoanDate` — ready to plot as a balance chart. `firstShortfallAmount` is the balance on the first shortfall day (always negative). `scenarios` is present only when `scenarioB` was sent; both `base` and `changed` include their own `dailySeries` with the same dates so they can be drawn as two chart lines. `draftStatus` is `"model"` when Anthropic classified successfully and `"fallback"` when it did not — the forecast is returned either way. If catalogue retrieval fails, `supportStatus` is `"unavailable"` and `supportSources` is empty.
+
+The deployed Code node sources and credential-free workflow export are in [`n8n/`](../n8n/). The catalogue URL is pinned to repository commit `35698fd54ebba2e1c6052c0e579c0ac8614aa5b1`. The workflow disables saved execution data for financial payloads.
 
 ## Local check
 

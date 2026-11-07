@@ -126,9 +126,13 @@ const chatServerFn = createServerFn({ method: "POST" })
       "https://tagihan.app.n8n.cloud/webhook/finbridge/chat";
     const { question } = ctx.data;
     try {
+      const webhookSecret = process.env.FINBRIDGE_WEBHOOK_SECRET;
       const upstream = await fetch(WEBHOOK_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(webhookSecret ? { "X-FinBridge-Key": webhookSecret } : {}),
+        },
         body: JSON.stringify(buildPayload(question)),
       });
       const json = (await upstream.json()) as Record<string, unknown>;

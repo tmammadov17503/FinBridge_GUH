@@ -20,14 +20,42 @@ const fixture = {
 };
 const catalogue = JSON.parse(readFileSync(new URL('../knowledge/sources.json', import.meta.url), 'utf8'));
 
-function run(file, input, nodes = {}) {
+function run(file, input, nodes = {}, env = {}) {
   const code = readFileSync(new URL(file, import.meta.url), 'utf8');
   const result = runInNewContext(`(function () { ${code} })()`, {
     $input: { first: () => ({ json: input }) },
     $: (name) => ({ first: () => ({ json: nodes[name] }) }),
+    $env: env,
   });
   return structuredClone(result[0].json);
 }
+
+// ── Shared-secret auth ────────────────────────────────────────────────────────
+
+test('missing key is rejected when secret is configured in env', () => {
+  const result = run('./validate-finance.js',
+    { body: fixture, headers: {} },
+    {},
+    { FINBRIDGE_WEBHOOK_SECRET: 'test-secret' });
+  assert.equal(result.valid, false);
+  assert.equal(result.error.code, 'UNAUTHORIZED');
+});
+
+test('correct key is accepted when secret is configured', () => {
+  const result = run('./validate-finance.js',
+    { body: fixture, headers: { 'x-finbridge-key': 'test-secret' } },
+    {},
+    { FINBRIDGE_WEBHOOK_SECRET: 'test-secret' });
+  assert.equal(result.valid, true);
+});
+
+test('no env secret means open access (dev default)', () => {
+  const result = run('./validate-finance.js',
+    { body: fixture, headers: {} },
+    {},
+    {});
+  assert.equal(result.valid, true);
+});
 
 // ── Validation ────────────────────────────────────────────────────────────────
 
