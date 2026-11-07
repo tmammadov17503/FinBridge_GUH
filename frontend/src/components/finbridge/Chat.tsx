@@ -49,9 +49,9 @@ export interface ChatSeed {
   text: string;
   nonce: number;
   /** Simple finale: add both messages locally, no forecast. */
-  cannedReply?: string;
+  cannedReply?: string | undefined;
   /** Full pre-made answer: add locally with forecast + sources. */
-  canned?: CannedAnswer;
+  canned?: CannedAnswer | undefined;
 }
 
 export function Chat({

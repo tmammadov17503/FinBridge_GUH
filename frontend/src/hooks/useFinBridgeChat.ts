@@ -33,7 +33,7 @@ function newId(prefix: string): string {
 
 interface Options {
   userId: string;
-  customFinance?: CustomFinance | null;
+  customFinance?: CustomFinance | null | undefined;
   /** Called with each new agent message, so the caller can decide whether to speak it. */
   onAgentMessage?: (message: TranscriptMessage, channel: Channel) => void;
 }

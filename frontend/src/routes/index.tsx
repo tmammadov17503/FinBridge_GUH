@@ -36,9 +36,9 @@ export const Route = createFileRoute("/")({
 interface DemoStep {
   text: string;
   /** Simple finale added locally — no forecast. */
-  cannedReply?: string;
+  cannedReply?: string | undefined;
   /** Full pre-made answer with forecast + sources added locally. */
-  canned?: CannedAnswer;
+  canned?: CannedAnswer | undefined;
 }
 
 interface DemoScript {
