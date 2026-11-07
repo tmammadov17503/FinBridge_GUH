@@ -81,6 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#090821" },
       { title: "FinBridge" },
       { name: "description", content: "FinBridge financial coaching prototype" },
       { name: "author", content: "Lovable" },
@@ -91,11 +92,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "apple-touch-icon", href: "/brand/apple-touch-icon.png" },
+      {
+        rel: "preload",
+        href: "/fonts/plus-jakarta-sans-latin-400-normal.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/plus-jakarta-sans-latin-800-normal.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -109,7 +122,7 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
-        <script dangerouslySetInnerHTML={{ __html: "try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}" }} />
+        <script dangerouslySetInnerHTML={{ __html: "var d=document.documentElement.classList;d.add('dark');try{if(localStorage.getItem('theme')==='light')d.remove('dark')}catch(e){}" }} />
       </head>
       <body>
         {children}
