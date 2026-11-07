@@ -7,8 +7,8 @@ import { Sidebar } from "@/components/finbridge/Sidebar";
 import { TopicPanel } from "@/components/finbridge/TopicPanel";
 import { Chat, type ChatSeed } from "@/components/finbridge/Chat";
 import { PersonaPicker } from "@/components/finbridge/PersonaPicker";
-import { ThemeToggle } from "@/components/finbridge/ThemeToggle";
 import type { DemoUserId } from "@/lib/finbridge/types";
+import { NavBar } from "@/components/NavBar";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -46,14 +46,7 @@ function Index() {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-header-bar">
-        <div className="mx-auto flex h-16 max-w-[1180px] items-center justify-between px-5">
-          <h1 className="font-serif text-2xl font-bold text-header-bar-foreground">
-            FinBridge
-          </h1>
-          <ThemeToggle />
-        </div>
-      </div>
+      <NavBar />
       <div className="h-1 bg-primary" />
       <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-5 p-5 md:grid-cols-[280px_1fr]">
         <div className="hidden md:block" />

@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LifelineRouteImport } from './routes/lifeline'
+import { Route as MoneyRouteImport } from './routes/money'
+import { Route as CommunitiesRouteImport } from './routes/communities'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiVoiceSttRouteImport } from './routes/api/voice/stt'
 import { Route as ApiVoiceTtsRouteImport } from './routes/api/voice/tts'
@@ -17,6 +20,21 @@ import { Route as ApiVoiceTtsRouteImport } from './routes/api/voice/tts'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LifelineRoute = LifelineRouteImport.update({
+  id: '/lifeline',
+  path: '/lifeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MoneyRoute = MoneyRouteImport.update({
+  id: '/money',
+  path: '/money',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunitiesRoute = CommunitiesRouteImport.update({
+  id: '/communities',
+  path: '/communities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -37,12 +55,18 @@ const ApiVoiceTtsRoute = ApiVoiceTtsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/lifeline': typeof LifelineRoute
+  '/money': typeof MoneyRoute
+  '/communities': typeof CommunitiesRoute
   '/api/chat': typeof ApiChatRoute
   '/api/voice/stt': typeof ApiVoiceSttRoute
   '/api/voice/tts': typeof ApiVoiceTtsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/lifeline': typeof LifelineRoute
+  '/money': typeof MoneyRoute
+  '/communities': typeof CommunitiesRoute
   '/api/chat': typeof ApiChatRoute
   '/api/voice/stt': typeof ApiVoiceSttRoute
   '/api/voice/tts': typeof ApiVoiceTtsRoute
@@ -50,20 +74,26 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/lifeline': typeof LifelineRoute
+  '/money': typeof MoneyRoute
+  '/communities': typeof CommunitiesRoute
   '/api/chat': typeof ApiChatRoute
   '/api/voice/stt': typeof ApiVoiceSttRoute
   '/api/voice/tts': typeof ApiVoiceTtsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/chat' | '/api/voice/stt' | '/api/voice/tts'
+  fullPaths: '/' | '/lifeline' | '/money' | '/communities' | '/api/chat' | '/api/voice/stt' | '/api/voice/tts'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/chat' | '/api/voice/stt' | '/api/voice/tts'
-  id: '__root__' | '/' | '/api/chat' | '/api/voice/stt' | '/api/voice/tts'
+  to: '/' | '/lifeline' | '/money' | '/communities' | '/api/chat' | '/api/voice/stt' | '/api/voice/tts'
+  id: '__root__' | '/' | '/lifeline' | '/money' | '/communities' | '/api/chat' | '/api/voice/stt' | '/api/voice/tts'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LifelineRoute: typeof LifelineRoute
+  MoneyRoute: typeof MoneyRoute
+  CommunitiesRoute: typeof CommunitiesRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiVoiceSttRoute: typeof ApiVoiceSttRoute
   ApiVoiceTtsRoute: typeof ApiVoiceTtsRoute
@@ -76,6 +106,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lifeline': {
+      id: '/lifeline'
+      path: '/lifeline'
+      fullPath: '/lifeline'
+      preLoaderRoute: typeof LifelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/money': {
+      id: '/money'
+      path: '/money'
+      fullPath: '/money'
+      preLoaderRoute: typeof MoneyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/communities': {
+      id: '/communities'
+      path: '/communities'
+      fullPath: '/communities'
+      preLoaderRoute: typeof CommunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -104,6 +155,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LifelineRoute: LifelineRoute,
+  MoneyRoute: MoneyRoute,
+  CommunitiesRoute: CommunitiesRoute,
   ApiChatRoute: ApiChatRoute,
   ApiVoiceSttRoute: ApiVoiceSttRoute,
   ApiVoiceTtsRoute: ApiVoiceTtsRoute,

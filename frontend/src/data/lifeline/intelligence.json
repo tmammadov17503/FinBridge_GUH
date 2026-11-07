@@ -1,0 +1,410 @@
+{
+  "events": [
+    {
+      "title": "Budget 2026 announces household energy, fuel and housing support",
+      "summary": "HM Treasury announced a £2.6 billion Household Energy Payment, providing £100 from January 2027 to eligible council-tax bands A-D households in England; a temporary 0% VAT rate on domestic electricity from 1 October 2026 to 1 July 2027; an extension of the 5p-per-litre fuel-duty cut and freeze to 1 July 2027; £1.5 billion for about 10,000 additional social and affordable homes in England; and a £4.7 billion first-time-buyer equity-loan scheme.",
+      "category": "Government policy, taxation and public spending",
+      "status": "announced",
+      "published_at": "2026-10-28",
+      "event_date": "2027-01-01",
+      "source_name": "HM Treasury / GOV.UK",
+      "source_url": "https://www.gov.uk/government/publications/budget-2026-document/budget-2026-html",
+      "affected_variables": [
+        "household disposable income",
+        "domestic electricity bills",
+        "petrol and diesel prices",
+        "fuel duty",
+        "housing supply",
+        "mortgage deposit requirements",
+        "public spending"
+      ],
+      "potential_impacts": [
+        "Direct: eligible England households may receive £100 and households paying domestic electricity may benefit from the VAT reduction.",
+        "Direct: motorists may face lower fuel costs than under the previously planned duty path until 1 July 2027.",
+        "Indirect: additional social and affordable housing and first-time-buyer finance could improve access to housing, but effects depend on delivery and take-up."
+      ],
+      "exposed_groups": [
+        "England council-tax bands A-D households",
+        "motorists",
+        "private renters and households seeking social housing",
+        "first-time buyers",
+        "households with high electricity or transport spending"
+      ],
+      "time_horizon": "Immediate relief from late 2026; payment from January 2027; housing and first-time-buyer effects from 2027 onward.",
+      "evidence": [
+        "Budget 2026 lists a £2.6bn Household Energy Payment and £100 payment from January 2027 for up to 20 million England households.",
+        "The Budget lists electricity VAT at 0% from 1 October 2026 to 1 July 2027 and extends the 5p fuel-duty cut to 1 July 2027.",
+        "The Budget commits £1.5bn for around 10,000 homes and confirms £4.7bn for the Your First Home equity-loan scheme."
+      ],
+      "uncertainties": [
+        "The household payment is targeted by council-tax band and devolved arrangements differ.",
+        "The estimated £50 annual effect on the April 2027 Ofgem cap is a government estimate, not a guaranteed bill reduction.",
+        "Housing outcomes depend on construction, legal implementation, eligibility and take-up."
+      ]
+    },
+    {
+      "title": "Bank Rate raised to 4% as inflation is expected to approach 5%",
+      "summary": "At its meeting ending 4 November 2026, the Bank of England MPC voted 8-1 to raise Bank Rate by 0.25 percentage points to 4%; one member preferred 4.25%. The Bank said UK CPI inflation was 3.5% in September and was expected to rise to around 5% by mid-2027 before falling as energy effects fade and restrictive policy works.",
+      "category": "Inflation, interest rates and household costs",
+      "status": "confirmed",
+      "published_at": "2026-11-05",
+      "event_date": "2026-11-04",
+      "source_name": "Bank of England",
+      "source_url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/november-2026",
+      "affected_variables": [
+        "Bank Rate",
+        "mortgage rates",
+        "consumer credit rates",
+        "CPI inflation",
+        "household energy bills",
+        "real disposable income"
+      ],
+      "potential_impacts": [
+        "Direct: borrowers refinancing or taking variable-rate debt may face higher interest costs.",
+        "Direct: savers may receive higher deposit returns, subject to provider pass-through.",
+        "Indirect: higher borrowing costs can reduce discretionary consumption and housing demand while the energy shock reduces real incomes."
+      ],
+      "exposed_groups": [
+        "variable-rate and fixed-rate mortgage borrowers refinancing",
+        "highly indebted households",
+        "consumer-credit users",
+        "households with limited cash buffers",
+        "savers"
+      ],
+      "time_horizon": "Rate effects begin quickly in financial markets and pass through to household borrowing over months; inflation projection covers late 2026 to mid-2027.",
+      "evidence": [
+        "MPC vote: 8-1 for a 0.25 percentage-point increase to 4%.",
+        "The Bank states CPI inflation was 3.5% in September and expected around 5% by mid-2027.",
+        "Minutes report benchmark two-year mortgage rates rose nearly 50 basis points since the beginning of September."
+      ],
+      "uncertainties": [
+        "Future Bank Rate decisions are explicitly not on a pre-set path.",
+        "The inflation path depends heavily on energy prices and whether second-round wage and price effects emerge.",
+        "Mortgage pass-through differs by product, reset date and lender pricing."
+      ]
+    },
+    {
+      "title": "UK CPI inflation rose to 3.5% in September 2026",
+      "summary": "ONS reported CPI inflation of 3.5% in the 12 months to September 2026, up from 3.1% in August; CPIH rose 3.6%, up from 3.3%. Transport, particularly motor fuels, made the largest upward contribution to the monthly change in both annual rates.",
+      "category": "Inflation, interest rates and household costs",
+      "status": "confirmed",
+      "published_at": "2026-10-21",
+      "event_date": "2026-09-30",
+      "source_name": "Office for National Statistics",
+      "source_url": "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/september2026",
+      "affected_variables": [
+        "CPI",
+        "CPIH",
+        "motor fuel prices",
+        "services inflation",
+        "goods inflation",
+        "real wages"
+      ],
+      "potential_impacts": [
+        "Direct: households face continued erosion of purchasing power where pay or benefits do not keep pace.",
+        "Direct: fuel-intensive households face more immediate cost pressure.",
+        "Indirect: persistent inflation can influence wage negotiations, interest rates and indexed contracts."
+      ],
+      "exposed_groups": [
+        "lower-income households with limited discretionary spending",
+        "motorists and long-distance commuters",
+        "households on fixed incomes",
+        "renters and borrowers facing indexed or reset costs"
+      ],
+      "time_horizon": "Current pressure with potential persistence into 2027, subject to energy and fuel prices.",
+      "evidence": [
+        "ONS CPI: 3.5% year-on-year in September 2026 versus 3.1% in August.",
+        "ONS CPIH: 3.6% year-on-year versus 3.3% in August.",
+        "Transport and motor fuels made the largest upward contribution to the monthly movement."
+      ],
+      "uncertainties": [
+        "ONS notes the figures are subject to revisions and component contributions can change.",
+        "The bulletin identifies motor fuels as the main driver, but does not by itself quantify future household bills."
+      ]
+    },
+    {
+      "title": "Ofgem energy price cap rises to £1,723 for October-December 2026",
+      "summary": "Ofgem announced a 4% increase in the default-tariff cap for 1 October to 31 December 2026. The typical dual-fuel direct-debit bill rises from £1,663 to £1,723 a year, or £60 annually if sustained. Gas costs rise 8%, while households without gas see an increase of less than 1%; around 35% of households on fixed tariffs are not affected by this rise.",
+      "category": "Petrol, diesel, gas and electricity prices",
+      "status": "implemented",
+      "published_at": "2026-08-26",
+      "event_date": "2026-10-01",
+      "source_name": "Ofgem",
+      "source_url": "https://www.ofgem.gov.uk/press-release/energy-price-cap-will-rise-4-october-2026",
+      "affected_variables": [
+        "energy price cap",
+        "gas unit rates",
+        "electricity unit rates",
+        "standing charges",
+        "household energy expenditure"
+      ],
+      "potential_impacts": [
+        "Direct: typical default-tariff dual-fuel households pay about £5 more per month on an annualised basis.",
+        "Direct: gas-heating households are more exposed than electricity-only households.",
+        "Indirect: higher heating costs can reduce spending on food and other essentials, especially in low-income households."
+      ],
+      "exposed_groups": [
+        "default-tariff households",
+        "gas-heated homes",
+        "low-income households",
+        "prepayment and standard-credit customers",
+        "households with poor energy efficiency"
+      ],
+      "time_horizon": "1 October to 31 December 2026 cap period; wholesale-price effects may influence subsequent reviews.",
+      "evidence": [
+        "Ofgem states the cap rises 4% from 1 October 2026.",
+        "Typical direct-debit dual-fuel cap rises from £1,663 to £1,723.",
+        "Ofgem reports gas bills rising 8% and electricity-only households seeing less than 1% increase; household electricity use is about 7% lower and gas use 17% lower than at the previous review."
+      ],
+      "uncertainties": [
+        "The cap is a maximum unit-rate and standing-charge structure, not a fixed bill; actual bills vary with consumption, region and payment method.",
+        "The £1,723 figure is based on Ofgem's typical domestic consumption value and is annualised.",
+        "Wholesale gas volatility may alter future cap periods."
+      ]
+    },
+    {
+      "title": "IEA warns diesel-market tightness may persist into 2027",
+      "summary": "The IEA's October 2026 Oil Market Report says global diesel markets remain under significant strain after supply disruptions. Brent futures were around $107 per barrel, global gasoil exports in the first nine months of 2026 were 10% below a year earlier, and the IEA expects the gasoil market to remain tight well into 2027 because 2026 inventory losses will not quickly be replenished.",
+      "category": "Petrol, diesel, gas and electricity prices",
+      "status": "forecast",
+      "published_at": "2026-10-10",
+      "event_date": "2026-10-10",
+      "source_name": "International Energy Agency",
+      "source_url": "https://www.iea.org/reports/oil-market-report-october-2026",
+      "affected_variables": [
+        "Brent crude price",
+        "diesel and gasoil prices",
+        "freight and logistics costs",
+        "heating-oil costs",
+        "inflation",
+        "household real incomes"
+      ],
+      "potential_impacts": [
+        "Direct: higher diesel and heating-oil prices can raise motoring and home-heating costs.",
+        "Indirect: transport and logistics costs can feed into prices of goods and services.",
+        "Indirect: sustained fuel costs can weaken real incomes and economic activity."
+      ],
+      "exposed_groups": [
+        "diesel motorists",
+        "rural and off-grid heating-oil households",
+        "low-income households with high transport needs",
+        "small businesses and workers dependent on vehicles",
+        "households exposed to food and delivery-cost pass-through"
+      ],
+      "time_horizon": "Immediate market risk, with tight gasoil conditions forecast through 2027.",
+      "evidence": [
+        "IEA reports Brent futures around $107/bbl and physical North Sea Dated up 43% to $134/bbl.",
+        "Global gasoil exports averaged 4.7 mb/d in the first nine months of 2026, 10% below a year earlier.",
+        "IEA projects gasoil-market tightness well into 2027 and says record diesel prices are raising goods costs, real-income pressure and inflation."
+      ],
+      "uncertainties": [
+        "This is a global forecast, not a UK pump-price forecast.",
+        "Conflict developments, refinery output, stock releases, shipping and exchange rates could change UK prices.",
+        "The UK Budget's fuel-duty extension may partially offset pump-price movements but does not remove wholesale exposure."
+      ]
+    },
+    {
+      "title": "UK labour market remains broadly flat with vacancies falling",
+      "summary": "ONS reported a 75.3% employment rate and 4.7% unemployment rate for June-August 2026. Early July-September estimates put vacancies at 691,000, down 21,000 or 2.9% quarter-on-quarter and 37,000 or 5.1% year-on-year. Payrolled employees fell 111,000 or 0.4% between August 2025 and August 2026.",
+      "category": "Employment, wages and AI-related job disruption",
+      "status": "emerging signal",
+      "published_at": "2026-10-20",
+      "event_date": "2026-09-30",
+      "source_name": "Office for National Statistics",
+      "source_url": "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/bulletins/uklabourmarket/october2026",
+      "affected_variables": [
+        "employment",
+        "unemployment",
+        "vacancies",
+        "payrolled employees",
+        "labour demand",
+        "household earned income"
+      ],
+      "potential_impacts": [
+        "Direct: slower hiring and fewer vacancies can lengthen job searches and reduce income security for jobseekers.",
+        "Direct: falling payroll employment can signal weaker employment income for affected workers.",
+        "Indirect: weaker labour demand may constrain wage bargaining and consumer spending."
+      ],
+      "exposed_groups": [
+        "jobseekers",
+        "young people",
+        "workers in smaller firms",
+        "sectors with high labour costs",
+        "households reliant on one earner"
+      ],
+      "time_horizon": "Near term, with monthly data expected to show whether the signal persists.",
+      "evidence": [
+        "ONS reports vacancies of 691,000, down 21,000 quarter-on-quarter and 37,000 year-on-year.",
+        "Payrolled employees fell 111,000 year-on-year to August 2026.",
+        "ONS reports regular and total pay growth of 3.7% in June-August, with real regular-pay growth of 0.6% using CPIH."
+      ],
+      "uncertainties": [
+        "ONS flags quality issues with Labour Force Survey estimates and says early payroll figures are provisional.",
+        "A flat headline labour market does not identify which occupations may be disrupted by AI.",
+        "Vacancy changes may reflect labour costs and sector composition rather than broad job losses."
+      ]
+    },
+    {
+      "title": "Household cost inflation was highest for private renters",
+      "summary": "ONS reported UK Household Costs Index inflation of 2.8% in the year to June 2026, down from 3.6% in March. Private renters had the highest tenure-specific rate at 3.0%, mortgagors 2.8%, social and other renters 2.7%, and outright owners 2.6%; non-retired households recorded 2.9% versus 2.5% for retired households.",
+      "category": "Inflation, interest rates and household costs",
+      "status": "confirmed",
+      "published_at": "2026-08-28",
+      "event_date": "2026-06-30",
+      "source_name": "Office for National Statistics",
+      "source_url": "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/householdcostsindicesforukhouseholdgroups/apriltojune2026",
+      "affected_variables": [
+        "household-specific inflation",
+        "rent costs",
+        "mortgage interest payments",
+        "energy expenditure",
+        "real disposable income"
+      ],
+      "potential_impacts": [
+        "Direct: private renters and mortgagors experienced higher household-cost inflation than outright owners.",
+        "Direct: non-retired households faced higher measured cost inflation than retired households in June.",
+        "Indirect: different expenditure baskets can widen financial stress even when headline CPI is the same."
+      ],
+      "exposed_groups": [
+        "private renters",
+        "mortgagors",
+        "non-retired households",
+        "low-income households",
+        "households with children"
+      ],
+      "time_horizon": "Observed through June 2026; relevant for monitoring household stress as later energy and interest-rate changes feed through.",
+      "evidence": [
+        "ONS HCI overall annual rate: 2.8% in June 2026 versus 3.6% in March.",
+        "Private renter rate: 3.0%; mortgagor rate: 2.8%; outright owner rate: 2.6%.",
+        "Non-retired rate: 2.9% versus retired rate: 2.5%."
+      ],
+      "uncertainties": [
+        "HCI is a statistical measure of average household groups, not an individual household budget.",
+        "The latest release is to June and may not capture the full effect of the October energy cap or November Bank Rate decision.",
+        "ONS notes data constraints in estimating household-specific inflation."
+      ]
+    },
+    {
+      "title": "UK private rents rose 3.8% while house-price growth slowed",
+      "summary": "ONS estimated average UK monthly private rent at £1,406 in September 2026, up 3.8% year-on-year. Average house prices were £273,000 in August, up 0.9% year-on-year; London prices fell 2.2%. Regional rent growth was 4.0% in England, 4.1% in Wales, 0.7% in Scotland and 1.7% in Northern Ireland using the latest available periods.",
+      "category": "Housing, mortgages and rents",
+      "status": "emerging signal",
+      "published_at": "2026-10-21",
+      "event_date": "2026-09-30",
+      "source_name": "Office for National Statistics",
+      "source_url": "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/privaterentandhousepricesuk/october2026",
+      "affected_variables": [
+        "private rents",
+        "house prices",
+        "housing affordability",
+        "deposit requirements",
+        "rental inflation"
+      ],
+      "potential_impacts": [
+        "Direct: renters face higher monthly housing costs, especially in high-growth regions.",
+        "Direct: slower house-price growth may reduce equity gains but could modestly improve affordability for some buyers.",
+        "Indirect: higher rents can delay saving for deposits and increase housing-cost arrears risk."
+      ],
+      "exposed_groups": [
+        "private renters",
+        "prospective first-time buyers",
+        "households in North West England and high-rent London areas",
+        "renters with low incomes",
+        "high loan-to-income borrowers"
+      ],
+      "time_horizon": "Current and near term; latest rent and house-price estimates are provisional.",
+      "evidence": [
+        "UK average rent £1,406 in September 2026, £52 or 3.8% above a year earlier.",
+        "UK average house price £273,000 in August 2026, up 0.9% year-on-year.",
+        "North West rent inflation was 5.7%; London house prices fell 2.2%."
+      ],
+      "uncertainties": [
+        "ONS says latest rent and house-price estimates are provisional and subject to revision.",
+        "Northern Ireland rents data are only available to July and Scotland comparisons are affected by data-collection differences.",
+        "House-price outcomes depend on mortgage rates, incomes, supply and regional conditions."
+      ]
+    },
+    {
+      "title": "OBR forecasts higher interest costs and slower growth after the energy shock",
+      "summary": "The October 2026 OBR outlook conditions its forecast on elevated and volatile energy markets. It says Bank Rate is conditioned to reach just over 4.25% by mid-2027 and just over 4.5% by the end of the forecast period, while its central forecast has 2027 growth slowing to 1.0% as higher energy prices and interest rates weigh on the economy. The OBR also says higher energy prices could raise borrowing by as much as £17 billion in 2027-28 in a scenario.",
+      "category": "Government policy, taxation and public spending",
+      "status": "forecast",
+      "published_at": "2026-10-29",
+      "event_date": "2027-01-01",
+      "source_name": "Office for Budget Responsibility / GOV.UK",
+      "source_url": "https://www.gov.uk/government/publications/october-2026-economic-and-fiscal-outlook/economic-and-fiscal-outlook-october-2026",
+      "affected_variables": [
+        "economic growth",
+        "Bank Rate expectations",
+        "government borrowing",
+        "debt interest",
+        "mortgage rates",
+        "public-service spending power"
+      ],
+      "potential_impacts": [
+        "Direct: higher market rates can increase refinancing costs for households and businesses.",
+        "Indirect: higher debt interest can reduce fiscal headroom and constrain future spending choices.",
+        "Indirect: slower growth can weaken labour demand and household income growth."
+      ],
+      "exposed_groups": [
+        "mortgage borrowers",
+        "households with unsecured debt",
+        "public-sector service users",
+        "workers in rate-sensitive sectors",
+        "future taxpayers"
+      ],
+      "time_horizon": "Forecast horizon to 2031-32, with notable risks concentrated in 2027-28.",
+      "evidence": [
+        "OBR central forecast conditions on Bank Rate just over 4.25% by mid-2027 and just over 4.5% by the end of the forecast period.",
+        "OBR forecasts 1.0% growth in 2027 after 1.2% in 2026.",
+        "OBR scenario analysis says higher energy prices could increase borrowing by up to £17bn in 2027-28."
+      ],
+      "uncertainties": [
+        "This is a forecast, not an announced path for Bank Rate.",
+        "The OBR highlights Middle East conflict, energy prices, productivity, labour-market outcomes and gilt yields as major uncertainties.",
+        "Fiscal effects do not translate one-for-one into individual household outcomes."
+      ]
+    },
+    {
+      "title": "AI is a productivity upside but an uncertain labour-market risk",
+      "summary": "The OBR's October 2026 outlook says artificial-intelligence adoption could boost productivity growth by 0.2 percentage points a year by the medium term, but the scale and timing are highly uncertain. The Bank of England also reported some positive impact from AI deployment on activity while stressing uncertainty about its effects on demand and supply.",
+      "category": "Employment, wages and AI-related job disruption",
+      "status": "emerging signal",
+      "published_at": "2026-10-29",
+      "event_date": "2026-10-29",
+      "source_name": "Office for Budget Responsibility / GOV.UK",
+      "source_url": "https://www.gov.uk/government/publications/october-2026-economic-and-fiscal-outlook/economic-and-fiscal-outlook-october-2026",
+      "affected_variables": [
+        "productivity",
+        "labour demand",
+        "wages",
+        "employment composition",
+        "economic growth",
+        "public finances"
+      ],
+      "potential_impacts": [
+        "Direct: some occupations may see task changes, weaker hiring or displacement, but the source does not quantify UK household job losses.",
+        "Indirect: higher productivity could support output, real wages and fiscal capacity if gains are broadly shared.",
+        "Indirect: uneven adoption could widen earnings and employment differences across occupations and regions."
+      ],
+      "exposed_groups": [
+        "workers in automatable or highly digital occupations",
+        "young entrants to affected occupations",
+        "workers lacking access to retraining",
+        "firms adopting AI",
+        "households dependent on vulnerable occupations"
+      ],
+      "time_horizon": "Medium term; the OBR describes effects building through the forecast horizon.",
+      "evidence": [
+        "OBR central forecast assumes AI boosts productivity growth by 0.2 percentage points a year by the medium term.",
+        "OBR explicitly labels the scale and timing of the effect highly uncertain.",
+        "Bank of England minutes cite some positive impact from AI deployment but say the effect on demand and supply is uncertain."
+      ],
+      "uncertainties": [
+        "Neither source provides a reliable count of jobs lost or gained by UK occupation.",
+        "Productivity gains may arrive slowly, unevenly or not at the assumed scale.",
+        "Distributional effects depend on firm behaviour, skills, labour mobility and policy response."
+      ]
+    }
+  ]
+}
