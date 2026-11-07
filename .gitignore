@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Secrets — never commit these. See frontend/.env.example for the keys that belong here.
+.env
+.env.local
+.env.*.local
+
+# MCP server config: holds API credentials on this machine.
+.mcp.json
+
+# Build output
+dist/
+build/
+.output/
+.nitro/
+.vinxi/
+.tanstack/
+.vercel/
+.netlify/
+.wrangler/
+
+# Caches and logs
+.cache/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# Test and coverage output
+coverage/
+
+# Editor and OS cruft
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+.vscode/*
+!.vscode/extensions.json
