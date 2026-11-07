@@ -154,14 +154,27 @@ export function useFinBridgeChat({ userId, customFinance, onAgentMessage }: Opti
     [userId, customFinance],
   );
 
-  /** Add a user + agent message pair locally without hitting the API. Used for demo finales. */
-  const addLocal = useCallback((userText: string, agentText: string) => {
-    setMessages((current) => [
-      ...current,
-      { id: newId("u"), author: "user", text: userText, at: Date.now() },
-      { id: newId("a"), author: "agent", text: agentText, at: Date.now() + 1 },
-    ]);
-  }, []);
+  /** Add a user + agent message pair locally without hitting the API. Used for canned demo steps. */
+  const addLocal = useCallback(
+    (
+      userText: string,
+      agentText: string,
+      agentExtra?: Pick<TranscriptMessage, "forecast" | "sources">,
+    ) => {
+      setMessages((current) => [
+        ...current,
+        { id: newId("u"), author: "user", text: userText, at: Date.now() },
+        {
+          id: newId("a"),
+          author: "agent",
+          text: agentText,
+          at: Date.now() + 1,
+          ...agentExtra,
+        },
+      ]);
+    },
+    [],
+  );
 
   return {
     messages,

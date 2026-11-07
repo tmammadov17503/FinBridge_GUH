@@ -18,6 +18,7 @@ import type {
   TranscriptMessage,
   VoiceKey,
 } from "@/lib/finbridge/types";
+import type { CannedAnswer } from "@/data/demo-canned";
 import { MessageBubble } from "./MessageBubble";
 import { MicButton } from "./MicButton";
 import { VoiceSettings } from "./VoiceSettings";
@@ -47,7 +48,10 @@ const SUGGESTIONS = [
 export interface ChatSeed {
   text: string;
   nonce: number;
+  /** Simple finale: add both messages locally, no forecast. */
   cannedReply?: string;
+  /** Full pre-made answer: add locally with forecast + sources. */
+  canned?: CannedAnswer;
 }
 
 export function Chat({
@@ -159,13 +163,20 @@ export function Chat({
   useEffect(() => {
     if (!seed || seed.nonce === lastSeedNonceRef.current) return;
     lastSeedNonceRef.current = seed.nonce;
-    if (seed.cannedReply) {
+    if (seed.canned) {
+      chat.addLocal(seed.text, seed.canned.reply, {
+        forecast: seed.canned.forecast,
+        sources: seed.canned.sources,
+      });
+      onForecast?.(seed.canned.forecast ?? null);
+      onAgentReplyRef.current?.();
+    } else if (seed.cannedReply) {
       chat.addLocal(seed.text, seed.cannedReply);
       onAgentReplyRef.current?.();
     } else {
       void sendMessage(seed.text, { channel: "web" });
     }
-  }, [seed, sendMessage, chat]);
+  }, [seed, sendMessage, chat, onForecast]);
 
   const onlyGreeting = chat.messages.length === 1;
 

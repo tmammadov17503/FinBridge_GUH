@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 
 import { topics, type TopicId } from "@/data/topics";
+import { buildDemoCanned, type CannedAnswer } from "@/data/demo-canned";
 import { HeaderCards } from "@/components/finbridge/HeaderCards";
 import { Sidebar } from "@/components/finbridge/Sidebar";
 import { TopicPanel } from "@/components/finbridge/TopicPanel";
@@ -34,17 +35,36 @@ export const Route = createFileRoute("/")({
 
 interface DemoStep {
   text: string;
-  /** If set, this step is added locally (no API call) — used for the thank-you finale. */
+  /** Simple finale added locally — no forecast. */
   cannedReply?: string;
+  /** Full pre-made answer with forecast + sources added locally. */
+  canned?: CannedAnswer;
 }
 
+interface DemoScript {
+  first: DemoStep;
+  followups: DemoStep[];
+}
+
+/** Pre-made answers computed once per session against today's date. */
+const demoCanned = buildDemoCanned(new Date());
+
 /** Per-persona demo walkthrough: first question fires on click, followups queue up. */
-const DEMO_SCRIPTS: Record<string, { first: string; followups: DemoStep[] }> = {
+const DEMO_SCRIPTS: Record<string, DemoScript> = {
   "demo-amira": {
-    first: "Will I run short before my next payday?",
+    first: {
+      text: "Will I run short before my next payday?",
+      canned: demoCanned["demo-amira"]?.[0],
+    },
     followups: [
-      { text: "What support could I apply for right now?" },
-      { text: "What would happen if I lost two of my shifts this month?" },
+      {
+        text: "What support could I apply for right now?",
+        canned: demoCanned["demo-amira"]?.[1],
+      },
+      {
+        text: "What would happen if I lost two of my shifts this month?",
+        canned: demoCanned["demo-amira"]?.[2],
+      },
       {
         text: "Thank you so much — I had no idea I could access some of these!",
         cannedReply:
@@ -53,10 +73,19 @@ const DEMO_SCRIPTS: Record<string, { first: string; followups: DemoStep[] }> = {
     ],
   },
   "demo-josh": {
-    first: "Will I run out of money before my next student loan arrives?",
+    first: {
+      text: "Will I run out of money before my next student loan arrives?",
+      canned: demoCanned["demo-josh"]?.[0],
+    },
     followups: [
-      { text: "Are there any hardship funds I could apply for as a student?" },
-      { text: "How much can I safely spend each day until my loan comes in?" },
+      {
+        text: "Are there any hardship funds I could apply for as a student?",
+        canned: demoCanned["demo-josh"]?.[1],
+      },
+      {
+        text: "How much can I safely spend each day until my loan comes in?",
+        canned: demoCanned["demo-josh"]?.[2],
+      },
       {
         text: "This is brilliant, thanks — I didn't realise my uni had these funds!",
         cannedReply:
@@ -65,10 +94,19 @@ const DEMO_SCRIPTS: Record<string, { first: string; followups: DemoStep[] }> = {
     ],
   },
   "demo-priya": {
-    first: "How much can I safely spend each day until I'm paid?",
+    first: {
+      text: "How much can I safely spend each day until I'm paid?",
+      canned: demoCanned["demo-priya"]?.[0],
+    },
     followups: [
-      { text: "Am I building up a good enough savings buffer?" },
-      { text: "What would an unexpected £400 bill do to my finances this month?" },
+      {
+        text: "Am I building up a good enough savings buffer?",
+        canned: demoCanned["demo-priya"]?.[1],
+      },
+      {
+        text: "What would an unexpected £400 bill do to my finances this month?",
+        canned: demoCanned["demo-priya"]?.[2],
+      },
       {
         text: "Really clear breakdown, thank you — that gives me real peace of mind!",
         cannedReply:
@@ -101,7 +139,12 @@ function Index() {
     const [next, ...rest] = queue;
     demoQueueRef.current = rest;
     setTimeout(() => {
-      setSeed({ text: next!.text, nonce: Date.now(), cannedReply: next!.cannedReply });
+      setSeed({
+        text: next!.text,
+        nonce: Date.now(),
+        cannedReply: next!.cannedReply,
+        canned: next!.canned,
+      });
     }, 1200);
   }
 
@@ -113,7 +156,7 @@ function Index() {
     const script = DEMO_SCRIPTS[next];
     if (script) {
       demoQueueRef.current = script.followups;
-      setSeed({ text: script.first, nonce: Date.now() });
+      setSeed({ text: script.first.text, nonce: Date.now(), canned: script.first.canned });
     } else {
       demoQueueRef.current = [];
       setSeed(null);
