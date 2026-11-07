@@ -44,6 +44,34 @@ if (!object(weekly) || !date(weekly.firstDate) || weekly.firstDate < f.startDate
   || weekly.firstDate >= f.nextMaintenanceLoanDate || !money(weekly.amount) || weekly.amount < 0) {
   return fail('weeklyEssentials needs a firstDate in the forecast window and a nonnegative amount.');
 }
+
+// Optional scenarioB: alternative transactions and weeklyEssentials for two-scenario comparison.
+// Inherits startDate, openingBalance, and nextMaintenanceLoanDate from the base finance.
+let scenarioB = null;
+if (body.scenarioB !== undefined) {
+  if (!object(body.scenarioB)) return fail('scenarioB must be an object if provided.');
+  const sb = body.scenarioB;
+  if (!Array.isArray(sb.transactions) || sb.transactions.length > 100) {
+    return fail('scenarioB.transactions must be an array of at most 100 items.');
+  }
+  for (const tx of sb.transactions) {
+    if (!object(tx) || !date(tx.date) || tx.date < f.startDate || tx.date >= f.nextMaintenanceLoanDate
+      || !money(tx.amount) || tx.amount === 0 || typeof tx.label !== 'string'
+      || tx.label.trim().length === 0 || tx.label.length > 80) {
+      return fail('Each scenarioB transaction needs a date in the forecast window, a nonzero amount, and a label of at most 80 characters.');
+    }
+  }
+  const sbWeekly = sb.weeklyEssentials;
+  if (!object(sbWeekly) || !date(sbWeekly.firstDate) || sbWeekly.firstDate < f.startDate
+    || sbWeekly.firstDate >= f.nextMaintenanceLoanDate || !money(sbWeekly.amount) || sbWeekly.amount < 0) {
+    return fail('scenarioB.weeklyEssentials needs a firstDate in the forecast window and a nonnegative amount.');
+  }
+  scenarioB = {
+    transactions: sb.transactions.map((tx) => ({ date: tx.date, amount: tx.amount, label: tx.label.trim() })),
+    weeklyEssentials: { firstDate: sbWeekly.firstDate, amount: sbWeekly.amount },
+  };
+}
+
 return [{ json: {
   valid: true,
   question: body.question ?? '',
@@ -56,4 +84,5 @@ return [{ json: {
     transactions: f.transactions.map((tx) => ({ date: tx.date, amount: tx.amount, label: tx.label.trim() })),
     weeklyEssentials: { firstDate: weekly.firstDate, amount: weekly.amount },
   },
+  scenarioB,
 } }];

@@ -12,13 +12,33 @@ export interface SupportSource {
   caution: string;
 }
 
-export interface FinBridgeForecast {
+export interface DailyBalance {
+  date: string;
+  balance: number;
+}
+
+export interface ScenarioForecast {
   lowestBalance: number;
   lowestBalanceDate: string;
   firstShortfallDate: string | null;
-  balanceBeforeNextLoan: number;
-  nextMaintenanceLoanDate: string;
+  firstShortfallAmount: number | null;
   hasShortfall: boolean;
+  balanceBeforeNextLoan: number;
+  dailySeries: DailyBalance[];
+}
+
+export interface FinBridgeForecast extends ScenarioForecast {
+  currency: string;
+  scenario: string;
+  startDate: string;
+  openingBalance: number;
+  nextMaintenanceLoanDate: string;
+  timeline: { date: string; label: string; amount: number; balance: number }[];
+  /** Present only when scenarioB was included in the request. */
+  scenarios?: {
+    base: ScenarioForecast;
+    changed: ScenarioForecast;
+  };
 }
 
 export interface FinBridgeResponse {
@@ -42,7 +62,7 @@ export type FinBridgeResult =
   | { ok: false; status: number; error: FinBridgeError };
 
 // ── Server-side helpers ───────────────────────────────────────────────────────
-// Everything below the createServerFn boundary runs only on the server.
+// Everything inside the createServerFn handler runs only on the server.
 // Set FINBRIDGE_WEBHOOK_URL in Lovable Secrets (or .env) to override the default.
 
 function pad(n: number): string {
@@ -59,7 +79,9 @@ function addDays(d: Date, n: number): Date {
   return r;
 }
 
-/** Synthetic payload — no personal data. All transactions fall before the loan date. */
+/** Synthetic payload — no personal data.
+ *  Includes a scenarioB (reduced wages) so the UI can show a two-line comparison chart.
+ *  All transactions fall before the loan date. */
 function buildPayload(question: string) {
   const today = new Date();
   const loanDate = addDays(today, 30);
@@ -73,6 +95,14 @@ function buildPayload(question: string) {
       nextMaintenanceLoanDate: isoDate(loanDate),
       transactions: [
         { date: isoDate(addDays(today, 7)), amount: 100, label: "Wages" },
+        { date: isoDate(addDays(today, 20)), amount: -300, label: "Rent" },
+      ],
+      weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 20 },
+    },
+    // Scenario B: half wages — simulates losing shifts
+    scenarioB: {
+      transactions: [
+        { date: isoDate(addDays(today, 7)), amount: 50, label: "Wages (reduced)" },
         { date: isoDate(addDays(today, 20)), amount: -300, label: "Rent" },
       ],
       weeklyEssentials: { firstDate: isoDate(addDays(today, 2)), amount: 20 },

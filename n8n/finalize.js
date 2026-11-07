@@ -2,8 +2,9 @@
 const selected = $('Select support sources').first().json;
 const forecast = selected.forecast;
 const money = (value) => (value < 0 ? '-£' : '£') + Math.abs(value).toFixed(2);
+const shortfallAmount = forecast.firstShortfallAmount ?? forecast.lowestBalance;
 const shortfall = forecast.firstShortfallDate
-  ? `Your first projected shortfall is on ${forecast.firstShortfallDate}.`
+  ? `Your first projected shortfall is on ${forecast.firstShortfallDate} (${money(shortfallAmount)}).`
   : 'There is no projected shortfall before the next maintenance loan.';
 const explanation = `Your projected lowest balance is ${money(forecast.lowestBalance)} on ${forecast.lowestBalanceDate}. ${shortfall} Your balance before the next maintenance loan on ${forecast.nextMaintenanceLoanDate} is ${money(forecast.balanceBeforeNextLoan)}. This estimate uses the transactions you supplied.`;
 const drafts = {
