@@ -1,0 +1,514 @@
+{
+  "knowledge_base": "LIFELINE Finding Money UK financial support knowledge base. Verified against permitted GOV.UK, Ofgem, Citizens Advice and Turn2us sources on 2026-11-07. Local schemes, supplier funds and charitable grants change frequently; users should confirm current rules with the administering body.",
+  "last_updated": "2026-11-07",
+  "support_options": [
+    {
+      "support_id": "UC",
+      "name": "Universal Credit",
+      "description": "Monthly living-cost payment for people out of work, on a low income or unable to work.",
+      "support_category": "Low household income",
+      "who_can_apply": "People meeting age, residence and means rules.",
+      "eligibility_criteria": [
+        "Usually 18 or over (some 16–17 year olds qualify); normally under State Pension age; must live in the UK; savings and investments must be £16,000 or less."
+      ],
+      "geographic_availability": "UK-wide; nation-specific rules can apply",
+      "application_method": "Apply online through GOV.UK.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/universal-credit/eligibility",
+      "last_verified": "2026-11-07",
+      "additional_notes": "Household and partner circumstances affect entitlement.",
+      "income_threshold": "No single cut-off; payment reduces as earnings rise.",
+      "savings_threshold": "£16,000 or less.",
+      "support_value": null,
+      "application_url": "https://www.gov.uk/apply-universal-credit",
+      "documents_required": [
+        "National Insurance number",
+        "Identity/residence",
+        "Housing costs",
+        "Income, savings and investments"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "BEN-CALC",
+      "name": "Benefits entitlement check",
+      "description": "Calculator links to help people estimate benefits and support; not an award or application.",
+      "support_category": "Benefit entitlement",
+      "who_can_apply": "UK residents checking possible entitlement.",
+      "eligibility_criteria": [
+        "Results depend on income, savings, rent, household, age, disability and caring circumstances."
+      ],
+      "geographic_availability": "UK-wide; check the relevant nation and council",
+      "application_method": "Use GOV.UK calculator links or Turn2us Benefits Calculator.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/benefits-calculators",
+      "last_verified": "2026-11-07",
+      "additional_notes": "Use results as a starting point and apply to the administering body.",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.gov.uk/benefits-calculators",
+      "documents_required": [
+        "Income/benefit details",
+        "Rent and Council Tax",
+        "Savings",
+        "Household details"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "WHD",
+      "name": "Warm Home Discount",
+      "description": "One-off electricity-bill discount credited by the energy supplier, not paid as cash.",
+      "support_category": "Energy and utility costs",
+      "who_can_apply": "Eligible electricity billpayers or partners.",
+      "eligibility_criteria": [
+        "England and Wales automatic Core Group: billpayer/partner receives a qualifying benefit on the qualifying date; Scotland has Core and Broader Groups; supplier must participate."
+      ],
+      "geographic_availability": "England, Wales and Scotland; not Northern Ireland",
+      "application_method": "Usually automatic; some Scottish, park-home or supplier cases require contact/application.",
+      "availability_status": "Currently available for 2026–27",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/the-warm-home-discount-scheme",
+      "last_verified": "2026-11-07",
+      "additional_notes": "Check the participating-supplier list and current qualifying date.",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": "£150 one-off discount",
+      "application_url": "https://www.gov.uk/the-warm-home-discount-scheme",
+      "documents_required": [
+        "Energy account/bill",
+        "Benefit details if requested"
+      ],
+      "deadline": "For 2026–27, letters say people needing to call must do so before 26 February 2027."
+    },
+    {
+      "support_id": "SUPPLIER-HARDSHIP",
+      "name": "Energy supplier hardship support",
+      "description": "Suppliers may offer payment plans, payment breaks or reductions and hardship funds for customers struggling with energy bills or debt.",
+      "support_category": "Energy and utility costs",
+      "who_can_apply": "Domestic energy customers in financial difficulty.",
+      "eligibility_criteria": [
+        "Supplier sets its own eligibility, evidence and award rules."
+      ],
+      "geographic_availability": "UK-wide; supplier-specific",
+      "application_method": "Contact the supplier directly.",
+      "availability_status": "Currently available; supplier-specific",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.ofgem.gov.uk/your-energy-supply/your-energy-bill/get-help-your-home-or-business-energy-bills",
+      "last_verified": "2026-11-07",
+      "additional_notes": "No common threshold or standard amount is stated.",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.ofgem.gov.uk/your-energy-supply/your-energy-bill/get-help-your-home-or-business-energy-bills",
+      "documents_required": [
+        "Recent bill/account details",
+        "Income, expenditure and debt information if requested"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "PSR",
+      "name": "Priority Services Register",
+      "description": "Free extra help from energy companies and networks for people who may be vulnerable or need support managing energy supply.",
+      "support_category": "Energy and utility costs",
+      "who_can_apply": "People needing extra support with electricity or gas.",
+      "eligibility_criteria": [
+        "Eligibility is based on support needs; examples include disability, health, age and communication needs."
+      ],
+      "geographic_availability": "UK-wide via the relevant electricity network",
+      "application_method": "Apply to the electricity network; one electricity-network application covers the relevant suppliers.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.citizensadvice.org.uk/consumer/energy/energy-supply/get-help-paying-your-bills/getting-extra-support-from-your-energy-supplier/",
+      "last_verified": "2026-11-07",
+      "additional_notes": "Can apply even without an energy supplier, for example in a park home.",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.thepsr.co.uk/",
+      "documents_required": [
+        "Contact details",
+        "Support-requirement information"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "FSM",
+      "name": "Free school meals",
+      "description": "Free school meals for eligible children; infant free school meals are also available in England.",
+      "support_category": "Children and education",
+      "who_can_apply": "Parents/carers of children at an eligible school.",
+      "eligibility_criteria": [
+        "England Universal Credit route: household income £7,400 a year or less after tax and excluding benefits; other qualifying benefits and nation rules apply."
+      ],
+      "geographic_availability": "Nation-specific; GOV.UK application route is for England",
+      "application_method": "Apply through the local authority or school.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/apply-free-school-meals",
+      "last_verified": "2026-11-07",
+      "additional_notes": "Check the relevant nation and council.",
+      "income_threshold": "England UC route: £7,400 a year or less after tax, excluding benefits.",
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.gov.uk/apply-free-school-meals",
+      "documents_required": [
+        "Child/school details",
+        "Benefit or income information"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "CHILDCARE",
+      "name": "Free Childcare for Working Parents",
+      "description": "Funded childcare for eligible working parents, delivered through an online childcare account and eligibility code.",
+      "support_category": "Children and education",
+      "who_can_apply": "Working parents or those about to start work, including partners.",
+      "eligibility_criteria": [
+        "Parent and partner must be working/about to start; minimum earnings rules apply; adjusted net income generally under £100,000 per parent; child-age rules apply."
+      ],
+      "geographic_availability": "England; other UK nations have different arrangements",
+      "application_method": "Set up a childcare account and apply online; give the 11-digit code to the provider.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/free-childcare-if-working",
+      "last_verified": "2026-11-07",
+      "additional_notes": "The page states applications for 30 hours can be made from when the child is 23 weeks old; funded-period deadlines apply.",
+      "income_threshold": "Adjusted net income generally under £100,000 per parent.",
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.gov.uk/free-childcare-if-working/apply-for-free-childcare-if-youre-working",
+      "documents_required": [
+        "National Insurance number",
+        "Child details",
+        "Income/employment details"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "PIP",
+      "name": "Personal Independence Payment",
+      "description": "Tax-free help with extra living costs caused by a long-term physical or mental health condition or disability.",
+      "support_category": "Disability and health-related costs",
+      "who_can_apply": "People aged 16 or over meeting disability and residence rules.",
+      "eligibility_criteria": [
+        "Usually 16 or over and under State Pension age when claiming; difficulty with daily living or mobility; condition expected to last at least 12 months; residence rules apply."
+      ],
+      "geographic_availability": "England and Wales; Scotland uses Adult Disability Payment; Northern Ireland has separate administration",
+      "application_method": "Start a claim by phone or textphone, then complete the process and assessment if required.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/pip",
+      "last_verified": "2026-11-07",
+      "additional_notes": "Award depends on how the condition affects activities, not diagnosis alone.",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": "Daily living £76.70 or £114.60 weekly; mobility £30.30 or £80 weekly.",
+      "application_url": "https://www.gov.uk/pip/how-to-claim",
+      "documents_required": [
+        "National Insurance number",
+        "Health professional details",
+        "Description of condition and functional impact"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "DLA-CHILD",
+      "name": "Disability Living Allowance for children",
+      "description": "Support for extra care or mobility costs for a disabled child; adults cannot make a new DLA claim in England or Wales.",
+      "support_category": "Disability and health-related costs",
+      "who_can_apply": "Parent or person responsible for a disabled child under 16.",
+      "eligibility_criteria": [
+        "Child under 16; care or mobility needs meet the relevant tests; residence and presence rules apply."
+      ],
+      "geographic_availability": "England and Wales for new child claims; Scotland uses Child Disability Payment",
+      "application_method": "Complete the child DLA claim form and send it to DWP.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/disability-living-allowance-children",
+      "last_verified": "2026-11-07",
+      "additional_notes": "",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.gov.uk/disability-living-allowance-children",
+      "documents_required": [
+        "Child/claimant details",
+        "Care and mobility description",
+        "Professional evidence where available"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "AA",
+      "name": "Attendance Allowance",
+      "description": "Help with personal-support costs where disability or health condition is severe enough that help looking after oneself is needed.",
+      "support_category": "Disability and health-related costs",
+      "who_can_apply": "People over State Pension age with qualifying care needs.",
+      "eligibility_criteria": [
+        "Physical or mental disability/health condition; needs personal support; mobility needs alone do not qualify; no carer is required."
+      ],
+      "geographic_availability": "England and Wales; Scotland uses Pension Age Disability Payment",
+      "application_method": "Apply using the GOV.UK claim route.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/attendance-allowance",
+      "last_verified": "2026-11-07",
+      "additional_notes": "May increase Pension Credit, Housing Benefit or Council Tax Reduction.",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": "£76.70 or £114.60 a week",
+      "application_url": "https://www.gov.uk/attendance-allowance/how-to-claim",
+      "documents_required": [
+        "Claimant/GP details",
+        "Description of care needs"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "CARERS",
+      "name": "Carer’s Allowance",
+      "description": "Payment for someone providing substantial unpaid care for a person receiving a qualifying disability benefit.",
+      "support_category": "Disability and health-related costs",
+      "who_can_apply": "People caring for someone at least 35 hours weekly.",
+      "eligibility_criteria": [
+        "Care at least 35 hours a week; cared-for person receives a qualifying benefit; earnings and other benefit rules apply."
+      ],
+      "geographic_availability": "England, Wales and Northern Ireland; Scotland has additional arrangements",
+      "application_method": "Apply online or by post through GOV.UK.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/carers-allowance",
+      "last_verified": "2026-11-07",
+      "additional_notes": "May affect the cared-for person’s benefits.",
+      "income_threshold": "Earnings limit applies; check current eligibility page.",
+      "savings_threshold": null,
+      "support_value": "£86.45 a week",
+      "application_url": "https://www.gov.uk/carers-allowance/how-to-claim",
+      "documents_required": [
+        "National Insurance number",
+        "Bank details",
+        "Employment/earnings",
+        "Cared-for person’s benefit details"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "ATW",
+      "name": "Access to Work",
+      "description": "Practical or financial help to start or stay in work where disability or health condition affects work.",
+      "support_category": "Disability and health-related costs",
+      "who_can_apply": "People with a disability or health condition who work or are about to work.",
+      "eligibility_criteria": [
+        "Condition must affect work; support must relate to work, interviews or mental-health needs; award depends on circumstances."
+      ],
+      "geographic_availability": "Great Britain; separate arrangements may apply in Northern Ireland",
+      "application_method": "Apply online through GOV.UK.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/access-to-work",
+      "last_verified": "2026-11-07",
+      "additional_notes": "",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.gov.uk/access-to-work",
+      "documents_required": [
+        "Employment details",
+        "Description of condition",
+        "Evidence/assessment information if requested"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "DFG",
+      "name": "Disabled Facilities Grant",
+      "description": "Grant to adapt a home so a disabled person can live more independently and safely.",
+      "support_category": "Disability and health-related costs",
+      "who_can_apply": "Disabled people or representatives applying through the local authority.",
+      "eligibility_criteria": [
+        "Local authority must assess works as necessary and appropriate; property reasonableness applies; means test may apply to adults."
+      ],
+      "geographic_availability": "England and Wales via local authorities",
+      "application_method": "Apply to the local council housing or social-services department.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/disabled-facilities-grants",
+      "last_verified": "2026-11-07",
+      "additional_notes": "Amount and contribution depend on the work and circumstances.",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.gov.uk/disabled-facilities-grants",
+      "documents_required": [
+        "Property/tenure details",
+        "Needs or occupational-therapy assessment",
+        "Financial information where means-tested"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "CTR",
+      "name": "Council Tax Reduction",
+      "description": "Reduction in Council Tax for people on low income or claiming benefits.",
+      "support_category": "Council Tax",
+      "who_can_apply": "Council Tax liable homeowners or renters meeting local rules.",
+      "eligibility_criteria": [
+        "Council considers income including savings, pensions and partner income, children and other adults; each council runs its own scheme."
+      ],
+      "geographic_availability": "Local authority schemes in Great Britain; Northern Ireland has a separate rates scheme",
+      "application_method": "Apply to the local council using the postcode finder.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/apply-council-tax-reduction",
+      "last_verified": "2026-11-07",
+      "additional_notes": "",
+      "income_threshold": "No UK-wide threshold; council scheme applies.",
+      "savings_threshold": "Savings may be considered locally.",
+      "support_value": "Bill may be reduced by up to 100%",
+      "application_url": "https://www.gov.uk/apply-council-tax-reduction",
+      "documents_required": [
+        "Council Tax account",
+        "Household details",
+        "Income/benefit/savings evidence"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "CT-SINGLE",
+      "name": "Council Tax single-person discount",
+      "description": "25% Council Tax discount where only one counted adult lives in a property.",
+      "support_category": "Council Tax",
+      "who_can_apply": "A liable adult meeting the single-person rules.",
+      "eligibility_criteria": [
+        "Only one counted adult normally lives in the property; some residents are disregarded when counting adults."
+      ],
+      "geographic_availability": "Council-tax areas in Great Britain",
+      "application_method": "Apply to the local council.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/council-tax/who-has-to-pay",
+      "last_verified": "2026-11-07",
+      "additional_notes": "",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": "25% discount where rules are met",
+      "application_url": "https://www.gov.uk/find-local-council",
+      "documents_required": [
+        "Council Tax account",
+        "Occupancy details"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "CT-DISABLED",
+      "name": "Council Tax disabled band reduction",
+      "description": "Council Tax relief for qualifying disabled adaptations or severe mental impairment circumstances.",
+      "support_category": "Council Tax",
+      "who_can_apply": "Households meeting disabled-band or severe-mental-impairment conditions.",
+      "eligibility_criteria": [
+        "Disabled Band Reduction may apply where an extra room, bathroom, kitchen or indoor wheelchair space is needed because of disability; severe mental impairment rules require relevant certification/conditions."
+      ],
+      "geographic_availability": "Great Britain council-tax areas",
+      "application_method": "Apply to the local council; medical certification may be required.",
+      "availability_status": "Currently available",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.gov.uk/council-tax/discounts-for-disabled-people",
+      "last_verified": "2026-11-07",
+      "additional_notes": "",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.gov.uk/council-tax/discounts-for-disabled-people",
+      "documents_required": [
+        "Council Tax account",
+        "Property/adaptation details",
+        "Medical certificate where relevant"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "LWA",
+      "name": "Local welfare and crisis assistance",
+      "description": "Local schemes may provide emergency help with food, essential items, heating or housing costs.",
+      "support_category": "Financial hardship",
+      "who_can_apply": "People facing an immediate crisis or difficulty paying essentials.",
+      "eligibility_criteria": [
+        "Rules, budgets and awards are local; benefits are not necessarily required."
+      ],
+      "geographic_availability": "Local-authority specific; England councils use Crisis and Resilience Fund arrangements, while devolved nations have their own schemes",
+      "application_method": "Ask the local council or use Turn2us Grants Search with a postcode.",
+      "availability_status": "Currently available but local budgets vary",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.turn2us.org.uk/get-support/information-for-your-situation/emergency-information/facing-an-unexpected-cost",
+      "last_verified": "2026-11-07",
+      "additional_notes": "Turn2us identifies Scottish Welfare Fund, Welsh Discretionary Assistance Fund and Northern Ireland local support routes.",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://grants-search.turn2us.org.uk/",
+      "documents_required": [
+        "Identity/address",
+        "Evidence of crisis and essential need",
+        "Income/benefit information if requested"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "SCOT-CRISIS",
+      "name": "Scottish Welfare Fund crisis grant",
+      "description": "Discretionary grant for an emergency or disaster when essential costs cannot be afforded; it does not have to be repaid.",
+      "support_category": "Financial hardship",
+      "who_can_apply": "People living in Scotland facing an emergency or disaster.",
+      "eligibility_criteria": [
+        "Cannot afford essential costs; grants are discretionary and depend on local budget; some income/capital or hardship-payment exclusions apply."
+      ],
+      "geographic_availability": "Scotland only",
+      "application_method": "Apply to the local council; Citizens Advice can help.",
+      "availability_status": "Currently available, subject to budget",
+      "source_name": "GOV.UK",
+      "source_url": "https://www.citizensadvice.org.uk/scotland/benefits/help-if-on-a-low-income/scottish-welfare-fund-s/scottish-welfare-fund-crisis-grants-s/",
+      "last_verified": "2026-11-07",
+      "additional_notes": "",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://www.mygov.scot/scottish-welfare-fund/",
+      "documents_required": [
+        "Identity/address",
+        "Emergency details",
+        "Income/capital and benefits"
+      ],
+      "deadline": null
+    },
+    {
+      "support_id": "CHARITY-GRANTS",
+      "name": "Turn2us charitable grants search",
+      "description": "Matches people to charitable grants that may help with costs and normally do not need repayment.",
+      "support_category": "Financial hardship",
+      "who_can_apply": "Anyone can search; individual charities set eligibility.",
+      "eligibility_criteria": [
+        "Eligibility may depend on health, age, occupation, family background or financial need; many grants are circumstance-specific."
+      ],
+      "geographic_availability": "UK-wide; individual charity coverage varies",
+      "application_method": "Complete the anonymous online search, then apply to the matched charity.",
+      "availability_status": "Currently available; individual grants vary",
+      "source_name": "GOV.UK",
+      "source_url": "https://grants-search.turn2us.org.uk/",
+      "last_verified": "2026-11-07",
+      "additional_notes": "Turn2us cannot guarantee an award.",
+      "income_threshold": null,
+      "savings_threshold": null,
+      "support_value": null,
+      "application_url": "https://grants-search.turn2us.org.uk/",
+      "documents_required": [
+        "Varies by charity; commonly identity, income and supporting evidence"
+      ],
+      "deadline": null
+    }
+  ]
+}
