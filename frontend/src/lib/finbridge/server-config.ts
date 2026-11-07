@@ -73,7 +73,7 @@ export function elevenLabsKey(): string {
   if (!key) {
     throw new ConfigError(
       "ELEVENLABS_API_KEY",
-      "Create a key at https://elevenlabs.io/app/settings/api-keys and put it in frontend/.env.local. It must never be exposed to the browser.",
+      "Create a key at https://elevenlabs.io/app/settings/api-keys and put it in new_frontend/.env.local. It must never be exposed to the browser.",
     );
   }
   return key;

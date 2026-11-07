@@ -7,8 +7,8 @@ import { Sidebar } from "@/components/finbridge/Sidebar";
 import { TopicPanel } from "@/components/finbridge/TopicPanel";
 import { Chat, type ChatSeed } from "@/components/finbridge/Chat";
 import { PersonaPicker } from "@/components/finbridge/PersonaPicker";
-import type { DemoUserId } from "@/lib/finbridge/types";
 import { NavBar } from "@/components/NavBar";
+import type { BalanceForecast, DemoUserId } from "@/lib/finbridge/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,6 +37,7 @@ function Index() {
   const [userId, setUserId] = useState<DemoUserId>("demo-amira");
   /** A question handed to the chat from a topic box; the nonce lets the same one re-fire. */
   const [seed, setSeed] = useState<ChatSeed | null>(null);
+  const [forecast, setForecast] = useState<BalanceForecast | null>(null);
 
   const topic = topics.find((t) => t.id === active) ?? null;
 
@@ -45,26 +46,39 @@ function Index() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <NavBar />
-      <div className="h-1 bg-primary" />
-      <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-5 p-5 md:grid-cols-[280px_1fr]">
-        <div className="hidden md:block" />
-        <HeaderCards />
-        <div className="flex flex-col gap-4">
+      <div className="mx-auto grid w-full max-w-[1000px] flex-1 grid-cols-1 gap-8 px-5 py-8 md:grid-cols-[220px_minmax(0,1fr)] md:gap-16 md:px-8 md:py-14">
+        <div className="flex flex-col gap-8 self-start md:sticky md:top-14">
           <Sidebar active={active} onSelect={setActive} />
-          <PersonaPicker value={userId} onChange={setUserId} />
+          <PersonaPicker
+            value={userId}
+            onChange={(next) => {
+              setUserId(next);
+              setForecast(null);
+              // The chat remounts for the new profile, so a kept seed would be asked again.
+              setSeed(null);
+            }}
+          />
         </div>
-        <main className="flex min-w-0 flex-col gap-4">
+        <main className="flex max-w-[660px] min-w-0 flex-col gap-12">
+          <HeaderCards forecast={forecast} />
           <TopicPanel topic={topic} onAsk={ask} />
           {/* Remounting on persona change starts a fresh session, so one profile's
               conversation never carries into another's numbers. */}
-          <Chat key={userId} userId={userId} seed={seed} />
+          <Chat
+            key={userId}
+            userId={userId}
+            seed={seed}
+            onForecast={setForecast}
+          />
         </main>
-        <p className="text-xs text-muted-foreground md:hidden">
+      </div>
+      <footer className="mx-auto w-full max-w-[1000px] px-5 md:px-8">
+        <p className="border-t border-border py-5 text-sm text-muted-foreground">
           Prototype. Guidance only, not regulated financial advice.
         </p>
-      </div>
+      </footer>
     </div>
   );
 }

@@ -83,7 +83,7 @@ function statusBadge(status: string) {
   };
   const cfg = map[status.toLowerCase()] ?? { label: status, className: "bg-muted text-muted-foreground", Icon: Clock };
   return (
-    <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium", cfg.className)}>
+    <span className={cn("inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium", cfg.className)}>
       <cfg.Icon className="h-3 w-3" aria-hidden />
       {cfg.label}
     </span>
@@ -115,7 +115,7 @@ function IntelligenceCard({ event }: { event: Event }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <article className="rounded-2xl border border-border bg-card overflow-hidden">
+    <article className="rounded-md border border-border bg-card overflow-hidden">
       <button
         type="button"
         className="w-full px-5 py-4 text-left"
@@ -135,7 +135,7 @@ function IntelligenceCard({ event }: { event: Event }) {
                 </span>
               )}
             </div>
-            <h3 className="text-sm font-semibold text-foreground">{event.title}</h3>
+            <h3 className="text-sm text-foreground">{event.title}</h3>
             <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{event.summary}</p>
           </div>
           {open ? <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground mt-1" /> : <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground mt-1" />}
@@ -150,7 +150,7 @@ function IntelligenceCard({ event }: { event: Event }) {
 
           {event.potential_impacts.length > 0 && (
             <div>
-              <h4 className="font-semibold mb-1">Potential household impacts</h4>
+              <h4 className=" mb-1">Potential household impacts</h4>
               <ul className="space-y-1">
                 {event.potential_impacts.map((p, i) => (
                   <li key={i} className="flex gap-2 text-xs text-muted-foreground">
@@ -164,10 +164,10 @@ function IntelligenceCard({ event }: { event: Event }) {
 
           {event.exposed_groups.length > 0 && (
             <div>
-              <h4 className="font-semibold mb-1">Who may be affected</h4>
+              <h4 className=" mb-1">Who may be affected</h4>
               <div className="flex flex-wrap gap-1">
                 {event.exposed_groups.map((g, i) => (
-                  <span key={i} className="rounded-full border border-border bg-background px-2 py-0.5 text-xs">{g}</span>
+                  <span key={i} className="rounded-md border border-border bg-background px-2 py-0.5 text-xs">{g}</span>
                 ))}
               </div>
             </div>
@@ -175,14 +175,14 @@ function IntelligenceCard({ event }: { event: Event }) {
 
           {event.time_horizon && (
             <div>
-              <h4 className="font-semibold mb-1">Time horizon</h4>
+              <h4 className=" mb-1">Time horizon</h4>
               <p className="text-xs text-muted-foreground">{event.time_horizon}</p>
             </div>
           )}
 
           {event.evidence.length > 0 && (
             <div>
-              <h4 className="font-semibold mb-1">Evidence</h4>
+              <h4 className=" mb-1">Evidence</h4>
               <ul className="space-y-1">
                 {event.evidence.map((e, i) => (
                   <li key={i} className="text-xs text-muted-foreground">— {e}</li>
@@ -192,8 +192,8 @@ function IntelligenceCard({ event }: { event: Event }) {
           )}
 
           {event.uncertainties.length > 0 && (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-800/30 dark:bg-amber-900/10 p-3">
-              <h4 className="font-semibold text-amber-800 dark:text-amber-300 mb-1">Uncertainties</h4>
+            <div className="rounded-md border border-amber-200 bg-amber-50 dark:border-amber-800/30 dark:bg-amber-900/10 p-3">
+              <h4 className=" text-amber-800 dark:text-amber-300 mb-1">Uncertainties</h4>
               <ul className="space-y-1">
                 {event.uncertainties.map((u, i) => (
                   <li key={i} className="text-xs text-amber-700 dark:text-amber-400">— {u}</li>
@@ -301,7 +301,7 @@ function ConsequenceGraph({
   const dim = (id: string) => isHighlighted && !highlighted.has(id);
 
   return (
-    <div className="rounded-2xl border border-border bg-card overflow-hidden">
+    <div className="rounded-md border border-border bg-card overflow-hidden">
       {/* Controls */}
       <div className="flex items-center justify-between border-b border-border px-4 py-2">
         <div className="flex items-center gap-2">
@@ -319,9 +319,9 @@ function ConsequenceGraph({
           </span>
         </div>
         <div className="flex gap-1">
-          <button type="button" onClick={zoomOut} className="rounded-lg p-1.5 hover:bg-accent" aria-label="Zoom out"><ZoomOut className="h-4 w-4" /></button>
-          <button type="button" onClick={zoomIn}  className="rounded-lg p-1.5 hover:bg-accent" aria-label="Zoom in"><ZoomIn className="h-4 w-4" /></button>
-          <button type="button" onClick={fitView} className="rounded-lg p-1.5 hover:bg-accent" aria-label="Fit view"><Maximize2 className="h-4 w-4" /></button>
+          <button type="button" onClick={zoomOut} className="rounded-md p-1.5 hover:bg-accent" aria-label="Zoom out"><ZoomOut className="h-4 w-4" /></button>
+          <button type="button" onClick={zoomIn}  className="rounded-md p-1.5 hover:bg-accent" aria-label="Zoom in"><ZoomIn className="h-4 w-4" /></button>
+          <button type="button" onClick={fitView} className="rounded-md p-1.5 hover:bg-accent" aria-label="Fit view"><Maximize2 className="h-4 w-4" /></button>
         </div>
       </div>
 
@@ -437,10 +437,10 @@ function ConsequenceGraph({
               <div className="space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className={cn("inline-block rounded-full px-2 py-0.5 text-xs font-medium mb-1", isEvent ? "bg-primary/10 text-primary" : "bg-lifeline/10 text-lifeline")}>
+                    <span className={cn("inline-block rounded-md px-2 py-0.5 text-xs font-medium mb-1", isEvent ? "bg-primary/10 text-primary" : "bg-lifeline/10 text-lifeline")}>
                       {isEvent ? "World event" : "Economic variable"}
                     </span>
-                    <h4 className="font-semibold text-sm">{node.label}</h4>
+                    <h4 className=" text-sm">{node.label}</h4>
                     {node.status && <p className="text-xs text-muted-foreground">Status: {node.status}</p>}
                   </div>
                   <button type="button" onClick={() => { setSelectedNode(null); onSelectNode(""); }} className="text-muted-foreground hover:text-foreground"><X className="h-4 w-4" /></button>
@@ -469,7 +469,7 @@ function ConsequenceGraph({
           {selectedEdge && (
             <div className="space-y-2">
               <div className="flex items-start justify-between gap-2">
-                <h4 className="font-semibold text-sm">{selectedEdge.from} → {selectedEdge.to}: {selectedEdge.relationship}</h4>
+                <h4 className=" text-sm">{selectedEdge.from} → {selectedEdge.to}: {selectedEdge.relationship}</h4>
                 <button type="button" onClick={() => setSelectedEdge(null)} className="text-muted-foreground hover:text-foreground"><X className="h-4 w-4" /></button>
               </div>
               <p className="text-xs text-muted-foreground">{selectedEdge.pathway}</p>
@@ -529,14 +529,14 @@ function ImpactExplorer() {
     <div className="space-y-6">
       <ConsequenceGraph highlighted={graphHighlight} onSelectNode={() => {}} />
 
-      <div className="rounded-2xl border border-border bg-card p-5">
-        <h3 className="font-semibold mb-1">Select events to explore connected pathways</h3>
+      <div className="rounded-md border border-border bg-card p-5">
+        <h3 className=" mb-1">Select events to explore connected pathways</h3>
         <p className="text-xs text-muted-foreground mb-4">
           Events selected below are highlighted in the graph above. Pathways show candidate analytical connections, not proven causal relationships.
         </p>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {eventNodes.map((node) => (
-            <label key={node.id} className="flex items-start gap-3 rounded-xl border border-border bg-background px-3 py-2 cursor-pointer hover:bg-accent transition-colors">
+            <label key={node.id} className="flex items-start gap-3 rounded-md border border-border bg-background px-3 py-2 cursor-pointer hover:bg-accent transition-colors">
               <input
                 type="checkbox"
                 checked={selected.has(node.id)}
@@ -553,10 +553,10 @@ function ImpactExplorer() {
 
         {affectedVars.length > 0 && (
           <div className="mt-5">
-            <h4 className="font-semibold text-sm mb-3">Variables that may be affected ({affectedVars.length})</h4>
+            <h4 className=" text-sm mb-3">Variables that may be affected ({affectedVars.length})</h4>
             <div className="space-y-3">
               {affectedVars.map(({ node, edges }) => (
-                <div key={node.id} className="rounded-xl border border-border bg-muted/40 p-3">
+                <div key={node.id} className="rounded-md border border-border bg-muted/40 p-3">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-mono text-xs text-lifeline font-semibold">{node.id}</span>
                     <span className="text-sm font-medium">{node.label}</span>
@@ -596,15 +596,15 @@ const PREPARE_STEPS = [
 
 function PrepareSection() {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5">
-      <h3 className="font-semibold mb-1">Prepare for the future</h3>
+    <div className="rounded-md border border-border bg-card p-5">
+      <h3 className=" mb-1">Prepare for the future</h3>
       <p className="text-xs text-muted-foreground mb-4">
         These are general questions and steps drawn from the analysed events. They are possibilities to explore, not financial advice. Eligibility and outcomes depend on individual circumstances.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         {PREPARE_STEPS.map((s) => (
-          <div key={s.heading} className="rounded-xl border border-border bg-background p-4">
-            <h4 className="text-sm font-semibold mb-1">{s.heading}</h4>
+          <div key={s.heading} className="rounded-md border border-border bg-background p-4">
+            <h4 className="text-sm mb-1">{s.heading}</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">{s.text}</p>
           </div>
         ))}
@@ -633,13 +633,12 @@ function LifelinePage() {
   return (
     <div className="min-h-screen">
       <NavBar />
-      <div className="h-1 bg-primary" />
 
       {/* Hero */}
-      <div className="bg-primary/5 border-b border-border">
-        <div className="mx-auto max-w-[1180px] px-5 py-10">
+      <div className="">
+        <div className="mx-auto max-w-[1000px] px-5 md:px-8 py-10">
           <p className="text-xs font-semibold uppercase tracking-wider text-lifeline mb-2">LIFELINE</p>
-          <h1 className="font-serif text-3xl font-bold text-heading mb-3">
+          <h1 className="font-serif text-3xl text-heading mb-3">
             Predict the world. Understand the impact. Prepare for the future.
           </h1>
           <p className="text-muted-foreground max-w-2xl">
@@ -651,9 +650,9 @@ function LifelinePage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1180px] px-5 py-6 space-y-6">
+      <div className="mx-auto max-w-[1000px] px-5 md:px-8 py-6 space-y-6">
         {/* Tabs */}
-        <div className="flex gap-1 rounded-xl border border-border bg-card p-1 w-fit">
+        <div className="flex gap-1 rounded-md border border-border bg-card p-1 w-fit">
           {([
             ["feed", "Intelligence feed"],
             ["explorer", "Consequence graph & impact explorer"],
@@ -664,7 +663,7 @@ function LifelinePage() {
               type="button"
               onClick={() => setTab(t)}
               className={cn(
-                "rounded-lg px-4 py-1.5 text-sm font-medium transition-colors",
+                "rounded-md px-4 py-1.5 text-sm font-medium transition-colors",
                 tab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent",
               )}
             >
@@ -680,7 +679,7 @@ function LifelinePage() {
               <button
                 type="button"
                 onClick={() => setCategoryFilter(null)}
-                className={cn("rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                className={cn("rounded-md border px-3 py-1 text-xs font-medium transition-colors",
                   categoryFilter === null ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:bg-accent")}
               >
                 All ({events.length})
@@ -690,7 +689,7 @@ function LifelinePage() {
                   key={cat}
                   type="button"
                   onClick={() => setCategoryFilter(cat === categoryFilter ? null : cat)}
-                  className={cn("rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                  className={cn("rounded-md border px-3 py-1 text-xs font-medium transition-colors",
                     categoryFilter === cat ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:bg-accent")}
                 >
                   {CATEGORY_SHORT[cat] ?? cat}

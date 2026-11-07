@@ -125,6 +125,7 @@ export function useFinBridgeChat({ userId, onAgentMessage }: Options) {
           sources: payload.supportSources,
           suggestedNextStep: payload.suggestedNextStep,
           editableDraft: payload.editableDraft,
+          forecast: payload.forecast,
         };
         setMessages((current) => [...current, agentMessage]);
         onAgentMessageRef.current?.(agentMessage, channel);

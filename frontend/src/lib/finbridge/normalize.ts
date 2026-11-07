@@ -1,6 +1,56 @@
 import { z } from "zod";
 
-import type { ChatResponse, SupportSource } from "./types";
+import type {
+  BalanceForecast,
+  ChatResponse,
+  DailyBalance,
+  SupportSource,
+} from "./types";
+
+function pickSeries(value: unknown): DailyBalance[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const series = value.flatMap((raw): DailyBalance[] => {
+    if (!raw || typeof raw !== "object") return [];
+    const { date, balance } = raw as Record<string, unknown>;
+    return typeof date === "string" && Number.isFinite(balance)
+      ? [{ date, balance: balance as number }]
+      : [];
+  });
+  return series.length > 0 ? series : undefined;
+}
+
+/**
+ * Keep only the forecast fields the balance chart and shortfall card draw, and only when
+ * they have the right shape. These figures come from the forecast engine, never the model.
+ */
+export function pickForecast(value: unknown): BalanceForecast | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const forecast = value as Record<string, unknown>;
+  const scenarios = forecast["scenarios"] as
+    | {
+        base?: { dailySeries?: unknown };
+        changed?: { dailySeries?: unknown };
+      }
+    | null
+    | undefined;
+  const base = pickSeries(scenarios?.base?.dailySeries);
+  const changed = pickSeries(scenarios?.changed?.dailySeries);
+  const amount = forecast["firstShortfallAmount"];
+  const hasShortfall = forecast["hasShortfall"];
+
+  return {
+    hasShortfall: typeof hasShortfall === "boolean" ? hasShortfall : undefined,
+    firstShortfallDate: asString(forecast["firstShortfallDate"]),
+    firstShortfallAmount: Number.isFinite(amount)
+      ? (amount as number)
+      : undefined,
+    dailySeries: pickSeries(forecast["dailySeries"]),
+    scenarios:
+      base && changed
+        ? { base: { dailySeries: base }, changed: { dailySeries: changed } }
+        : undefined,
+  };
+}
 
 /**
  * The chat contract: what we accept from the browser, and how we read whatever n8n sends
@@ -128,5 +178,6 @@ export function toChatResponse(
     catalogueCheckedAt: asString(data["catalogueCheckedAt"]),
     suggestedNextStep: asString(data["suggestedNextStep"]),
     editableDraft: asString(data["editableDraft"] ?? data["draft"]),
+    forecast: pickForecast(data["forecast"]),
   };
 }

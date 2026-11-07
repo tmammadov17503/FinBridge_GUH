@@ -75,20 +75,20 @@ function SupportCard({
 }) {
   const cfg = categoryConfig(option.support_category);
   return (
-    <article className="rounded-2xl border border-border bg-card p-4 flex flex-col gap-3">
+    <article className="rounded-md border border-border bg-card p-4 flex flex-col gap-3">
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium", cfg.color)}>
+          <span className={cn("inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium", cfg.color)}>
             <cfg.Icon className="h-3 w-3" aria-hidden />
             {cfg.label}
           </span>
           {option.availability_status === "Currently available" && (
-            <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-300">
+            <span className="rounded-md bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-300">
               Available
             </span>
           )}
         </div>
-        <h3 className="font-semibold text-sm">{option.name}</h3>
+        <h3 className=" text-sm">{option.name}</h3>
         <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{option.description}</p>
       </div>
 
@@ -106,7 +106,7 @@ function SupportCard({
         <button
           type="button"
           onClick={() => onDetail(option)}
-          className="flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors"
+          className="flex items-center gap-1 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors"
         >
           Details <ChevronRight className="h-3 w-3" />
         </button>
@@ -115,7 +115,7 @@ function SupportCard({
             href={option.application_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+            className="flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90 transition-opacity"
           >
             Apply <ExternalLink className="h-3 w-3" />
           </a>
@@ -138,42 +138,42 @@ function SchemeDetail({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40" onClick={onClose}>
       <div
-        className="relative w-full max-w-lg rounded-2xl border border-border bg-card p-6 max-h-[85vh] overflow-y-auto"
+        className="relative w-full max-w-lg rounded-md border border-border bg-card p-6 max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-full p-1 hover:bg-accent"
+          className="absolute right-4 top-4 rounded-md p-1 hover:bg-accent"
           aria-label="Close"
         >
           <X className="h-5 w-5" />
         </button>
 
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium", cfg.color)}>
+          <span className={cn("inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium", cfg.color)}>
             <cfg.Icon className="h-3 w-3" aria-hidden />
             {cfg.label}
           </span>
           {option.availability_status === "Currently available" && (
-            <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-300">
+            <span className="rounded-md bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-300">
               Currently available
             </span>
           )}
         </div>
 
-        <h2 className="text-lg font-bold mb-1">{option.name}</h2>
+        <h2 className="text-lg mb-1">{option.name}</h2>
         <p className="text-sm text-muted-foreground mb-4">{option.description}</p>
 
         <div className="space-y-4 text-sm">
           <div>
-            <h3 className="font-semibold mb-1">Who can apply</h3>
+            <h3 className=" mb-1">Who can apply</h3>
             <p className="text-muted-foreground">{option.who_can_apply}</p>
           </div>
 
           {option.eligibility_criteria.length > 0 && (
             <div>
-              <h3 className="font-semibold mb-1">Eligibility criteria</h3>
+              <h3 className=" mb-1">Eligibility criteria</h3>
               <ul className="space-y-1">
                 {option.eligibility_criteria.map((c, i) => (
                   <li key={i} className="flex gap-2 text-muted-foreground text-xs">
@@ -187,43 +187,43 @@ function SchemeDetail({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <h3 className="font-semibold mb-1">Where</h3>
+              <h3 className=" mb-1">Where</h3>
               <p className="text-xs text-muted-foreground">{option.geographic_availability}</p>
             </div>
             {option.support_value && (
               <div>
-                <h3 className="font-semibold mb-1">Potential value</h3>
+                <h3 className=" mb-1">Potential value</h3>
                 <p className="text-xs text-muted-foreground">{option.support_value}</p>
               </div>
             )}
             {option.income_threshold && (
               <div>
-                <h3 className="font-semibold mb-1">Income limit</h3>
+                <h3 className=" mb-1">Income limit</h3>
                 <p className="text-xs text-muted-foreground">{option.income_threshold}</p>
               </div>
             )}
             {option.savings_threshold && (
               <div>
-                <h3 className="font-semibold mb-1">Savings limit</h3>
+                <h3 className=" mb-1">Savings limit</h3>
                 <p className="text-xs text-muted-foreground">{option.savings_threshold}</p>
               </div>
             )}
             {option.deadline && (
               <div>
-                <h3 className="font-semibold mb-1">Deadline</h3>
+                <h3 className=" mb-1">Deadline</h3>
                 <p className="text-xs text-muted-foreground">{option.deadline}</p>
               </div>
             )}
           </div>
 
           <div>
-            <h3 className="font-semibold mb-1">How to apply</h3>
+            <h3 className=" mb-1">How to apply</h3>
             <p className="text-xs text-muted-foreground">{option.application_method}</p>
           </div>
 
           {option.documents_required.length > 0 && (
             <div>
-              <h3 className="font-semibold mb-1">Documents you may need</h3>
+              <h3 className=" mb-1">Documents you may need</h3>
               <div className="flex flex-wrap gap-1">
                 {option.documents_required.map((d, i) => (
                   <span key={i} className="rounded border border-border bg-background px-2 py-0.5 text-xs">{d}</span>
@@ -233,7 +233,7 @@ function SchemeDetail({
           )}
 
           {option.additional_notes && (
-            <div className="rounded-xl border border-border bg-muted/40 p-3">
+            <div className="rounded-md border border-border bg-muted/40 p-3">
               <p className="text-xs text-muted-foreground">{option.additional_notes}</p>
             </div>
           )}
@@ -250,7 +250,7 @@ function SchemeDetail({
             )}
           </div>
 
-          <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-800/30 dark:bg-amber-900/10 p-3">
+          <div className="rounded-md border border-amber-200 bg-amber-50 dark:border-amber-800/30 dark:bg-amber-900/10 p-3">
             <p className="text-xs text-amber-700 dark:text-amber-400">
               Eligibility is decided by the scheme provider, not FinBridge. These details are drawn from public sources and may change. Always check directly with the provider before applying.
             </p>
@@ -262,7 +262,7 @@ function SchemeDetail({
             href={option.application_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-5 flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
+            className="mt-5 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
           >
             Go to application <ExternalLink className="h-4 w-4" />
           </a>
@@ -301,13 +301,12 @@ function MoneyPage() {
   return (
     <div className="min-h-screen">
       <NavBar />
-      <div className="h-1 bg-primary" />
 
       {/* Hero */}
-      <div className="bg-primary/5 border-b border-border">
-        <div className="mx-auto max-w-[1180px] px-5 py-10">
+      <div className="">
+        <div className="mx-auto max-w-[1000px] px-5 md:px-8 py-10">
           <p className="text-xs font-semibold uppercase tracking-wider text-lifeline mb-2">Money Where It Is</p>
-          <h1 className="font-serif text-3xl font-bold text-heading mb-3">
+          <h1 className="font-serif text-3xl text-heading mb-3">
             There may be more support available than you think.
           </h1>
           <p className="text-muted-foreground mb-6 max-w-xl">
@@ -323,7 +322,7 @@ function MoneyPage() {
               placeholder="Describe what you need help with…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-full border border-input bg-background pl-11 pr-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="w-full rounded-md border border-input bg-background pl-11 pr-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               aria-label="Search for financial support"
             />
             {query && (
@@ -335,10 +334,10 @@ function MoneyPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1180px] px-5 py-6 space-y-6">
+      <div className="mx-auto max-w-[1000px] px-5 md:px-8 py-6 space-y-6">
         {/* Category grid */}
         <div>
-          <h2 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">Browse by category</h2>
+          <h2 className="text-sm mb-3 text-muted-foreground uppercase tracking-wide">Browse by category</h2>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
             {activeCats.map((cat) => {
               const count = options.filter((o) => o.support_category === cat.key).length;
@@ -349,7 +348,7 @@ function MoneyPage() {
                   type="button"
                   onClick={() => setActiveCategory(isActive ? null : cat.key)}
                   className={cn(
-                    "flex flex-col items-center gap-1 rounded-xl border p-3 text-xs font-medium transition-colors",
+                    "flex flex-col items-center gap-1 rounded-md border p-3 text-xs font-medium transition-colors",
                     isActive
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border bg-card hover:bg-accent",
@@ -369,7 +368,7 @@ function MoneyPage() {
         {/* Results */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold">
+            <h2 className="text-sm">
               {filtered.length} scheme{filtered.length !== 1 ? "s" : ""} found
               {activeCategory && ` in ${categoryConfig(activeCategory).label}`}
             </h2>
@@ -385,7 +384,7 @@ function MoneyPage() {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="rounded-2xl border border-border bg-card p-10 text-center">
+            <div className="rounded-md border border-border bg-card p-10 text-center">
               <Search className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
               <p className="font-semibold">No schemes matched your search</p>
               <p className="text-sm text-muted-foreground mt-1">Try different words or browse by category.</p>
@@ -400,8 +399,8 @@ function MoneyPage() {
         </div>
 
         {/* Worth checking section */}
-        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
-          <h2 className="font-semibold mb-1">Worth checking</h2>
+        <div className="rounded-md border border-primary/20 bg-primary/5 p-5">
+          <h2 className=" mb-1">Worth checking</h2>
           <p className="text-xs text-muted-foreground mb-3">
             These schemes are often missed. We show them because they're broadly applicable and regularly go unclaimed — not because we know you qualify.
           </p>
@@ -411,7 +410,7 @@ function MoneyPage() {
                 key={o.support_id}
                 type="button"
                 onClick={() => setDetail(o)}
-                className="text-left rounded-xl border border-border bg-background px-4 py-3 hover:bg-accent transition-colors"
+                className="text-left rounded-md border border-border bg-background px-4 py-3 hover:bg-accent transition-colors"
               >
                 <p className="text-sm font-semibold">{o.name}</p>
                 <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{o.description}</p>

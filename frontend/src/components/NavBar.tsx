@@ -10,25 +10,31 @@ const NAV_LINKS = [
 
 export function NavBar() {
   return (
-    <div className="bg-header-bar">
-      <div className="mx-auto flex h-16 max-w-[1180px] items-center justify-between gap-4 px-5">
-        <Link to="/" className="font-serif text-2xl font-bold text-header-bar-foreground hover:opacity-90 shrink-0">
+    <header className="mx-auto w-full max-w-[1000px] px-5 md:px-8">
+      <div className="flex flex-wrap items-center gap-x-8 border-b border-border">
+        <Link to="/" className="py-3 font-serif text-xl text-heading">
           FinBridge
         </Link>
-        <nav className="flex items-center gap-1 overflow-x-auto">
+        <div className="ml-auto md:order-last">
+          <ThemeToggle />
+        </div>
+        <nav
+          aria-label="Main"
+          className="flex w-full gap-x-5 overflow-x-auto md:w-auto"
+        >
           {NAV_LINKS.map(({ to, label }) => (
             <Link
               key={to}
               to={to}
-              className="whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium text-header-bar-foreground/80 transition-colors hover:bg-white/10 hover:text-header-bar-foreground"
-              activeProps={{ className: "bg-white/20 text-header-bar-foreground" }}
+              activeOptions={{ exact: true }}
+              className="flex min-h-11 items-center whitespace-nowrap border-b-2 border-transparent text-sm text-muted-foreground hover:text-foreground"
+              activeProps={{ className: "border-primary! text-foreground!" }}
             >
               {label}
             </Link>
           ))}
         </nav>
-        <ThemeToggle />
       </div>
-    </div>
+    </header>
   );
 }

@@ -1,5 +1,3 @@
-import { MessageSquare } from "lucide-react";
-
 import type { Topic } from "@/data/topics";
 
 /**
@@ -16,44 +14,38 @@ export function TopicPanel({
   disabled?: boolean;
 }) {
   return (
-    <section
-      aria-live="polite"
-      className="rounded-2xl border border-border bg-card p-5"
-    >
+    <section aria-live="polite">
       {topic ? (
         <>
-          <h2 className="text-xl font-bold">{topic.title}</h2>
-          <p className="text-muted-foreground">{topic.description}</p>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <h1 className="text-3xl md:text-4xl">{topic.title}</h1>
+          <p className="mt-3 text-lg text-muted-foreground">
+            {topic.description}
+          </p>
+          <ul className="mt-6 border-t border-border">
             {topic.boxes.map((box) => (
-              <button
-                key={box.label}
-                type="button"
-                disabled={disabled}
-                onClick={() => onAsk(box.prompt)}
-                title={box.prompt}
-                className="group flex min-h-12 flex-col gap-1 rounded-xl border border-input bg-background p-3 text-left transition-colors hover:border-primary hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-                  <MessageSquare
-                    className="h-3.5 w-3.5 text-primary opacity-70"
-                    aria-hidden
-                  />
-                  {box.label}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {box.prompt}
-                </span>
-              </button>
+              <li key={box.label} className="border-b border-border">
+                <button
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => onAsk(box.prompt)}
+                  className="w-full py-2.5 text-left hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <span className="block">{box.label}</span>
+                  <span className="block text-sm text-muted-foreground">
+                    {box.prompt}
+                  </span>
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
         </>
       ) : (
         <>
-          <h2 className="text-xl font-bold">Welcome</h2>
-          <p className="text-muted-foreground">
-            Pick a topic on the left, or ask the chat below — by typing or by
-            voice.
+          <h1 className="text-3xl text-balance md:text-4xl">
+            Money help, in plain English.
+          </h1>
+          <p className="mt-3 text-lg text-muted-foreground">
+            Ask below by typing or by voice, or choose a topic.
           </p>
         </>
       )}

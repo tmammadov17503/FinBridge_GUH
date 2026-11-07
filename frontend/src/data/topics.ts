@@ -95,4 +95,11 @@ export const topics: Topic[] = [
   },
 ];
 
-export const headerCards = ["Next step", "Coming up", "Support for you"];
+export const headerCards = [
+  { title: "Next step", body: "Ask a question about your money." },
+  { title: "Coming up", body: "Nothing here yet." },
+  {
+    title: "Support for you",
+    body: "Links to support appear with your answers.",
+  },
+];

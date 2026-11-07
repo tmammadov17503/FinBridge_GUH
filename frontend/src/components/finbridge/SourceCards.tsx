@@ -1,5 +1,3 @@
-import { ExternalLink, Info } from "lucide-react";
-
 import type { SupportSource } from "@/lib/finbridge/types";
 
 /**
@@ -19,46 +17,34 @@ export function SourceCards({
   if (sources.length === 0) return null;
 
   return (
-    <div className="mt-3 flex flex-col gap-2">
-      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        Support to look at
-      </p>
-      <ul className="flex flex-col gap-2">
+    <div className="mt-5">
+      <p className="mb-2 font-medium">Support to look at</p>
+      <ul className="border-b border-border">
         {sources.map((source) => (
-          <li
-            key={source.id}
-            className="rounded-xl border border-border bg-background p-3"
-          >
+          <li key={source.id} className="border-t border-border py-3">
             <a
               href={source.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-start gap-1.5 font-semibold text-primary underline-offset-4 hover:underline"
+              className="text-primary underline underline-offset-2 hover:no-underline"
             >
-              <span>{source.title}</span>
-              <ExternalLink
-                className="mt-1 h-3.5 w-3.5 shrink-0 opacity-70"
-                aria-hidden
-              />
-              <span className="sr-only">(opens in a new tab)</span>
+              {source.title}
+              <span className="sr-only"> (opens in a new tab)</span>
             </a>
-            <p className="text-xs text-muted-foreground">{source.provider}</p>
+            <p className="text-sm text-muted-foreground">{source.provider}</p>
             {source.summary ? (
-              <p className="mt-1.5 text-sm text-foreground/90">
-                {source.summary}
-              </p>
+              <p className="mt-1.5 text-sm">{source.summary}</p>
             ) : null}
             {source.caution ? (
-              <p className="mt-2 flex gap-1.5 text-xs text-muted-foreground">
-                <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-                <span>{source.caution}</span>
+              <p className="mt-1.5 text-sm text-muted-foreground">
+                {source.caution}
               </p>
             ) : null}
           </li>
         ))}
       </ul>
       {checkedAt ? (
-        <p className="text-xs text-muted-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
           Catalogue last checked {checkedAt}. Eligibility is decided by each
           provider.
         </p>

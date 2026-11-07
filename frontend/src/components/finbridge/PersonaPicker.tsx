@@ -18,14 +18,9 @@ export function PersonaPicker({
   disabled?: boolean;
 }) {
   return (
-    <fieldset
-      disabled={disabled}
-      className="rounded-2xl border border-border bg-card p-3 disabled:opacity-60"
-    >
-      <legend className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        Demo profile
-      </legend>
-      <div className="flex flex-wrap gap-2 pt-1">
+    <fieldset disabled={disabled} className="disabled:opacity-60">
+      <legend className="text-sm text-muted-foreground">Demo profile</legend>
+      <div className="mt-1 flex flex-wrap gap-x-5 md:flex-col">
         {DEMO_USERS.map((user) => {
           const active = user.id === value;
           return (
@@ -35,28 +30,21 @@ export function PersonaPicker({
               aria-pressed={active}
               onClick={() => onChange(user.id)}
               className={cn(
-                "min-h-12 flex-1 rounded-xl border px-3 py-2 text-left transition-colors",
+                "min-h-11 border-b-2 py-1.5 text-left leading-snug md:border-b-0 md:border-l-2 md:pl-3",
                 active
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-input bg-background text-foreground hover:bg-accent",
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground",
               )}
             >
-              <span className="block text-sm font-semibold">{user.name}</span>
-              <span
-                className={cn(
-                  "block text-xs",
-                  active
-                    ? "text-primary-foreground/80"
-                    : "text-muted-foreground",
-                )}
-              >
+              <span className="block">{user.name}</span>
+              <span className="block text-sm text-muted-foreground">
                 {user.blurb}
               </span>
             </button>
           );
         })}
       </div>
-      <p className="pt-2 text-xs text-muted-foreground">
+      <p className="mt-2 text-sm text-muted-foreground">
         Generated demo data, not a real person&apos;s bank account.
       </p>
     </fieldset>

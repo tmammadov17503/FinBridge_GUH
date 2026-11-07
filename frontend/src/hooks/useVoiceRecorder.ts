@@ -57,10 +57,15 @@ export function useVoiceRecorder({
   const onClipRef = useRef(onClip);
   onClipRef.current = onClip;
 
-  const supported =
-    typeof window !== "undefined" &&
-    typeof MediaRecorder !== "undefined" &&
-    !!navigator.mediaDevices?.getUserMedia;
+  // Checked after mount: the server can't record, so reading this during render would make
+  // the first browser render differ from the server's HTML and fail hydration.
+  const [supported, setSupported] = useState(false);
+  useEffect(() => {
+    setSupported(
+      typeof MediaRecorder !== "undefined" &&
+        !!navigator.mediaDevices?.getUserMedia,
+    );
+  }, []);
 
   /** Release the mic, the analyser and the animation frame. Safe to call repeatedly. */
   const teardown = useCallback(() => {

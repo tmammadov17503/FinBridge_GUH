@@ -106,11 +106,11 @@ function IndicatorCard({ indicator, onDetail }: { indicator: Indicator; onDetail
     : null;
 
   return (
-    <article className="rounded-2xl border border-border bg-card p-4 flex flex-col gap-3">
+    <article className="rounded-md border border-border bg-card p-4 flex flex-col gap-3">
       <div>
         <div className="flex items-center gap-2 mb-2">
           <span
-            className="inline-block rounded-full px-2 py-0.5 text-xs font-medium"
+            className="inline-block rounded-md px-2 py-0.5 text-xs font-medium"
             style={{ background: cfg.color + "20", color: cfg.color }}
           >
             {cfg.label}
@@ -120,7 +120,7 @@ function IndicatorCard({ indicator, onDetail }: { indicator: Indicator; onDetail
             {indicator.geography.area_name}
           </span>
         </div>
-        <h3 className="text-sm font-semibold">{indicator.indicator_name}</h3>
+        <h3 className="text-sm">{indicator.indicator_name}</h3>
         <p className="text-xs text-muted-foreground mt-0.5">{indicator.description}</p>
       </div>
 
@@ -162,39 +162,39 @@ function IndicatorDetail({ indicator, onClose }: { indicator: Indicator; onClose
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40" onClick={onClose}>
       <div
-        className="relative w-full max-w-lg rounded-2xl border border-border bg-card p-6 max-h-[85vh] overflow-y-auto"
+        className="relative w-full max-w-lg rounded-md border border-border bg-card p-6 max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <button type="button" onClick={onClose} className="absolute right-4 top-4 rounded-full p-1 hover:bg-accent" aria-label="Close">
+        <button type="button" onClick={onClose} className="absolute right-4 top-4 rounded-md p-1 hover:bg-accent" aria-label="Close">
           <X className="h-5 w-5" />
         </button>
 
-        <span className="inline-block rounded-full px-2 py-0.5 text-xs font-medium mb-3"
+        <span className="inline-block rounded-md px-2 py-0.5 text-xs font-medium mb-3"
           style={{ background: cfg.color + "20", color: cfg.color }}>
           {cfg.label}
         </span>
-        <h2 className="text-lg font-bold mb-1">{indicator.indicator_name}</h2>
+        <h2 className="text-lg mb-1">{indicator.indicator_name}</h2>
         <p className="text-sm text-muted-foreground mb-4">{indicator.description}</p>
 
         <div className="grid grid-cols-2 gap-4 text-sm mb-4">
           <div>
-            <h3 className="font-semibold text-xs text-muted-foreground uppercase mb-1">Value</h3>
+            <h3 className=" text-xs text-muted-foreground uppercase mb-1">Value</h3>
             <p className="text-xl font-bold">{indicator.unit.includes("GBP") ? "£" : ""}{indicator.value.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">{indicator.unit}</span></p>
             {indicator.previous_value !== null && <p className="text-xs text-muted-foreground">Previously: {indicator.unit.includes("GBP") ? "£" : ""}{indicator.previous_value.toLocaleString()}</p>}
           </div>
           <div>
-            <h3 className="font-semibold text-xs text-muted-foreground uppercase mb-1">Geography</h3>
+            <h3 className=" text-xs text-muted-foreground uppercase mb-1">Geography</h3>
             <p className="font-medium">{indicator.geography.area_name}</p>
             <p className="text-xs text-muted-foreground">{indicator.geography.geography_level}</p>
             {indicator.geography.geography_code && <p className="text-xs text-muted-foreground font-mono">{indicator.geography.geography_code}</p>}
           </div>
           <div>
-            <h3 className="font-semibold text-xs text-muted-foreground uppercase mb-1">Period</h3>
+            <h3 className=" text-xs text-muted-foreground uppercase mb-1">Period</h3>
             <p className="text-xs">{indicator.observation_period}</p>
             {indicator.comparison_period && <p className="text-xs text-muted-foreground">Compared to: {indicator.comparison_period}</p>}
           </div>
           <div>
-            <h3 className="font-semibold text-xs text-muted-foreground uppercase mb-1">Published</h3>
+            <h3 className=" text-xs text-muted-foreground uppercase mb-1">Published</h3>
             <p className="text-xs">{indicator.publication_date}</p>
             <p className="text-xs text-muted-foreground">{indicator.data_type}</p>
           </div>
@@ -202,35 +202,35 @@ function IndicatorDetail({ indicator, onClose }: { indicator: Indicator; onClose
 
         {indicator.trend && (
           <div className="mb-4">
-            <h3 className="font-semibold text-sm mb-1">Trend</h3>
+            <h3 className=" text-sm mb-1">Trend</h3>
             <TrendBadge trend={indicator.trend} />
           </div>
         )}
 
         {indicator.population_affected && (
           <div className="mb-4">
-            <h3 className="font-semibold text-sm mb-1">Population affected</h3>
+            <h3 className=" text-sm mb-1">Population affected</h3>
             <p className="text-xs text-muted-foreground">{indicator.population_affected}</p>
           </div>
         )}
 
         {indicator.denominator && (
           <div className="mb-4">
-            <h3 className="font-semibold text-sm mb-1">Denominator</h3>
+            <h3 className=" text-sm mb-1">Denominator</h3>
             <p className="text-xs text-muted-foreground">{indicator.denominator}</p>
           </div>
         )}
 
         {indicator.methodology && (
           <div className="mb-4">
-            <h3 className="font-semibold text-sm mb-1">Methodology</h3>
+            <h3 className=" text-sm mb-1">Methodology</h3>
             <p className="text-xs text-muted-foreground">{indicator.methodology}</p>
           </div>
         )}
 
         {indicator.limitations.length > 0 && (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-800/30 dark:bg-amber-900/10 p-3 mb-4">
-            <h3 className="font-semibold text-xs text-amber-800 dark:text-amber-300 mb-1">Limitations</h3>
+          <div className="rounded-md border border-amber-200 bg-amber-50 dark:border-amber-800/30 dark:bg-amber-900/10 p-3 mb-4">
+            <h3 className=" text-xs text-amber-800 dark:text-amber-300 mb-1">Limitations</h3>
             <ul className="space-y-1">
               {indicator.limitations.map((l, i) => (
                 <li key={i} className="text-xs text-amber-700 dark:text-amber-400">— {l}</li>
@@ -266,8 +266,8 @@ function IndicatorsChart({ data }: { data: Indicator[] }) {
   }));
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5">
-      <h2 className="font-semibold mb-4">Indicator values by area</h2>
+    <div className="rounded-md border border-border bg-card p-5">
+      <h2 className=" mb-4">Indicator values by area</h2>
       <ResponsiveContainer width="100%" height={260}>
         <BarChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 60 }}>
           <XAxis
@@ -323,13 +323,12 @@ function CommunitiesPage() {
   return (
     <div className="min-h-screen">
       <NavBar />
-      <div className="h-1 bg-primary" />
 
       {/* Hero */}
-      <div className="bg-primary/5 border-b border-border">
-        <div className="mx-auto max-w-[1180px] px-5 py-10">
+      <div className="">
+        <div className="mx-auto max-w-[1000px] px-5 md:px-8 py-10">
           <p className="text-xs font-semibold uppercase tracking-wider text-lifeline mb-2">LIFELINE Communities</p>
-          <h1 className="font-serif text-3xl font-bold text-heading mb-3">
+          <h1 className="font-serif text-3xl text-heading mb-3">
             Where financial pressure is emerging across communities
           </h1>
           <p className="text-muted-foreground max-w-2xl">
@@ -338,15 +337,15 @@ function CommunitiesPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1180px] px-5 py-6 space-y-6">
+      <div className="mx-auto max-w-[1000px] px-5 md:px-8 py-6 space-y-6">
         {/* Headline indicators */}
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-3">Headline indicators</h2>
+          <h2 className="text-sm uppercase tracking-wide text-muted-foreground mb-3">Headline indicators</h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {national.map((ind) => {
               const cfg = catConfig(ind.pressure_category);
               return (
-                <div key={ind.indicator_id} className="rounded-2xl border border-border bg-card p-4">
+                <div key={ind.indicator_id} className="rounded-md border border-border bg-card p-4">
                   <span className="text-xs font-medium" style={{ color: cfg.color }}>{cfg.label}</span>
                   <p className="text-xl font-bold mt-1 tabular-nums">
                     {ind.unit.includes("GBP") ? "£" : ""}{ind.value.toLocaleString()}
@@ -369,7 +368,7 @@ function CommunitiesPage() {
             <div className="flex flex-wrap gap-1">
               <button type="button"
                 onClick={() => setActiveCat(null)}
-                className={cn("rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                className={cn("rounded-md border px-3 py-1 text-xs font-medium transition-colors",
                   activeCat === null ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:bg-accent")}>
                 All
               </button>
@@ -378,7 +377,7 @@ function CommunitiesPage() {
                 return (
                   <button key={cat} type="button"
                     onClick={() => setActiveCat(cat === activeCat ? null : cat)}
-                    className={cn("rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                    className={cn("rounded-md border px-3 py-1 text-xs font-medium transition-colors",
                       activeCat === cat ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:bg-accent")}>
                     {cfg.label}
                   </button>
@@ -391,14 +390,14 @@ function CommunitiesPage() {
             <div className="flex flex-wrap gap-1">
               <button type="button"
                 onClick={() => setActiveGeo(null)}
-                className={cn("rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                className={cn("rounded-md border px-3 py-1 text-xs font-medium transition-colors",
                   activeGeo === null ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:bg-accent")}>
                 All
               </button>
               {geoLevels.map((level) => (
                 <button key={level} type="button"
                   onClick={() => setActiveGeo(level === activeGeo ? null : level)}
-                  className={cn("rounded-full border px-3 py-1 text-xs font-medium transition-colors capitalize",
+                  className={cn("rounded-md border px-3 py-1 text-xs font-medium transition-colors capitalize",
                     activeGeo === level ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:bg-accent")}>
                   {level.replace("_", " ")}
                 </button>
@@ -411,7 +410,7 @@ function CommunitiesPage() {
         <div>
           <p className="text-sm text-muted-foreground mb-3">{filtered.length} indicator{filtered.length !== 1 ? "s" : ""}</p>
           {filtered.length === 0 ? (
-            <div className="rounded-2xl border border-border bg-card p-10 text-center">
+            <div className="rounded-md border border-border bg-card p-10 text-center">
               <p className="font-semibold">No indicators match the selected filters</p>
             </div>
           ) : (
@@ -424,8 +423,8 @@ function CommunitiesPage() {
         </div>
 
         {/* Emerging pressures */}
-        <div className="rounded-2xl border border-lifeline/30 bg-lifeline/5 p-5">
-          <h2 className="font-semibold mb-1">Where pressures are emerging</h2>
+        <div className="rounded-md border border-lifeline/30 bg-lifeline/5 p-5">
+          <h2 className=" mb-1">Where pressures are emerging</h2>
           <p className="text-xs text-muted-foreground mb-3">
             Patterns observed directly from the data. These are interpretations, not causal claims.
           </p>
@@ -435,7 +434,7 @@ function CommunitiesPage() {
               .map((ind) => {
                 const cfg = catConfig(ind.pressure_category);
                 return (
-                  <div key={ind.indicator_id} className="flex items-start gap-3 rounded-xl border border-border bg-background px-4 py-3">
+                  <div key={ind.indicator_id} className="flex items-start gap-3 rounded-md border border-border bg-background px-4 py-3">
                     <TrendingUp className="h-4 w-4 shrink-0 text-lifeline mt-0.5" />
                     <div>
                       <p className="text-xs font-semibold">{ind.indicator_name} ({ind.geography.area_name})</p>

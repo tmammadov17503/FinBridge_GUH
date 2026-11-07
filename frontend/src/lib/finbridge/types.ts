@@ -82,6 +82,8 @@ export interface ChatResponse {
   /** ISO date the catalogue was last human-checked. */
   catalogueCheckedAt?: string | undefined;
   suggestedNextStep?: string | undefined;
+  /** Figures for the balance chart and shortfall card; absent on older workflows. */
+  forecast?: BalanceForecast | undefined;
   /** A message FinBridge drafted for the user to review and send themselves. */
   editableDraft?: string | undefined;
 }
@@ -122,6 +124,32 @@ export interface Forecast {
   assumptions?: string[];
 }
 
+/* --------------------------------------------------------- balance chart */
+
+export interface DailyBalance {
+  date: string;
+  balance: number;
+}
+
+/**
+ * The parts of the finance webhook's `forecast` the UI draws, per the contract in
+ * `knowledge/README.md`. Every field is optional so an older workflow degrades cleanly.
+ */
+export interface BalanceForecast {
+  hasShortfall?: boolean | undefined;
+  firstShortfallDate?: string | undefined;
+  /** The balance on the first shortfall day, so always negative. */
+  firstShortfallAmount?: number | undefined;
+  dailySeries?: DailyBalance[] | undefined;
+  /** Present only when the request included scenarioB. */
+  scenarios?:
+    | {
+        base: { dailySeries: DailyBalance[] };
+        changed: { dailySeries: DailyBalance[] };
+      }
+    | undefined;
+}
+
 /* ------------------------------------------------------------ transcript */
 
 export type MessageAuthor = "user" | "agent";
@@ -137,6 +165,7 @@ export interface TranscriptMessage {
   sources?: SupportSource[] | undefined;
   suggestedNextStep?: string | undefined;
   editableDraft?: string | undefined;
+  forecast?: BalanceForecast | undefined;
   /** Marks a locally generated failure notice so it can be styled as an error. */
   failed?: boolean | undefined;
 }

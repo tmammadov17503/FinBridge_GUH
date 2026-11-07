@@ -25,7 +25,7 @@ export function MicButton({
   onToggle: () => void;
 }) {
   // Grow the ring with the mic level, with a floor so it never looks dead while recording.
-  const ringScale = 1 + Math.min(level, 1) * 0.45;
+  const ringScale = 1 + Math.min(level, 1) * 0.3;
   const seconds = Math.floor(elapsedMs / 1000);
 
   return (
@@ -33,7 +33,7 @@ export function MicButton({
       {isRecording ? (
         <span
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-lifeline/25 transition-transform duration-75 motion-reduce:transition-none"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-11 w-11 -translate-x-1/2 -translate-y-1/2 rounded-md bg-lifeline/25 transition-transform duration-75 motion-reduce:transition-none"
           style={{ transform: `translate(-50%, -50%) scale(${ringScale})` }}
         />
       ) : null}
@@ -48,7 +48,7 @@ export function MicButton({
             : "Ask by voice"
         }
         className={cn(
-          "relative grid h-12 w-12 place-items-center rounded-full border transition-colors",
+          "relative grid h-11 w-11 place-items-center rounded-md border",
           "disabled:cursor-not-allowed disabled:opacity-50",
           isRecording
             ? "border-lifeline bg-lifeline text-lifeline-foreground"
@@ -57,13 +57,13 @@ export function MicButton({
       >
         {isBusy ? (
           <Loader2
-            className="h-5 w-5 animate-spin motion-reduce:animate-none"
+            className="h-4 w-4 animate-spin motion-reduce:animate-none"
             aria-hidden
           />
         ) : isRecording ? (
-          <Square className="h-4 w-4 fill-current" aria-hidden />
+          <Square className="h-3.5 w-3.5 fill-current" aria-hidden />
         ) : (
-          <Mic className="h-5 w-5" aria-hidden />
+          <Mic className="h-4 w-4" aria-hidden />
         )}
       </button>
     </div>

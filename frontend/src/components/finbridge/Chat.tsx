@@ -7,13 +7,12 @@ import {
   type FormEvent,
   type KeyboardEvent,
 } from "react";
-import { AlertTriangle, Loader2, SendHorizontal, X } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { useFinBridgeChat } from "@/hooks/useFinBridgeChat";
 import { useSpeech } from "@/hooks/useSpeech";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import type {
+  BalanceForecast,
   Channel,
   TranscriptMessage,
   VoiceKey,
@@ -50,9 +49,12 @@ export interface ChatSeed {
 export function Chat({
   userId,
   seed,
+  onForecast,
 }: {
   userId: string;
   seed?: ChatSeed | null;
+  /** Receives each answer's forecast, and null when the conversation is cleared. */
+  onForecast?: (forecast: BalanceForecast | null) => void;
 }) {
   const [input, setInput] = useState("");
   const [speakReplies, setSpeakReplies] = useState(false);
@@ -80,6 +82,7 @@ export function Chat({
 
   const handleAgentMessage = useCallback(
     (message: TranscriptMessage, channel: Channel) => {
+      if (message.forecast) onForecast?.(message.forecast);
       // Speak when the toggle is on, and always speak the answer to a spoken question —
       // someone who just talked to the page is not watching it.
       if (!speakRepliesRef.current && channel !== "voice") return;
@@ -89,7 +92,7 @@ export function Chat({
         voice: voiceRef.current,
       });
     },
-    [speech],
+    [speech, onForecast],
   );
 
   const chat = useFinBridgeChat({ userId, onAgentMessage: handleAgentMessage });
@@ -149,24 +152,27 @@ export function Chat({
     void sendMessage(seed.text, { channel: "web" });
   }, [seed, sendMessage]);
 
-  /** Keep the newest turn in view, without animating for people who asked us not to. */
+  const onlyGreeting = chat.messages.length === 1;
+
+  /**
+   * Bring the start of the newest turn into view if it's off screen or near the bottom:
+   * answers lead with the forecast, so that's the part to show. Never on the first paint,
+   * and without animating for people who asked us not to.
+   */
   useLayoutEffect(() => {
-    const list = listRef.current;
-    if (!list) return;
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    // Not every engine implements Element.scrollTo (jsdom and some embedded webviews do
-    // not); assigning scrollTop still gets the newest turn on screen.
-    if (typeof list.scrollTo === "function") {
-      list.scrollTo({
-        top: list.scrollHeight,
-        behavior: reduceMotion ? "auto" : "smooth",
-      });
-    } else {
-      list.scrollTop = list.scrollHeight;
-    }
-  }, [chat.messages, chat.pending, transcribing]);
+    if (onlyGreeting) return;
+    const last = listRef.current?.lastElementChild;
+    if (!last) return;
+    const { top } = last.getBoundingClientRect();
+    if (top >= 0 && top <= window.innerHeight * 0.7) return;
+    const reduceMotion = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    window.scrollTo({
+      top: window.scrollY + top - 16,
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+  }, [chat.messages, chat.pending, transcribing, onlyGreeting]);
 
   const busy = chat.pending || transcribing;
 
@@ -210,13 +216,118 @@ export function Chat({
     chat.clearError();
   };
 
-  const onlyGreeting = chat.messages.length === 1;
-
   return (
-    <section
-      aria-label="FinBridge chat"
-      className="flex min-h-[460px] flex-1 flex-col rounded-2xl border border-border bg-card"
-    >
+    <section aria-labelledby="chat-heading">
+      <h2 id="chat-heading" className="text-xl">
+        Ask FinBridge
+      </h2>
+
+      <div
+        ref={listRef}
+        aria-live="polite"
+        aria-atomic="false"
+        aria-label="Conversation"
+        className="mt-4 flex flex-col gap-5"
+      >
+        {chat.messages.map((message) => (
+          <MessageBubble
+            key={message.id}
+            message={message}
+            isSpeaking={speech.speakingId === message.id}
+            isPreparing={speech.preparingId === message.id}
+            canSpeak
+            onSpeak={() =>
+              void speech.speak({
+                text: message.text,
+                messageId: message.id,
+                voice,
+              })
+            }
+            onStopSpeaking={speech.stop}
+          />
+        ))}
+
+        {transcribing ? (
+          <p className="text-muted-foreground">Transcribing what you said…</p>
+        ) : null}
+
+        {chat.pending ? (
+          <p className="text-muted-foreground">FinBridge is working it out…</p>
+        ) : null}
+      </div>
+
+      {onlyGreeting ? (
+        <div className="mt-3 flex flex-col items-start">
+          {SUGGESTIONS.map((question) => (
+            <button
+              key={question}
+              type="button"
+              onClick={() => askSuggestion(question)}
+              disabled={busy}
+              className="min-h-9 text-left text-primary underline underline-offset-2 hover:no-underline disabled:opacity-50"
+            >
+              {question}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      {banner ? (
+        <div
+          role="status"
+          className="mt-4 flex items-start gap-3 border-l-2 border-destructive pl-3 text-sm"
+        >
+          <p className="flex-1 text-foreground">{banner}</p>
+          <button
+            type="button"
+            onClick={dismissBanner}
+            aria-label="Dismiss this message"
+            className="text-muted-foreground underline underline-offset-2 hover:text-foreground"
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
+
+      <form onSubmit={submit} className="mt-5 flex items-end gap-2">
+        {recorder.supported ? (
+          <MicButton
+            isRecording={recorder.isRecording}
+            isBusy={recorder.isBusy}
+            level={recorder.level}
+            elapsedMs={recorder.elapsedMs}
+            disabled={busy}
+            onToggle={toggleMic}
+          />
+        ) : null}
+
+        <textarea
+          ref={inputRef}
+          value={input}
+          onChange={(event) => setInput(event.target.value)}
+          onKeyDown={onKeyDown}
+          rows={1}
+          maxLength={1200}
+          placeholder={
+            recorder.isRecording
+              ? "Listening… press stop when you're done"
+              : "Ask about your money"
+          }
+          aria-label="Your question"
+          disabled={recorder.isRecording}
+          className="max-h-32 min-h-11 min-w-0 flex-1 resize-none rounded-md border border-input bg-background px-3 py-2.5 leading-snug text-foreground placeholder:text-muted-foreground disabled:opacity-70"
+        />
+
+        <button
+          type="submit"
+          disabled={busy || input.trim().length === 0}
+          aria-label="Send your question"
+          className="min-h-11 shrink-0 rounded-md bg-primary px-5 text-primary-foreground hover:bg-primary/85 disabled:opacity-50"
+        >
+          Send
+        </button>
+      </form>
+
       <VoiceSettings
         speakReplies={speakReplies}
         onSpeakRepliesChange={(next) => {
@@ -241,144 +352,14 @@ export function Chat({
           setInput("");
           dismissBanner();
           chat.reset();
+          onForecast?.(null);
         }}
       />
 
-      {banner ? (
-        <div
-          role="status"
-          className="flex items-start gap-2 border-b border-lifeline/30 bg-lifeline/10 px-3 py-2 text-sm"
-        >
-          <AlertTriangle
-            className="mt-0.5 h-4 w-4 shrink-0 text-lifeline"
-            aria-hidden
-          />
-          <p className="flex-1 text-foreground">{banner}</p>
-          <button
-            type="button"
-            onClick={dismissBanner}
-            aria-label="Dismiss this message"
-            className="rounded-full p-1 text-muted-foreground hover:bg-accent"
-          >
-            <X className="h-4 w-4" aria-hidden />
-          </button>
-        </div>
-      ) : null}
-
-      <div
-        ref={listRef}
-        aria-live="polite"
-        aria-atomic="false"
-        aria-label="Conversation"
-        className="flex max-h-[52vh] min-h-[220px] flex-1 flex-col gap-3 overflow-y-auto px-3 py-3"
-      >
-        {chat.messages.map((message) => (
-          <MessageBubble
-            key={message.id}
-            message={message}
-            isSpeaking={speech.speakingId === message.id}
-            isPreparing={speech.preparingId === message.id}
-            canSpeak
-            onSpeak={() =>
-              void speech.speak({
-                text: message.text,
-                messageId: message.id,
-                voice,
-              })
-            }
-            onStopSpeaking={speech.stop}
-          />
-        ))}
-
-        {transcribing ? (
-          <p className="self-end text-xs text-muted-foreground">
-            Transcribing what you said…
-          </p>
-        ) : null}
-
-        {chat.pending ? (
-          <div className="flex items-center gap-2 self-start rounded-2xl border border-border bg-background px-3.5 py-2.5 text-sm text-muted-foreground">
-            <Loader2
-              className="h-4 w-4 animate-spin motion-reduce:animate-none"
-              aria-hidden
-            />
-            FinBridge is working it out…
-          </div>
-        ) : null}
-      </div>
-
-      {onlyGreeting ? (
-        <div className="flex flex-wrap gap-2 px-3 pb-1">
-          {SUGGESTIONS.map((question) => (
-            <button
-              key={question}
-              type="button"
-              onClick={() => askSuggestion(question)}
-              disabled={busy}
-              className="rounded-full border border-input bg-background px-3 py-2 text-left text-xs font-medium text-foreground hover:bg-accent disabled:opacity-50"
-            >
-              {question}
-            </button>
-          ))}
-        </div>
-      ) : null}
-
-      <form
-        onSubmit={submit}
-        className="flex items-end gap-2 border-t border-border p-3"
-      >
-        {recorder.supported ? (
-          <MicButton
-            isRecording={recorder.isRecording}
-            isBusy={recorder.isBusy}
-            level={recorder.level}
-            elapsedMs={recorder.elapsedMs}
-            disabled={busy}
-            onToggle={toggleMic}
-          />
-        ) : null}
-
-        <textarea
-          ref={inputRef}
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          onKeyDown={onKeyDown}
-          rows={1}
-          maxLength={1200}
-          placeholder={
-            recorder.isRecording
-              ? "Listening… stop talking when you're done"
-              : "Ask about your money, or press the mic"
-          }
-          aria-label="Your question"
-          disabled={recorder.isRecording}
-          className={cn(
-            "max-h-32 min-h-12 min-w-0 flex-1 resize-none rounded-2xl border border-input bg-background px-4 py-3",
-            "text-foreground placeholder:text-muted-foreground disabled:opacity-70",
-          )}
-        />
-
-        <button
-          type="submit"
-          disabled={busy || input.trim().length === 0}
-          aria-label="Send your question"
-          className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
-        >
-          {chat.pending ? (
-            <Loader2
-              className="h-5 w-5 animate-spin motion-reduce:animate-none"
-              aria-hidden
-            />
-          ) : (
-            <SendHorizontal className="h-5 w-5" aria-hidden />
-          )}
-        </button>
-      </form>
-
-      <p className="px-3 pb-3 text-xs text-muted-foreground">
-        FinBridge explains figures worked out by its forecast engine and links
-        only to checked support providers. It is not regulated financial advice,
-        and eligibility is decided by each provider.
+      <p className="mt-3 text-sm text-muted-foreground">
+        Demo only: answers use sample figures, not your own. Please don&apos;t
+        type or say personal details. FinBridge links only to checked support
+        providers, and eligibility is decided by each provider.
       </p>
     </section>
   );
