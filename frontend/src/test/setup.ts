@@ -5,6 +5,12 @@ Object.defineProperty(window, "scrollTo", {
   value: () => {},
 });
 
+// jsdom does not implement Element.prototype.scrollTo
+Object.defineProperty(Element.prototype, "scrollTo", {
+  writable: true,
+  value: () => {},
+});
+
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({
