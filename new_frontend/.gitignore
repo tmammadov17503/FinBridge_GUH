@@ -1,0 +1,10 @@
+node_modules/
+.output/
+.wrangler/
+.tanstack/
+.vite/
+dist/
+.env
+.env.*
+!.env.example
+package-lock.json

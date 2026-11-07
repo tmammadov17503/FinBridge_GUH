@@ -1,0 +1,349 @@
+{
+  "knowledge_base": "LIFELINE Communities UK community financial pressure indicators",
+  "last_updated": "2026-11-07",
+  "indicators": [
+    {
+      "indicator_id": "ons_private_rent_uk_2026_08",
+      "indicator_name": "Average monthly private rent, UK",
+      "description": "Average UK monthly private rent and annual change.",
+      "pressure_category": "housing_and_rental_pressure",
+      "geography": {
+        "country": "United Kingdom",
+        "region": null,
+        "local_authority": null,
+        "area_name": "United Kingdom",
+        "geography_code": null,
+        "geography_level": "national"
+      },
+      "value": 1400,
+      "unit": "GBP per month",
+      "denominator": "Private rented properties covered by the Price Index of Private Rents",
+      "observation_period": "12 months to August 2026",
+      "publication_date": "2026-09-16",
+      "comparison_period": "12 months to August 2025",
+      "previous_value": null,
+      "trend": "increasing; annual growth 3.8%",
+      "data_type": "provisional estimate",
+      "population_affected": "Private renters",
+      "methodology": "ONS Price Index of Private Rents (PIPR).",
+      "limitations": [
+        "The estimate is provisional.",
+        "This is an aggregate average and does not describe every renter or property."
+      ],
+      "source_name": "Office for National Statistics",
+      "source_url": "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/privaterentandhousepricesuk/september2026"
+    },
+    {
+      "indicator_id": "ons_private_rent_southwark_2026_09",
+      "indicator_name": "Average monthly private rent, Southwark",
+      "description": "Average private rent in Southwark and annual rental inflation.",
+      "pressure_category": "housing_and_rental_pressure",
+      "geography": {
+        "country": "England",
+        "region": "London",
+        "local_authority": "Southwark",
+        "area_name": "Southwark",
+        "geography_code": "E09000028",
+        "geography_level": "local_authority"
+      },
+      "value": 2516,
+      "unit": "GBP per month",
+      "denominator": "Private rented properties in Southwark",
+      "observation_period": "September 2026",
+      "publication_date": "2026-10-20",
+      "comparison_period": "September 2025",
+      "previous_value": 2345,
+      "trend": "increasing; 7.3% year on year",
+      "data_type": "provisional estimate",
+      "population_affected": "Private renters in Southwark",
+      "methodology": "ONS local housing prices and rents visualisation using official private-rent statistics.",
+      "limitations": [
+        "Average rent does not capture the distribution of rents, property size or tenant circumstances.",
+        "The local figure is an aggregate estimate."
+      ],
+      "source_name": "Office for National Statistics",
+      "source_url": "https://www.ons.gov.uk/visualisations/housingpriceslocal/E09000028/"
+    },
+    {
+      "indicator_id": "ons_private_rent_york_2026_09",
+      "indicator_name": "Average monthly private rent, York",
+      "description": "Average private rent in York and annual rental inflation.",
+      "pressure_category": "housing_and_rental_pressure",
+      "geography": {
+        "country": "England",
+        "region": "Yorkshire and The Humber",
+        "local_authority": "York",
+        "area_name": "York",
+        "geography_code": "E06000014",
+        "geography_level": "unitary_authority"
+      },
+      "value": 1206,
+      "unit": "GBP per month",
+      "denominator": "Private rented properties in York",
+      "observation_period": "September 2026",
+      "publication_date": "2026-10-20",
+      "comparison_period": "September 2025",
+      "previous_value": 1130,
+      "trend": "increasing; 6.7% year on year",
+      "data_type": "provisional estimate",
+      "population_affected": "Private renters in York",
+      "methodology": "ONS local housing prices and rents visualisation using official private-rent statistics.",
+      "limitations": [
+        "Average rent does not capture the distribution of rents, property size or tenant circumstances.",
+        "The local figure is an aggregate estimate."
+      ],
+      "source_name": "Office for National Statistics",
+      "source_url": "https://www.ons.gov.uk/visualisations/housingpriceslocal/E06000014/"
+    },
+    {
+      "indicator_id": "desnz_fuel_poverty_england_2024",
+      "indicator_name": "Households in fuel poverty, England",
+      "description": "Share of households in fuel poverty under the Low Income Low Energy Efficiency metric.",
+      "pressure_category": "energy_and_heating_costs",
+      "geography": {
+        "country": "England",
+        "region": null,
+        "local_authority": null,
+        "area_name": "England",
+        "geography_code": "E92000001",
+        "geography_level": "country"
+      },
+      "value": 9.9,
+      "unit": "percent of households",
+      "denominator": "All households in England",
+      "observation_period": "2024",
+      "publication_date": "2026-05-14",
+      "comparison_period": null,
+      "previous_value": null,
+      "trend": "not comparable in this record",
+      "data_type": "modelled official statistic in development at sub-regional level",
+      "population_affected": "Households in England",
+      "methodology": "LILEE counts a household as fuel poor when it is in a property with FPEER band D to G and its disposable income after housing costs and required energy costs would be below the poverty line.",
+      "limitations": [
+        "Sub-regional estimates are modelled and constrained to regional totals.",
+        "They should be used for general trends and identifying particularly high or low areas, not detailed trends over time.",
+        "Fuel poverty is based on required energy costs, not actual spending."
+      ],
+      "source_name": "Department for Energy Security and Net Zero",
+      "source_url": "https://www.gov.uk/government/statistics/sub-regional-fuel-poverty-report-2026-2024-data/sub-regional-fuel-poverty-in-england-2026-report-2024-data-accessible-webpage"
+    },
+    {
+      "indicator_id": "desnz_fuel_poverty_west_midlands_2024",
+      "indicator_name": "Households in fuel poverty, West Midlands",
+      "description": "Regional fuel-poverty rate under the LILEE metric.",
+      "pressure_category": "energy_and_heating_costs",
+      "geography": {
+        "country": "England",
+        "region": "West Midlands",
+        "local_authority": null,
+        "area_name": "West Midlands",
+        "geography_code": "E12000005",
+        "geography_level": "region"
+      },
+      "value": 12.1,
+      "unit": "percent of households",
+      "denominator": "Households in the West Midlands",
+      "observation_period": "2024",
+      "publication_date": "2026-05-14",
+      "comparison_period": null,
+      "previous_value": null,
+      "trend": "highest regional rate in England in this release",
+      "data_type": "modelled official statistic",
+      "population_affected": "Households in the West Midlands",
+      "methodology": "LILEE metric; regional estimates are taken from national fuel-poverty statistics.",
+      "limitations": [
+        "The source cautions that sub-regional estimates are for general trends and identifying high or low areas.",
+        "This is not evidence that every household in the region is fuel poor."
+      ],
+      "source_name": "Department for Energy Security and Net Zero",
+      "source_url": "https://www.gov.uk/government/statistics/sub-regional-fuel-poverty-report-2026-2024-data/sub-regional-fuel-poverty-in-england-2026-report-2024-data-accessible-webpage"
+    },
+    {
+      "indicator_id": "dlu_homeless_temp_accommodation_england_2025_q4",
+      "indicator_name": "Households in temporary accommodation",
+      "description": "Households in temporary accommodation under the statutory homelessness duty.",
+      "pressure_category": "housing_and_rental_pressure",
+      "geography": {
+        "country": "England",
+        "region": null,
+        "local_authority": null,
+        "area_name": "England",
+        "geography_code": "E92000001",
+        "geography_level": "country"
+      },
+      "value": 134210,
+      "unit": "households",
+      "denominator": "Households in England on the statutory homelessness duty",
+      "observation_period": "31 December 2025",
+      "publication_date": "2026-03-26",
+      "comparison_period": "31 December 2024",
+      "previous_value": null,
+      "trend": "increasing 5.0% year on year; decreasing 0.4% from previous quarter",
+      "data_type": "provisional administrative statistic",
+      "population_affected": "Households in temporary accommodation, including households with children",
+      "methodology": "Quarterly statutory homelessness administrative data; temporary accommodation is a stock figure measured at the end of the quarter.",
+      "limitations": [
+        "Data are provisional when first published and are revised for late updates.",
+        "A stock count on the last day of the quarter is not a count of all households experiencing homelessness during the period."
+      ],
+      "source_name": "Department for Levelling Up, Housing and Communities",
+      "source_url": "https://www.gov.uk/government/statistics/statutory-homelessness-in-england-october-to-december-2025/statutory-homelessness-in-england-october-to-december-2025"
+    },
+    {
+      "indicator_id": "dlu_homeless_temp_accommodation_london_2025_q4",
+      "indicator_name": "Temporary accommodation rate, London",
+      "description": "Households in temporary accommodation per 1,000 households in London.",
+      "pressure_category": "housing_and_rental_pressure",
+      "geography": {
+        "country": "England",
+        "region": "London",
+        "local_authority": null,
+        "area_name": "London",
+        "geography_code": "E12000007",
+        "geography_level": "region"
+      },
+      "value": 21.1,
+      "unit": "households per 1,000 households",
+      "denominator": "Households in London",
+      "observation_period": "31 December 2025",
+      "publication_date": "2026-03-26",
+      "comparison_period": null,
+      "previous_value": null,
+      "trend": "higher than Rest of England rate of 2.8 per 1,000",
+      "data_type": "administrative statistic",
+      "population_affected": "Households in London",
+      "methodology": "Statutory homelessness temporary-accommodation stock rate.",
+      "limitations": [
+        "The rate is area-level and does not imply uniform experience across London.",
+        "Comparisons may reflect housing markets, local authority practice and household composition as well as need."
+      ],
+      "source_name": "Department for Levelling Up, Housing and Communities",
+      "source_url": "https://www.gov.uk/government/statistics/statutory-homelessness-in-england-october-to-december-2025/statutory-homelessness-in-england-october-to-december-2025"
+    },
+    {
+      "indicator_id": "ons_unemployment_uk_2026_may_july",
+      "indicator_name": "Unemployment rate, UK population aged 16 and over",
+      "description": "Seasonally adjusted unemployment rate among the economically active population.",
+      "pressure_category": "employment_and_income_instability",
+      "geography": {
+        "country": "United Kingdom",
+        "region": null,
+        "local_authority": null,
+        "area_name": "United Kingdom",
+        "geography_code": null,
+        "geography_level": "national"
+      },
+      "value": 4.9,
+      "unit": "percent of economically active people aged 16 and over",
+      "denominator": "Economically active population aged 16 and over",
+      "observation_period": "May to July 2026",
+      "publication_date": "2026-09-15",
+      "comparison_period": "May to July 2025",
+      "previous_value": null,
+      "trend": "0.2 percentage points higher year on year; largely unchanged on latest quarter",
+      "data_type": "survey-based official estimate",
+      "population_affected": "People aged 16 and over in the UK labour force",
+      "methodology": "Labour Force Survey estimate; unemployment is the proportion of the economically active population who are unemployed.",
+      "limitations": [
+        "Survey estimates are subject to sampling and non-sampling uncertainty.",
+        "Unemployment rate is not the proportion of the total population who are unemployed."
+      ],
+      "source_name": "Office for National Statistics",
+      "source_url": "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/bulletins/uklabourmarket/september2026"
+    },
+    {
+      "indicator_id": "dfe_fsm_england_2025_26",
+      "indicator_name": "Pupils eligible for free school meals",
+      "description": "Percentage of pupils eligible for free school meals in England.",
+      "pressure_category": "childcare_and_family_costs",
+      "geography": {
+        "country": "England",
+        "region": null,
+        "local_authority": null,
+        "area_name": "England",
+        "geography_code": "E92000001",
+        "geography_level": "country"
+      },
+      "value": 26.5,
+      "unit": "percent of pupils",
+      "denominator": "Pupils in state-funded primary, secondary and special schools, non-maintained special schools and state-funded alternative provision schools",
+      "observation_period": "January 2026 / academic year 2025/26",
+      "publication_date": "2026-06-04",
+      "comparison_period": "2024/25",
+      "previous_value": 25.7,
+      "trend": "increasing by 0.8 percentage points; over 2.2 million pupils eligible",
+      "data_type": "administrative census statistic",
+      "population_affected": "School pupils in England",
+      "methodology": "School census and school characteristics data for the January 2026 count.",
+      "limitations": [
+        "Eligibility is a proxy for household financial circumstances and is not a direct measure of household income.",
+        "Coverage and eligibility rules are specific to the school-meals measure."
+      ],
+      "source_name": "Department for Education",
+      "source_url": "https://explore-education-statistics.service.gov.uk/find-statistics/school-pupils-and-their-characteristics/2025-26"
+    },
+    {
+      "indicator_id": "trussell_food_parcels_uk_2025",
+      "indicator_name": "Emergency food parcels distributed by Trussell food banks",
+      "description": "Emergency food parcels distributed by food banks in the Trussell community across the UK.",
+      "pressure_category": "local_financial_hardship",
+      "geography": {
+        "country": "United Kingdom",
+        "region": null,
+        "local_authority": null,
+        "area_name": "United Kingdom",
+        "geography_code": null,
+        "geography_level": "national"
+      },
+      "value": 2600000,
+      "unit": "emergency food parcels; more than 2.6 million",
+      "denominator": "Parcels recorded by Trussell community food banks",
+      "observation_period": "1 January to 31 December 2025",
+      "publication_date": "2026-03",
+      "comparison_period": "2024",
+      "previous_value": null,
+      "trend": "decreasing 12% from 2024 but still above pre-pandemic levels",
+      "data_type": "observed administrative service-volume statistic",
+      "population_affected": "People receiving emergency food parcels through the Trussell community",
+      "methodology": "Counts parcels supplied by Trussell community food banks; headline parcel numbers measure volume rather than unique users.",
+      "limitations": [
+        "Parcels are not unique people or households.",
+        "Trussell figures do not cover all independent or non-Trussell food banks and cannot fully explain food insecurity across the UK.",
+        "The numeric value is a rounded lower-bound representation of 'over 2.6 million'."
+      ],
+      "source_name": "Trussell Trust",
+      "source_url": "https://www.trussell.org.uk/news-and-research/latest-stats/end-of-year-stats"
+    },
+    {
+      "indicator_id": "trussell_food_parcels_scotland_2025",
+      "indicator_name": "Emergency food parcels distributed in Scotland",
+      "description": "Emergency food parcels distributed by food banks in the Trussell community in Scotland.",
+      "pressure_category": "local_financial_hardship",
+      "geography": {
+        "country": "Scotland",
+        "region": null,
+        "local_authority": null,
+        "area_name": "Scotland",
+        "geography_code": null,
+        "geography_level": "country"
+      },
+      "value": 218838,
+      "unit": "emergency food parcels",
+      "denominator": "Parcels recorded by Trussell community food banks in Scotland",
+      "observation_period": "2025",
+      "publication_date": "2026-03",
+      "comparison_period": null,
+      "previous_value": null,
+      "trend": "no comparable previous value in the source page",
+      "data_type": "observed administrative service-volume statistic",
+      "population_affected": "People receiving emergency food parcels through the Trussell community in Scotland",
+      "methodology": "Trussell community food-bank parcel count.",
+      "limitations": [
+        "Parcels are not unique users.",
+        "Coverage is limited to the Trussell community and is not a complete measure of food insecurity."
+      ],
+      "source_name": "Trussell Trust",
+      "source_url": "https://www.trussell.org.uk/news-and-research/latest-stats/end-of-year-stats"
+    }
+  ]
+}
