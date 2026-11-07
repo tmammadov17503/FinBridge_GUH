@@ -1,23 +1,23 @@
-// Paste this file into an n8n Code node after an HTTP Request that fetches sources.json.
-// Name the incoming trigger node "Webhook" and run this Code node once for all items.
+// n8n Code node after the catalogue request. Keep this ranking aligned with retrieve.mjs.
 const catalogue = $input.first().json;
-const request = $('Webhook').first().json.body ?? {};
-const resources = catalogue.resources;
-if (!Array.isArray(resources)) throw new Error('Support catalogue has no resources array');
-if (typeof request.question !== 'undefined' && (typeof request.question !== 'string' || request.question.length > 500)) {
-  throw new Error('question must be a string of at most 500 characters');
-}
-if (typeof request.university !== 'undefined' && (typeof request.university !== 'string' || request.university.length > 100)) {
-  throw new Error('university must be a string of at most 100 characters');
+const request = $('Calculate forecast').first().json;
+const forecast = request.forecast;
+const resources = catalogue?.resources;
+const usable = Array.isArray(resources) && resources.length > 0 && resources.every((source) =>
+  source && typeof source.id === 'string' && typeof source.title === 'string'
+  && typeof source.url === 'string' && /^https:\/\//.test(source.url)
+  && Array.isArray(source.tags) && source.tags.every((tag) => typeof tag === 'string')
+  && (source.university === undefined || typeof source.university === 'string')
+  && (source.requiresNoFamilySupport === undefined || typeof source.requiresNoFamilySupport === 'boolean'));
+if (!usable) {
+  return [{ json: { ...request, supportSources: [], supportStatus: 'unavailable', catalogueCheckedAt: null } }];
 }
 
 const questionWords = new Set(String(request.question ?? '').toLowerCase().match(/[a-z]+/g) ?? []);
 const university = String(request.university ?? '').trim().toLowerCase();
 const manchester = university === 'university of manchester' || university === 'manchester';
-// A sensitive status is only used when the person explicitly confirms it.
 const noFamilySupport = request.noFamilySupport === true;
-const shortfall = Boolean(request.shortfall ?? request.forecast?.firstShortfallDate);
-
+const shortfall = forecast.hasShortfall === true;
 const supportSources = resources
   .filter((source) => !source.university || (manchester && source.university === 'university of manchester'))
   .filter((source) => !source.requiresNoFamilySupport || noFamilySupport)
@@ -33,4 +33,4 @@ const supportSources = resources
   .slice(0, 3)
   .map(({ source }) => source);
 
-return [{ json: { ...request, supportSources, catalogueCheckedAt: catalogue.checkedAt } }];
+return [{ json: { ...request, supportSources, supportStatus: 'ok', catalogueCheckedAt: catalogue.checkedAt ?? null } }];

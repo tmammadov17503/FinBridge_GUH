@@ -1,0 +1,343 @@
+{
+  "name": "FinBridge Demo",
+  "active": false,
+  "nodes": [
+    {
+      "id": "2a13f8b0-4d2d-49a3-b89b-c60645498404",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "finbridge/chat",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "39655a8c-ea6c-4070-9674-b13a1d9e7b1c",
+      "name": "Validate finance input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// n8n Code node: validate and normalize one webhook request before any external call.\nconst body = $input.first().json.body;\nconst fail = (message) => [{ json: { valid: false, error: { code: 'INVALID_INPUT', message } } }];\nconst object = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);\nconst money = (value) => typeof value === 'number' && Number.isFinite(value)\n  && Math.abs(value) <= 1000000 && Math.abs(value * 100 - Math.round(value * 100)) < 0.000001;\nconst date = (value) => typeof value === 'string' && /^\\d{4}-\\d{2}-\\d{2}$/.test(value)\n  && !Number.isNaN(Date.parse(value + 'T00:00:00Z'))\n  && new Date(value + 'T00:00:00Z').toISOString().slice(0, 10) === value;\n\nif (!object(body)) return fail('Send a JSON object in the request body.');\nif (body.question !== undefined && (typeof body.question !== 'string' || body.question.length > 500)) {\n  return fail('question must be a string of at most 500 characters.');\n}\nif (body.university !== undefined && (typeof body.university !== 'string' || body.university.length > 100)) {\n  return fail('university must be a string of at most 100 characters.');\n}\nif (body.noFamilySupport !== undefined && typeof body.noFamilySupport !== 'boolean') {\n  return fail('noFamilySupport must be a boolean.');\n}\nconst f = body.finance;\nif (!object(f)) return fail('finance is required.');\nif (!date(f.startDate) || !date(f.nextMaintenanceLoanDate)) {\n  return fail('Finance dates must be real YYYY-MM-DD dates.');\n}\nconst start = Date.parse(f.startDate + 'T00:00:00Z');\nconst end = Date.parse(f.nextMaintenanceLoanDate + 'T00:00:00Z');\nif (end <= start || end - start > 366 * 86400000) {\n  return fail('nextMaintenanceLoanDate must be within 366 days after startDate.');\n}\nif (!money(f.openingBalance)) return fail('openingBalance must be a finite amount with at most two decimal places.');\nif (!Array.isArray(f.transactions) || f.transactions.length > 100) {\n  return fail('transactions must be an array of at most 100 items.');\n}\nfor (const tx of f.transactions) {\n  if (!object(tx) || !date(tx.date) || tx.date < f.startDate || tx.date >= f.nextMaintenanceLoanDate\n    || !money(tx.amount) || tx.amount === 0 || typeof tx.label !== 'string'\n    || tx.label.trim().length === 0 || tx.label.length > 80) {\n    return fail('Each transaction needs a date in the forecast window, a nonzero amount, and a label of at most 80 characters.');\n  }\n}\nconst weekly = f.weeklyEssentials;\nif (!object(weekly) || !date(weekly.firstDate) || weekly.firstDate < f.startDate\n  || weekly.firstDate >= f.nextMaintenanceLoanDate || !money(weekly.amount) || weekly.amount < 0) {\n  return fail('weeklyEssentials needs a firstDate in the forecast window and a nonnegative amount.');\n}\nreturn [{ json: {\n  valid: true,\n  question: body.question ?? '',\n  university: body.university ?? '',\n  noFamilySupport: body.noFamilySupport === true,\n  finance: {\n    startDate: f.startDate,\n    openingBalance: f.openingBalance,\n    nextMaintenanceLoanDate: f.nextMaintenanceLoanDate,\n    transactions: f.transactions.map((tx) => ({ date: tx.date, amount: tx.amount, label: tx.label.trim() })),\n    weeklyEssentials: { firstDate: weekly.firstDate, amount: weekly.amount },\n  },\n} }];"
+      }
+    },
+    {
+      "id": "a277541b-ddf3-4370-8b01-3b8f4a158d45",
+      "name": "Calculate forecast",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// n8n Code node: deterministic forecast from validated, user-supplied finance data.\nconst request = $input.first().json;\nconst f = request.finance;\nconst toPence = (value) => Math.round(value * 100);\nconst events = f.transactions.map((tx) => ({ date: tx.date, label: tx.label, amountP: toPence(tx.amount) }));\nconst end = Date.parse(f.nextMaintenanceLoanDate + 'T00:00:00Z');\nfor (let day = Date.parse(f.weeklyEssentials.firstDate + 'T00:00:00Z'); day < end; day += 7 * 86400000) {\n  events.push({ date: new Date(day).toISOString().slice(0, 10), label: 'Weekly essentials', amountP: -toPence(f.weeklyEssentials.amount) });\n}\nevents.sort((a, b) => a.date.localeCompare(b.date) || b.amountP - a.amountP || a.label.localeCompare(b.label));\nlet balance = toPence(f.openingBalance);\nlet lowest = balance;\nlet lowestDate = f.startDate;\nlet firstShortfallDate = balance < 0 ? f.startDate : null;\nconst timeline = [];\nfor (const event of events) {\n  balance += event.amountP;\n  timeline.push({ date: event.date, label: event.label, amount: event.amountP / 100, balance: balance / 100 });\n  if (balance < lowest) { lowest = balance; lowestDate = event.date; }\n  if (balance < 0 && firstShortfallDate === null) firstShortfallDate = event.date;\n}\nreturn [{ json: {\n  forecast: {\n    currency: 'GBP',\n    scenario: 'provided_transactions',\n    startDate: f.startDate,\n    openingBalance: f.openingBalance,\n    lowestBalance: lowest / 100,\n    lowestBalanceDate: lowestDate,\n    firstShortfallDate,\n    hasShortfall: firstShortfallDate !== null,\n    balanceBeforeNextLoan: balance / 100,\n    nextMaintenanceLoanDate: f.nextMaintenanceLoanDate,\n    timeline,\n  },\n  question: request.question,\n  university: request.university,\n  noFamilySupport: request.noFamilySupport,\n} }];"
+      }
+    },
+    {
+      "id": "ac7cb248-9f7f-49a3-a206-e98bbb397113",
+      "name": "Fetch support catalogue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        896,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://raw.githubusercontent.com/tmammadov17503/FinBridge_GUH/35698fd54ebba2e1c6052c0e579c0ac8614aa5b1/knowledge/sources.json",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000
+    },
+    {
+      "id": "eb71d2a2-7c23-417d-ae5a-77bb9bacfd80",
+      "name": "Select support sources",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// n8n Code node after the catalogue request. Keep this ranking aligned with retrieve.mjs.\nconst catalogue = $input.first().json;\nconst request = $('Calculate forecast').first().json;\nconst forecast = request.forecast;\nconst resources = catalogue?.resources;\nconst usable = Array.isArray(resources) && resources.length > 0 && resources.every((source) =>\n  source && typeof source.id === 'string' && typeof source.title === 'string'\n  && typeof source.url === 'string' && /^https:\\/\\//.test(source.url)\n  && Array.isArray(source.tags) && source.tags.every((tag) => typeof tag === 'string')\n  && (source.university === undefined || typeof source.university === 'string')\n  && (source.requiresNoFamilySupport === undefined || typeof source.requiresNoFamilySupport === 'boolean'));\nif (!usable) {\n  return [{ json: { ...request, supportSources: [], supportStatus: 'unavailable', catalogueCheckedAt: null } }];\n}\n\nconst questionWords = new Set(String(request.question ?? '').toLowerCase().match(/[a-z]+/g) ?? []);\nconst university = String(request.university ?? '').trim().toLowerCase();\nconst manchester = university === 'university of manchester' || university === 'manchester';\nconst noFamilySupport = request.noFamilySupport === true;\nconst shortfall = forecast.hasShortfall === true;\nconst supportSources = resources\n  .filter((source) => !source.university || (manchester && source.university === 'university of manchester'))\n  .filter((source) => !source.requiresNoFamilySupport || noFamilySupport)\n  .map((source) => ({\n    source,\n    score: source.tags.filter((tag) => questionWords.has(tag)).length * 2\n      + (shortfall && source.tags.includes('hardship') ? 4 : 0)\n      + (shortfall && source.tags.includes('shortfall') ? 2 : 0)\n      + (noFamilySupport && source.id === 'manchester-estranged' ? 7 : 0)\n      + (source.id === 'student-minds-budget' ? 1 : 0),\n  }))\n  .sort((a, b) => b.score - a.score || a.source.id.localeCompare(b.source.id))\n  .slice(0, 3)\n  .map(({ source }) => source);\n\nreturn [{ json: { ...request, supportSources, supportStatus: 'ok', catalogueCheckedAt: catalogue.checkedAt ?? null } }];"
+      }
+    },
+    {
+      "id": "fa840fe5-3fc4-4be2-b0e4-365623bfea0b",
+      "name": "Explain and draft request",
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        0
+      ],
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "claude-sonnet-5-5"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "user",
+              "content": "=Student question: {{ $json.question }}\n\nClassify the main reason for asking for financial guidance. Return only a JSON object with one field, focus, whose value is exactly one of: rent, budget, general. Choose rent for rent or housing payments, budget for planning spending, and general otherwise."
+            }
+          ]
+        },
+        "simplify": true,
+        "options": {
+          "includeMergedResponse": true,
+          "maxTokens": 60,
+          "system": "You classify a student's question for an editable support request. Return only valid JSON such as {\"focus\":\"rent\"}. The only allowed values are rent, budget, and general. Do not write advice, explanation, links, or a draft."
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000
+    },
+    {
+      "id": "95415704-91ef-4b02-866d-57f679b08a7b",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1794,
+        0
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "0c62ec44-8ed2-4094-b2a9-6f5c1a85edfd",
+      "name": "Route valid input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        448,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ String($json.valid) }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ff1dada6-e849-40a1-ae4b-394fd8366ca4",
+      "name": "Respond invalid input",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        672,
+        260
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { error: $json.error } }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    },
+    {
+      "id": "e744df25-4c5c-47f3-bf56-914f9e5a60c3",
+      "name": "Validate response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1570,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// n8n Code node after Anthropic. The model can select a draft focus, never response text or URLs.\nconst selected = $('Select support sources').first().json;\nconst forecast = selected.forecast;\nconst money = (value) => (value < 0 ? '-£' : '£') + Math.abs(value).toFixed(2);\nconst shortfall = forecast.firstShortfallDate\n  ? `Your first projected shortfall is on ${forecast.firstShortfallDate}.`\n  : 'There is no projected shortfall before the next maintenance loan.';\nconst explanation = `Your projected lowest balance is ${money(forecast.lowestBalance)} on ${forecast.lowestBalanceDate}. ${shortfall} Your balance before the next maintenance loan on ${forecast.nextMaintenanceLoanDate} is ${money(forecast.balanceBeforeNextLoan)}. This estimate uses the transactions you supplied.`;\nconst drafts = {\n  general: 'Hello, I would like to discuss my financial situation and ask what support options may be available. Could you tell me what information you need? Thank you.',\n  rent: 'Hello, I am concerned about covering my rent and would like to discuss possible support options. Could you tell me what information you need? Thank you.',\n  budget: 'Hello, I would like help reviewing my budget and understanding what support options may be available. Could you tell me what information you need? Thank you.',\n};\nconst incoming = $input.first().json;\nconst raw = incoming?.merged_response ?? incoming?.content?.filter((part) => part.type === 'text').map((part) => part.text).join('\\n');\nlet focus = 'general';\nlet draftStatus = 'fallback';\ntry {\n  const parsed = JSON.parse(raw);\n  if (parsed && typeof parsed === 'object' && ['general', 'rent', 'budget'].includes(parsed.focus)) {\n    focus = parsed.focus;\n    draftStatus = 'model';\n  }\n} catch (error) { /* Use the general draft when Anthropic fails or returns invalid JSON. */ }\nreturn [{ json: {\n  forecast,\n  explanation,\n  draft: drafts[focus],\n  supportSources: selected.supportSources,\n  supportStatus: selected.supportStatus,\n  draftStatus,\n  catalogueCheckedAt: selected.catalogueCheckedAt,\n} }];"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate finance input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate forecast": {
+      "main": [
+        [
+          {
+            "node": "Fetch support catalogue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch support catalogue": {
+      "main": [
+        [
+          {
+            "node": "Select support sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select support sources": {
+      "main": [
+        [
+          {
+            "node": "Explain and draft request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate finance input": {
+      "main": [
+        [
+          {
+            "node": "Route valid input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route valid input": {
+      "main": [
+        [
+          {
+            "node": "Calculate forecast",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond invalid input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Explain and draft request": {
+      "main": [
+        [
+          {
+            "node": "Validate response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "saveManualExecutions": false,
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "executionTimeout": 60
+  },
+  "nodeGroups": [
+    {
+      "id": "a47c7a5d-52d1-4639-89c9-8e8bf823df45",
+      "name": "Validate request",
+      "nodeNames": [
+        "Validate finance input",
+        "Route valid input"
+      ],
+      "description": "Check the finance payload and return a clear error before forecasting."
+    },
+    {
+      "id": "d88553d4-b0c3-404c-a36a-1a2cb43665f8",
+      "name": "Forecast and trusted sources",
+      "nodeNames": [
+        "Calculate forecast",
+        "Fetch support catalogue",
+        "Select support sources"
+      ],
+      "description": "Calculate balances from supplied transactions and select provider links from the catalogue."
+    },
+    {
+      "id": "a5d168c6-9e96-4e4d-a994-11c7323dbf6d",
+      "name": "Draft and verify response",
+      "nodeNames": [
+        "Explain and draft request",
+        "Validate response"
+      ],
+      "description": "Ask Anthropic for an editable draft, then build a checked response with deterministic figures."
+    }
+  ],
+  "pinData": {}
+}

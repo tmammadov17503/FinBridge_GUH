@@ -14,35 +14,34 @@ This is a small, curated retrieval layer for the hackathon demo. It is **not** a
 
 Manchester-only records are excluded unless the request explicitly says `"university": "University of Manchester"` or `"Manchester"`. The dedicated estranged-student record requires `"noFamilySupport": true`; do not guess this sensitive status from chat text. Other university users receive only broadly applicable records. The retrieval code returns at most three entries; every entry includes its real provider URL and a caution about eligibility.
 
-## n8n handoff
+## Webhook contract
 
-Create these nodes in order:
-
-1. **Webhook** (`POST`), named exactly `Webhook`. Accept the request below.
-2. **HTTP Request** (`GET`) for `https://raw.githubusercontent.com/tmammadov17503/FinBridge_GUH/main/knowledge/sources.json`, response format JSON. The file must be pushed to GitHub before this works.
-3. **Code**, run once for all items. Paste the complete contents of `n8n-retrieve.js`. Its input is the HTTP Request output. It reads the original request from the named Webhook node.
-4. Use n8n's **Anthropic** node, **Text → Message a Model**, with the supplied hackathon API key stored as an n8n credential. Start with `claude-sonnet-4-6` if it is available in the account. Pass `supportSources` alongside the independently calculated forecast. The model explains; it does not calculate or select URLs.
-5. Return the `supportSources` array unchanged to the website, so the UI builds source cards from trusted catalogue URLs rather than model-generated links.
-
-Example input to the Webhook:
+`POST /webhook/finbridge/chat` accepts one JSON object. All figures are supplied by the caller; there is no demo student or hidden estimate. Income is a positive transaction amount and spending is negative. The question selects a draft focus and relevant support sources, but never changes the numbers.
 
 ```json
 {
-  "question": "What if I lose two shifts and cannot pay rent?",
+  "question": "Can I cover rent before my loan?",
   "university": "University of Manchester",
-  "noFamilySupport": true,
-  "shortfall": true
+  "noFamilySupport": false,
+  "finance": {
+    "startDate": "2026-11-07",
+    "openingBalance": 200,
+    "nextMaintenanceLoanDate": "2026-12-05",
+    "transactions": [
+      { "date": "2026-11-14", "amount": 100, "label": "Wages" },
+      { "date": "2026-12-01", "amount": -300, "label": "Rent" }
+    ],
+    "weeklyEssentials": { "firstDate": "2026-11-09", "amount": 20 }
+  }
 }
 ```
 
-The Code node returns the original request plus `supportSources` and `catalogueCheckedAt`. If the GitHub fetch fails during the live demo, use a static JSON copy of `sources.json` in an n8n Edit Fields node. The forecast and text chat should still work if retrieval is unavailable.
+The request requires real ISO dates, GBP amounts with at most two decimals, a loan date within 366 days, at most 100 transactions, and a weekly essentials amount. `question` is optional (up to 500 characters), `university` is optional (up to 100), and `noFamilySupport` must be an explicit boolean. Invalid requests return HTTP 400 with `error.code = "INVALID_INPUT"`. Transactions on or after the loan date are rejected; supply reduced wages as transaction amounts to test a lost-shifts scenario.
 
-## Claude instruction to add after retrieval
+The successful response contains `forecast`, `explanation`, `draft`, `supportSources`, `supportStatus`, `draftStatus`, and `catalogueCheckedAt`. Forecast arithmetic uses pence. Explanation, draft text, and URLs are built by deterministic code. Anthropic can only select the `rent`, `budget`, or `general` draft focus. If catalogue retrieval fails, the response has `supportStatus: "unavailable"` and no sources. If Anthropic fails or returns another value, `draftStatus: "fallback"` and a general draft are returned. Neither failure drops the forecast.
 
-> You are FinBridge, a calm financial support guide. Explain only the forecast numbers supplied by the calculation node. For support options, use only the provided `supportSources`. Name each provider and source ID you rely on. Never invent a grant, amount, eligibility decision, bank action, or URL. Say that eligibility and awards are decided by the provider. If a relevant source is missing, say you cannot verify an option and suggest contacting the student's own university support team. Keep the answer under 90 words. Draft messages are for the student to review; never send them.
-
-Ask the model for structured output: `explanation`, `suggestedNextStep`, `sourceIds`, and `editableDraft`. Reject any `sourceIds` not found in the retrieved records. Show actual source cards separately from model text.
+The deployed Code node sources and credential-free workflow export are in [`n8n/`](../n8n/). The catalogue URL is pinned to repository commit `35698fd54ebba2e1c6052c0e579c0ac8614aa5b1` so approved links cannot change with the main branch. The workflow disables saved execution data for financial payloads. The public webhook still needs inbound authentication and rate limiting before it should receive personal financial records.
 
 ## Local check
 
-Run `node --test knowledge/retrieve.test.mjs` from the repository root. `retrieve.mjs` is the locally testable reference implementation; `n8n-retrieve.js` is the paste-ready Code node version.
+Run `node --test knowledge/retrieve.test.mjs n8n/workflow.test.mjs` from the repository root. `retrieve.mjs` is the locally testable retrieval reference; the files under `n8n/` are paste-ready Code node sources.

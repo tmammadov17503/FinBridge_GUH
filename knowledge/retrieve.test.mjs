@@ -61,10 +61,15 @@ test('paste-ready n8n node returns the same sources as local retrieval', () => {
     noFamilySupport: true,
     shortfall: true,
   };
-  const code = readFileSync(new URL('./n8n-retrieve.js', import.meta.url), 'utf8');
+  const code = readFileSync(new URL('../n8n/retrieve.js', import.meta.url), 'utf8');
   const result = runInNewContext(`(function () { ${code} })()`, {
     $input: { first: () => ({ json: catalogue }) },
-    $: () => ({ first: () => ({ json: { body: request } }) }),
+    $: () => ({ first: () => ({ json: {
+      question: request.question,
+      university: request.university,
+      noFamilySupport: request.noFamilySupport,
+      forecast: { hasShortfall: request.shortfall },
+    } }) }),
   });
   assert.deepEqual(
     Array.from(result[0].json.supportSources, (source) => source.id),
