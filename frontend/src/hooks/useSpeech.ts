@@ -58,7 +58,20 @@ export function useSpeech({ onFinished }: Options = {}) {
 
   const speak = useCallback(
     async ({ text, messageId, voice }: SpeakRequest) => {
-      const trimmed = text.trim();
+      // Strip markdown so ElevenLabs doesn't speak "asterisk asterisk bold asterisk asterisk".
+      // Also keep it under the 1500-char TTS cap by truncating at a sentence boundary.
+      const stripped = text
+        .trim()
+        .replace(/\*\*([^*]+)\*\*/g, "$1")
+        .replace(/\*([^*]+)\*/g, "$1")
+        .replace(/^[•\-\*]\s+/gm, "")
+        .replace(/^\d+\.\s+/gm, "")
+        .trim();
+      const trimmed =
+        stripped.length <= 1400
+          ? stripped
+          : (stripped.slice(0, 1400).match(/^.*[.!?]/s)?.[0] ??
+            stripped.slice(0, 1400));
       if (!trimmed) return;
 
       stop();

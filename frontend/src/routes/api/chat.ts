@@ -335,9 +335,9 @@ export const Route = createFileRoute("/api/chat")({
         });
 
         // n8n's Code node generates a mechanical template reply for every request.
-        // For "Me" mode we have the forecast data, so we write our own natural reply
-        // and discard the mechanical text entirely.
-        if (response && body.userId === "demo-me" && response.forecast) {
+        // We always have the forecast data, so we write our own natural reply
+        // and discard the mechanical text entirely regardless of persona.
+        if (response && response.forecast) {
           response.reply = naturalMeReply(body.message, response.forecast);
         }
 
