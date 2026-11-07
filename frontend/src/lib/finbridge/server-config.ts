@@ -64,6 +64,13 @@ export function n8nUrl(route: "finbridge/chat" | "finbridge/forecast"): string {
   return `${n8nBaseUrl()}${n8nWebhookPath()}/${route}`;
 }
 
+/* --------------------------------------------------------------- anthropic */
+
+/** Direct Anthropic key — used to give natural, question-aware replies without going via n8n. */
+export function anthropicKey(): string | undefined {
+  return env("ANTHROPIC_API_KEY");
+}
+
 /* ------------------------------------------------------------ elevenlabs */
 
 export const ELEVENLABS_API = "https://api.elevenlabs.io/v1";

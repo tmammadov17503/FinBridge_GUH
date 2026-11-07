@@ -83,6 +83,17 @@ export function useFinBridgeChat({ userId, customFinance, onAgentMessage }: Opti
       ]);
 
       try {
+        // Send the last 8 turns as history so Claude can answer in context.
+        const history = messages
+          .filter((m) => m.id !== "greeting" && !m.failed)
+          .slice(-8)
+          .map((m) => ({
+            role: (m.author === "user" ? "user" : "assistant") as
+              | "user"
+              | "assistant",
+            content: m.text.slice(0, 1200),
+          }));
+
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: { "content-type": "application/json" },
@@ -92,6 +103,7 @@ export function useFinBridgeChat({ userId, customFinance, onAgentMessage }: Opti
             sessionId: sessionIdRef.current,
             channel,
             ...(customFinance ? { customFinance } : {}),
+            ...(history.length > 0 ? { history } : {}),
           }),
         });
 

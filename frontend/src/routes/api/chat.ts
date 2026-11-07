@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import {
   ConfigError,
+  anthropicKey,
   n8nAuthHeaders,
   n8nUrl,
 } from "@/lib/finbridge/server-config";
@@ -186,6 +187,96 @@ function buildFinancePayload(
 }
 
 /**
+ * Call the Anthropic Messages API directly so we can answer ANY question naturally,
+ * using the user's finance data as context. Runs in parallel with the n8n forecast call
+ * so it adds no extra wall-clock time. Falls back to undefined if the key isn't set.
+ */
+async function askClaude(
+  systemPrompt: string,
+  history: { role: "user" | "assistant"; content: string }[],
+  question: string,
+  apiKey: string,
+): Promise<string | undefined> {
+  const messages = [...history, { role: "user" as const, content: question }];
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 350,
+        system: systemPrompt,
+        messages,
+      }),
+      signal: AbortSignal.timeout(14_000),
+    });
+    if (!res.ok) return undefined;
+    const data = (await res.json().catch(() => null)) as {
+      content?: { type: string; text: string }[];
+    } | null;
+    return data?.content?.[0]?.text?.trim() ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function buildSystemPrompt(
+  finance: CustomFinance | null | undefined,
+  forecast: BalanceForecast | undefined,
+  personaLabel: string,
+): string {
+  const fmtDate = (iso: string) =>
+    new Date(iso).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+    });
+
+  let context = "";
+  if (finance) {
+    const surplus =
+      finance.nextIncomeAmount -
+      finance.monthlyBills -
+      finance.weeklySpend * 4.33;
+    context =
+      `Current balance: £${finance.balance}. ` +
+      `Next income: £${finance.nextIncomeAmount} on ${fmtDate(finance.nextIncomeDate)}. ` +
+      `Monthly bills/rent: £${finance.monthlyBills}. ` +
+      `Weekly essentials: £${finance.weeklySpend}. ` +
+      `Estimated monthly surplus: £${Math.round(surplus)}.`;
+  } else {
+    context = `Demo persona: ${personaLabel}.`;
+  }
+
+  const forecastLine = forecast
+    ? forecast.hasShortfall === false
+      ? "Forecast: no shortfall — balance stays positive until next income."
+      : `Forecast: balance dips below zero around ${fmtDate(forecast.firstShortfallDate ?? "")}` +
+        (forecast.firstShortfallAmount != null
+          ? `, about £${Math.abs(Math.round(forecast.firstShortfallAmount))} short`
+          : "") +
+        "."
+    : "";
+
+  return [
+    "You are FinBridge, a friendly UK financial coaching assistant. Be warm, concise (2-4 sentences), and practical.",
+    "Focus on the user's actual question. Use their finance data when relevant.",
+    "For savings/planning questions, use their monthly surplus to give a concrete timeline.",
+    "For support/benefits questions, mention Universal Credit, council hardship funds, or Citizens Advice as relevant.",
+    "Never invent specific URLs. Never give regulated financial advice. Always caveat with 'check eligibility directly'.",
+    "",
+    "User finance context:",
+    context,
+    forecastLine,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+/**
  * n8n's Code node generates a mechanical template reply ("Your projected lowest balance
  * is…"). For "Me" mode we discard that text and write a natural reply from the forecast
  * data ourselves, so the response reads like a human adviser, not a report.
@@ -292,20 +383,54 @@ export const Route = createFileRoute("/api/chat")({
           throw error;
         }
 
-        let upstream: Response;
-        try {
-          upstream = await fetch(url, {
+        // Build system prompt for Claude using the finance context we already have.
+        const { finance: personaFinanceData } = personaFinance(
+          body.userId,
+          new Date(),
+        );
+        const claudeKey = anthropicKey();
+        const financeForPrompt =
+          body.customFinance ??
+          ({
+            balance: personaFinanceData.openingBalance,
+            nextIncomeDate: personaFinanceData.nextMaintenanceLoanDate,
+            nextIncomeAmount: personaFinanceData.transactions.find(
+              (t) => t.amount > 0,
+            )?.amount ?? 0,
+            monthlyBills: Math.abs(
+              personaFinanceData.transactions.find((t) => t.amount < 0)
+                ?.amount ?? 0,
+            ),
+            weeklySpend: personaFinanceData.weeklyEssentials.amount,
+          } satisfies CustomFinance);
+
+        // Run n8n (for forecast data) and Claude (for the reply) in parallel.
+        const [upstreamResult, claudeReply] = await Promise.allSettled([
+          fetch(url, {
             method: "POST",
             headers,
             body: JSON.stringify(
               buildFinancePayload(body.message, body.userId, body.customFinance),
             ),
             signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
-          });
-        } catch (error) {
-          const timedOut =
-            error instanceof Error && error.name === "TimeoutError";
-          console.error("[finbridge] chat webhook unreachable", error);
+          }),
+          claudeKey
+            ? askClaude(
+                buildSystemPrompt(financeForPrompt, undefined, body.userId),
+                body.history ?? [],
+                body.message,
+                claudeKey,
+              )
+            : Promise.resolve(undefined),
+        ]);
+
+        if (
+          upstreamResult.status === "rejected" ||
+          !(upstreamResult.value instanceof Response)
+        ) {
+          const err = upstreamResult.status === "rejected" ? upstreamResult.reason : null;
+          const timedOut = err instanceof Error && err.name === "TimeoutError";
+          console.error("[finbridge] chat webhook unreachable", err);
           return bad(
             504,
             timedOut
@@ -314,6 +439,7 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
+        const upstream = upstreamResult.value;
         if (!upstream.ok) {
           const detail = (await upstream.text().catch(() => "")).slice(0, 500);
           console.error(
@@ -334,11 +460,16 @@ export const Route = createFileRoute("/api/chat")({
           sessionId: body.sessionId,
         });
 
-        // n8n's Code node generates a mechanical template reply for every request.
-        // We always have the forecast data, so we write our own natural reply
-        // and discard the mechanical text entirely regardless of persona.
-        if (response && response.forecast) {
-          response.reply = naturalMeReply(body.message, response.forecast);
+        // Use Claude's reply if available (question-aware, conversational).
+        // Fall back to our naturalMeReply generator, then to n8n's raw text.
+        const claudeText =
+          claudeReply.status === "fulfilled" ? claudeReply.value : undefined;
+        if (response) {
+          if (claudeText) {
+            response.reply = claudeText;
+          } else if (response.forecast) {
+            response.reply = naturalMeReply(body.message, response.forecast);
+          }
         }
 
         if (!response) {

@@ -89,6 +89,16 @@ export const ChatBody = z.object({
       weeklySpend: z.number(),
     })
     .optional(),
+  /** Recent conversation turns sent by the client so Claude can answer in context. */
+  history: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string().max(1200),
+      }),
+    )
+    .max(10)
+    .optional(),
 });
 
 export type ChatBodyInput = z.infer<typeof ChatBody>;
