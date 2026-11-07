@@ -6,7 +6,7 @@ import {
   n8nUrl,
 } from "@/lib/finbridge/server-config";
 import { ChatBody, toChatResponse } from "@/lib/finbridge/normalize";
-import type { CustomFinance } from "@/lib/finbridge/types";
+import type { BalanceForecast, CustomFinance } from "@/lib/finbridge/types";
 
 /**
  * Browser -> n8n chat proxy.
@@ -185,6 +185,68 @@ function buildFinancePayload(
   };
 }
 
+/**
+ * n8n's Code node generates a mechanical template reply ("Your projected lowest balance
+ * is…"). For "Me" mode we discard that text and write a natural reply from the forecast
+ * data ourselves, so the response reads like a human adviser, not a report.
+ */
+function fmtDay(iso: string | undefined): string {
+  if (!iso) return "soon";
+  return new Date(iso).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+  });
+}
+
+function naturalMeReply(question: string, forecast: BalanceForecast): string {
+  const q = question.toLowerCase();
+
+  // Detect simple / conversational follow-ups that don't need a full re-analysis.
+  const isConversational =
+    q.length < 70 &&
+    !/£|\bshort\b|\brun out\b|\bshift|\bbill|\brent|\bsupport|\bfund|\bhardship/.test(
+      q,
+    );
+
+  if (forecast.hasShortfall === false) {
+    if (isConversational) {
+      return (
+        "Yes — your numbers look solid this month. No shortfall projected before your next income arrives. " +
+        "The chart shows your balance staying positive throughout. Feel free to ask about anything specific!"
+      );
+    }
+    const series = forecast.dailySeries ?? [];
+    const minBal = series.length
+      ? Math.round(Math.min(...series.map((d) => d.balance)))
+      : null;
+    const minText =
+      minBal !== null ? ` Your lowest point is around £${minBal}.` : "";
+    return (
+      `Your balance holds up all the way through to your next income — no shortfall projected.${minText} ` +
+      `The chart above shows the full picture. ` +
+      `Would you like to explore a scenario, like what an unexpected bill or fewer hours would do?`
+    );
+  }
+
+  // Has shortfall
+  const date = fmtDay(forecast.firstShortfallDate);
+  const amount = Math.abs(forecast.firstShortfallAmount ?? 0);
+
+  if (isConversational) {
+    return (
+      `Not quite — your balance is set to dip below zero around ${date}, about £${amount} short at the worst point. ` +
+      `Worth looking at options to cover that gap. Would you like me to suggest some?`
+    );
+  }
+
+  return (
+    `Looking at your numbers, your balance goes below zero around **${date}** — roughly **£${amount} short** at the lowest point. ` +
+    `The chart above shows the full timeline.\n\n` +
+    `A few options worth considering: checking whether you qualify for any support funds, cutting non-essential spend in the short term, ` +
+    `or planning a conversation with your landlord or bank ahead of time. What would be most useful to look at?`
+  );
+}
+
 /** n8n and the LLM behind it are slow; fail with a readable message rather than hanging. */
 const UPSTREAM_TIMEOUT_MS = 45_000;
 
@@ -271,6 +333,13 @@ export const Route = createFileRoute("/api/chat")({
           userId: body.userId,
           sessionId: body.sessionId,
         });
+
+        // n8n's Code node generates a mechanical template reply for every request.
+        // For "Me" mode we have the forecast data, so we write our own natural reply
+        // and discard the mechanical text entirely.
+        if (response && body.userId === "demo-me" && response.forecast) {
+          response.reply = naturalMeReply(body.message, response.forecast);
+        }
 
         if (!response) {
           console.error(
