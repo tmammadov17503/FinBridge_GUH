@@ -187,155 +187,195 @@ function buildFinancePayload(
 }
 
 /**
- * Call the Anthropic Messages API directly so we can answer ANY question naturally,
- * using the user's finance data as context. Runs in parallel with the n8n forecast call
- * so it adds no extra wall-clock time. Falls back to undefined if the key isn't set.
+ * Comprehensive intent-based reply generator. Covers savings goals, daily budgets,
+ * benefits, debt, emergency funds, and general finance questions — all personalised
+ * with the user's real numbers. No external API needed.
  */
-async function askClaude(
-  systemPrompt: string,
-  history: { role: "user" | "assistant"; content: string }[],
+function generateSmartReply(
   question: string,
-  apiKey: string,
-): Promise<string | undefined> {
-  const messages = [...history, { role: "user" as const, content: question }];
-  try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 350,
-        system: systemPrompt,
-        messages,
-      }),
-      signal: AbortSignal.timeout(14_000),
-    });
-    if (!res.ok) return undefined;
-    const data = (await res.json().catch(() => null)) as {
-      content?: { type: string; text: string }[];
-    } | null;
-    return data?.content?.[0]?.text?.trim() ?? undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-function buildSystemPrompt(
-  finance: CustomFinance | null | undefined,
+  finance: CustomFinance,
   forecast: BalanceForecast | undefined,
-  personaLabel: string,
 ): string {
-  const fmtDate = (iso: string) =>
-    new Date(iso).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "long",
-    });
+  const q = question.toLowerCase().replace(/[?!.,]/g, " ");
 
-  let context = "";
-  if (finance) {
-    const surplus =
-      finance.nextIncomeAmount -
-      finance.monthlyBills -
-      finance.weeklySpend * 4.33;
-    context =
-      `Current balance: £${finance.balance}. ` +
-      `Next income: £${finance.nextIncomeAmount} on ${fmtDate(finance.nextIncomeDate)}. ` +
-      `Monthly bills/rent: £${finance.monthlyBills}. ` +
-      `Weekly essentials: £${finance.weeklySpend}. ` +
-      `Estimated monthly surplus: £${Math.round(surplus)}.`;
-  } else {
-    context = `Demo persona: ${personaLabel}.`;
-  }
+  const day = (iso: string | undefined) =>
+    iso
+      ? new Date(iso).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+        })
+      : "soon";
 
-  const forecastLine = forecast
-    ? forecast.hasShortfall === false
-      ? "Forecast: no shortfall — balance stays positive until next income."
-      : `Forecast: balance dips below zero around ${fmtDate(forecast.firstShortfallDate ?? "")}` +
-        (forecast.firstShortfallAmount != null
-          ? `, about £${Math.abs(Math.round(forecast.firstShortfallAmount))} short`
-          : "") +
-        "."
-    : "";
-
-  return [
-    "You are FinBridge, a friendly UK financial coaching assistant. Be warm, concise (2-4 sentences), and practical.",
-    "Focus on the user's actual question. Use their finance data when relevant.",
-    "For savings/planning questions, use their monthly surplus to give a concrete timeline.",
-    "For support/benefits questions, mention Universal Credit, council hardship funds, or Citizens Advice as relevant.",
-    "Never invent specific URLs. Never give regulated financial advice. Always caveat with 'check eligibility directly'.",
-    "",
-    "User finance context:",
-    context,
-    forecastLine,
-  ]
-    .filter(Boolean)
-    .join("\n");
-}
-
-/**
- * n8n's Code node generates a mechanical template reply ("Your projected lowest balance
- * is…"). For "Me" mode we discard that text and write a natural reply from the forecast
- * data ourselves, so the response reads like a human adviser, not a report.
- */
-function fmtDay(iso: string | undefined): string {
-  if (!iso) return "soon";
-  return new Date(iso).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-  });
-}
-
-function naturalMeReply(question: string, forecast: BalanceForecast): string {
-  const q = question.toLowerCase();
-
-  // Detect simple / conversational follow-ups that don't need a full re-analysis.
-  const isConversational =
-    q.length < 70 &&
-    !/£|\bshort\b|\brun out\b|\bshift|\bbill|\brent|\bsupport|\bfund|\bhardship/.test(
-      q,
-    );
-
-  if (forecast.hasShortfall === false) {
-    if (isConversational) {
-      return (
-        "Yes — your numbers look solid this month. No shortfall projected before your next income arrives. " +
-        "The chart shows your balance staying positive throughout. Feel free to ask about anything specific!"
-      );
-    }
-    const series = forecast.dailySeries ?? [];
-    const minBal = series.length
-      ? Math.round(Math.min(...series.map((d) => d.balance)))
-      : null;
-    const minText =
-      minBal !== null ? ` Your lowest point is around £${minBal}.` : "";
-    return (
-      `Your balance holds up all the way through to your next income — no shortfall projected.${minText} ` +
-      `The chart above shows the full picture. ` +
-      `Would you like to explore a scenario, like what an unexpected bill or fewer hours would do?`
-    );
-  }
-
-  // Has shortfall
-  const date = fmtDay(forecast.firstShortfallDate);
-  const amount = Math.abs(forecast.firstShortfallAmount ?? 0);
-
-  if (isConversational) {
-    return (
-      `Not quite — your balance is set to dip below zero around ${date}, about £${amount} short at the worst point. ` +
-      `Worth looking at options to cover that gap. Would you like me to suggest some?`
-    );
-  }
-
-  return (
-    `Looking at your numbers, your balance goes below zero around **${date}** — roughly **£${amount} short** at the lowest point. ` +
-    `The chart above shows the full timeline.\n\n` +
-    `A few options worth considering: checking whether you qualify for any support funds, cutting non-essential spend in the short term, ` +
-    `or planning a conversation with your landlord or bank ahead of time. What would be most useful to look at?`
+  const daysUntil = Math.max(
+    1,
+    Math.ceil(
+      (new Date(finance.nextIncomeDate).getTime() - Date.now()) / 86_400_000,
+    ),
   );
+  const nextIncomeLabel = day(finance.nextIncomeDate);
+  const surplus = Math.round(
+    finance.nextIncomeAmount - finance.monthlyBills - finance.weeklySpend * 4.33,
+  );
+  const noShortfall = forecast?.hasShortfall === false;
+  const shortfallDate = day(forecast?.firstShortfallDate);
+  const shortfallAmt = forecast?.firstShortfallAmount
+    ? Math.abs(Math.round(forecast.firstShortfallAmount))
+    : null;
+
+  // ── 1. Status / how am I doing ───────────────────────────────────────────
+  if (
+    /\b(am i (good|ok|okay|fine|alright)|how (is it|am i|are (we|things))|doing (ok|good|well)|how.?s it going|all good|everything ok)\b/.test(
+      q,
+    )
+  ) {
+    if (noShortfall)
+      return `You're doing well — no shortfall projected before ${nextIncomeLabel}. With a monthly surplus of about £${surplus}, you're in a stable position. Anything specific you'd like to look at?`;
+    return `Not quite — your balance will dip around ${shortfallDate}${shortfallAmt ? `, about £${shortfallAmt} short` : ""}. Worth having a plan — want some options?`;
+  }
+
+  // ── 2. Savings goal with a price ─────────────────────────────────────────
+  const priceMatch = q.match(/£\s*(\d[\d,]*)|(\d[\d,]*)\s*(?:pound|quid)/);
+  const price = priceMatch
+    ? parseInt((priceMatch[1] ?? priceMatch[2] ?? "0").replace(/,/g, ""))
+    : null;
+
+  const savingsItem =
+    q.match(
+      /\b(car|vehicle|motorbike|bike|holiday|vacation|trip|phone|iphone|android|laptop|computer|pc|mac|house|flat|deposit|sofa|tv|ring|watch|camera|console|ps5|xbox|airpods)\b/,
+    )?.[1] ?? null;
+
+  if (
+    savingsItem ||
+    /\b(save (for|up)|saving (for|up)|how long.{0,15}save|when can i (buy|afford|get)|afford to buy)\b/.test(
+      q,
+    )
+  ) {
+    const item = savingsItem ?? "that";
+    if (surplus <= 0)
+      return `Right now your monthly outgoings exceed income by about £${Math.abs(surplus)}, so saving for a ${item} needs some breathing room first. Reducing a regular bill or picking up extra income would open that up quickly.`;
+    if (price) {
+      const months = Math.ceil(price / surplus);
+      const years = Math.floor(months / 12);
+      const rem = months % 12;
+      const timeLabel =
+        years > 0
+          ? `${years} year${years > 1 ? "s" : ""}${rem > 0 ? ` and ${rem} month${rem > 1 ? "s" : ""}` : ""}`
+          : `${months} month${months > 1 ? "s" : ""}`;
+      return `With a monthly surplus of about £${surplus}, saving £${price.toLocaleString()} for a ${item} would take roughly **${timeLabel}**. Setting up a standing order on payday makes it automatic — you won't miss what you don't see.`;
+    }
+    return `With a monthly surplus of about £${surplus}, you have real saving power. Tell me the price of the ${item} and I'll give you a specific timeline.`;
+  }
+
+  // ── 3. Daily / weekly spend limit ────────────────────────────────────────
+  if (
+    /\b(how much (can|should|could) i spend|safe to spend|daily (budget|limit|spend)|per day|each day|spend a day|day to day)\b/.test(
+      q,
+    )
+  ) {
+    const available = Math.max(
+      0,
+      finance.balance - finance.monthlyBills * (daysUntil / 30),
+    );
+    const dailySafe = Math.max(
+      0,
+      Math.round(available / daysUntil - finance.weeklySpend / 7),
+    );
+    if (dailySafe < 2)
+      return `With ${daysUntil} days until ${nextIncomeLabel} and bills coming up, your budget is very tight beyond your regular £${finance.weeklySpend}/week on essentials. I'd hold off on any extras until your income arrives.`;
+    return `With ${daysUntil} days until ${nextIncomeLabel}, you have about **£${dailySafe} extra per day** on top of your regular essentials (£${Math.round(dailySafe * 7)}/week in flexible spend). That's based on your current balance and upcoming bills.`;
+  }
+
+  // ── 4. Universal Credit / benefits ───────────────────────────────────────
+  if (
+    /\b(universal credit|uc |benefit|dwp|housing benefit|tax credit|pip |dla |esa |jsa |council tax reduction|entitled to)\b/.test(
+      q,
+    )
+  ) {
+    return `Universal Credit is worth checking if your income is variable or below about £1,200/month take-home. The Turn2us benefits calculator takes 10 minutes and is free — it covers UC, council tax reduction, free school meals, and more. Citizens Advice can also do a full entitlements check in a free 30-minute call.`;
+  }
+
+  // ── 5. Hardship / emergency funds / grants ───────────────────────────────
+  if (
+    /\b(hardship fund|emergency fund|emergency grant|council grant|household support|food bank|citizen.?s advice|charity help|crisis fund)\b/.test(
+      q,
+    )
+  ) {
+    return `The Household Support Fund gives council grants for food, energy, and essentials — no repayment needed. Contact your local council directly or ask Citizens Advice to find what's available in your area. If you're a student, most UK universities also have hardship funds that can pay out within a week.`;
+  }
+
+  // ── 6. How to save / budgeting tips ──────────────────────────────────────
+  if (
+    /\b(save money|cut (back|costs|spending)|reduce (spending|costs|bills)|budget tips|how to budget|spend less|frugal|money saving)\b/.test(
+      q,
+    )
+  ) {
+    if (surplus > 0)
+      return `You already have a surplus of about £${surplus}/month — the key is making it automatic. Set a standing order to a separate savings account on payday (even £${Math.min(surplus, 100)}/month adds up to £${Math.min(surplus, 100) * 12} a year). For quick cuts, check direct debits for unused subscriptions first.`;
+    return `The quickest wins: cancel unused subscriptions, switch to own-brand groceries (saves 20–30% on food), and check whether you're on the cheapest energy tariff. Citizens Advice can also check if you're claiming all entitlements — that's often the biggest unlock.`;
+  }
+
+  // ── 7. Extra income / side hustle ────────────────────────────────────────
+  if (
+    /\b(extra (money|income|cash)|earn more|side (job|hustle|income|gig)|make more money|overtime|second job|freelance|part.?time)\b/.test(
+      q,
+    )
+  ) {
+    return `A few practical options: picking up extra shifts, selling unused items online (eBay, Vinted, Facebook Marketplace), or task platforms like TaskRabbit or Deliveroo for one-off income. Even £${Math.max(50, Math.round(surplus * 0.5))}/month extra makes a real difference to your buffer.`;
+  }
+
+  // ── 8. Unexpected bill / what-if ─────────────────────────────────────────
+  if (
+    /\b(unexpected|emergency cost|what if (i|my)|boiler|car (repair|broke)|bill came|suddenly (need|have)|large bill)\b/.test(
+      q,
+    )
+  ) {
+    if (noShortfall)
+      return `Your balance of £${finance.balance} should absorb a moderate unexpected cost. If a bill arrived this week you'd still make it to ${nextIncomeLabel} — though with less breathing room. Long-term, an emergency buffer of 3× monthly essentials (around £${Math.round(finance.weeklySpend * 4.33 * 3)} for you) is the target.`;
+    return `With a shortfall already projected, an unexpected bill would make things tighter. The Household Support Fund and Citizens Advice are the fastest places to look for emergency help — council grants can come through within days.`;
+  }
+
+  // ── 9. Investments / what to do with extra money ─────────────────────────
+  if (
+    /\b(invest|investment|stocks|shares|isa|pension|crypto|savings account|interest rate|premium bond)\b/.test(
+      q,
+    )
+  ) {
+    if (surplus > 100)
+      return `With a surplus of about £${surplus}/month, the priority order is: 1) emergency fund (3 months of essentials, ~£${Math.round(finance.weeklySpend * 13)} for you), 2) Cash ISA or easy-access savings account (currently 4–5% AER), 3) workplace pension if your employer matches. That sequence gives the best risk-adjusted return before touching stocks.`;
+    return `Before investing it's worth building a small emergency buffer first — 1 month of essentials gives you a cushion so you never have to sell at a bad time. A Cash ISA or easy-access savings account (4–5% AER) is a great starting point.`;
+  }
+
+  // ── 10. Rent / housing ───────────────────────────────────────────────────
+  if (
+    /\b(rent|landlord|tenancy|housing|eviction|deposit|housing benefit|renew|notice)\b/.test(
+      q,
+    )
+  ) {
+    return `Rent is usually the biggest fixed cost. If you're worried about missing a payment, contact your landlord early — most would rather agree a short payment plan than start proceedings. Shelter and Citizens Advice both offer free housing advice, including if you're facing eviction risk.`;
+  }
+
+  // ── 11. Debt / overdraft ─────────────────────────────────────────────────
+  if (
+    /\b(debt|overdraft|credit card|loan repay|owe money|borrow|high interest|minimum payment|missed payment)\b/.test(
+      q,
+    )
+  ) {
+    return `The quickest debt wins: pay off the highest-interest balance first (usually credit cards), then work down. StepChange and Citizens Advice both offer free, confidential debt advice — they can often negotiate with creditors directly. If you're in an overdraft, ask your bank about a 0% buffer first.`;
+  }
+
+  // ── 12. General finance question (mentions money) ────────────────────────
+  if (
+    /\b(money|finance|financial|budget|cash|afford|cost|price|pay|income|wage|salary|spend)\b/.test(
+      q,
+    )
+  ) {
+    if (noShortfall)
+      return `Based on your numbers — £${finance.balance} now, next income of £${finance.nextIncomeAmount} on ${nextIncomeLabel} — you're in a solid position with no shortfall. What specifically would you like to plan for?`;
+    return `With £${finance.balance} and a projected dip around ${shortfallDate}, this is worth planning around. What's on your mind — cutting costs, finding support, or something else?`;
+  }
+
+  // ── 13. Off-topic redirect ───────────────────────────────────────────────
+  return `I'm best at money questions — things like whether you'll run short, how long to save for something, or what support you could access. What would be most useful?`;
 }
 
 /** n8n and the LLM behind it are slow; fail with a readable message rather than hanging. */
@@ -383,54 +423,39 @@ export const Route = createFileRoute("/api/chat")({
           throw error;
         }
 
-        // Build system prompt for Claude using the finance context we already have.
+        // Build finance context for the smart reply generator.
         const { finance: personaFinanceData } = personaFinance(
           body.userId,
           new Date(),
         );
-        const claudeKey = anthropicKey();
-        const financeForPrompt =
-          body.customFinance ??
-          ({
+        const financeForReply: CustomFinance =
+          body.customFinance ?? {
             balance: personaFinanceData.openingBalance,
             nextIncomeDate: personaFinanceData.nextMaintenanceLoanDate,
-            nextIncomeAmount: personaFinanceData.transactions.find(
-              (t) => t.amount > 0,
-            )?.amount ?? 0,
+            nextIncomeAmount:
+              personaFinanceData.transactions.find((t) => t.amount > 0)
+                ?.amount ?? 0,
             monthlyBills: Math.abs(
               personaFinanceData.transactions.find((t) => t.amount < 0)
                 ?.amount ?? 0,
             ),
             weeklySpend: personaFinanceData.weeklyEssentials.amount,
-          } satisfies CustomFinance);
+          };
 
-        // Run n8n (for forecast data) and Claude (for the reply) in parallel.
-        const [upstreamResult, claudeReply] = await Promise.allSettled([
-          fetch(url, {
+        let upstream: Response;
+        try {
+          upstream = await fetch(url, {
             method: "POST",
             headers,
             body: JSON.stringify(
               buildFinancePayload(body.message, body.userId, body.customFinance),
             ),
             signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
-          }),
-          claudeKey
-            ? askClaude(
-                buildSystemPrompt(financeForPrompt, undefined, body.userId),
-                body.history ?? [],
-                body.message,
-                claudeKey,
-              )
-            : Promise.resolve(undefined),
-        ]);
-
-        if (
-          upstreamResult.status === "rejected" ||
-          !(upstreamResult.value instanceof Response)
-        ) {
-          const err = upstreamResult.status === "rejected" ? upstreamResult.reason : null;
-          const timedOut = err instanceof Error && err.name === "TimeoutError";
-          console.error("[finbridge] chat webhook unreachable", err);
+          });
+        } catch (error) {
+          const timedOut =
+            error instanceof Error && error.name === "TimeoutError";
+          console.error("[finbridge] chat webhook unreachable", error);
           return bad(
             504,
             timedOut
@@ -439,7 +464,6 @@ export const Route = createFileRoute("/api/chat")({
           );
         }
 
-        const upstream = upstreamResult.value;
         if (!upstream.ok) {
           const detail = (await upstream.text().catch(() => "")).slice(0, 500);
           console.error(
@@ -460,16 +484,13 @@ export const Route = createFileRoute("/api/chat")({
           sessionId: body.sessionId,
         });
 
-        // Use Claude's reply if available (question-aware, conversational).
-        // Fall back to our naturalMeReply generator, then to n8n's raw text.
-        const claudeText =
-          claudeReply.status === "fulfilled" ? claudeReply.value : undefined;
+        // Always replace n8n's mechanical reply with our smart, question-aware reply.
         if (response) {
-          if (claudeText) {
-            response.reply = claudeText;
-          } else if (response.forecast) {
-            response.reply = naturalMeReply(body.message, response.forecast);
-          }
+          response.reply = generateSmartReply(
+            body.message,
+            financeForReply,
+            response.forecast,
+          );
         }
 
         if (!response) {
